@@ -6,7 +6,7 @@ package combatgame.util;
 import java.util.*;
 import android.graphics.Point;
 
-public class vision
+public class Vision
 {
 	private Point loc;
 	private int view;
@@ -17,7 +17,7 @@ public class vision
 	private int px, nx, py, ny;
 	private Point[] ans=new Point[0];
 
-	public vision( Point locIn, int viewIn, int widthIn, int heightIn, char directionIn)
+	public Vision( Point locIn, int viewIn, int widthIn, int heightIn, char directionIn)
 	{
 		loc= new Point(locIn.x+1,locIn.y+1);
 		view=viewIn;

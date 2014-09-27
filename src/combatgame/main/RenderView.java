@@ -50,7 +50,10 @@ public class RenderView extends SurfaceView implements Runnable {
 			
 			Canvas canvas = holder.lockCanvas();
 			canvas.getClipBounds(destinationRect);
-			canvas.drawBitmap(frameBuffer, null, destinationRect, null);
+			if(game.shouldScale)
+				canvas.drawBitmap(frameBuffer, null, destinationRect, null); //scales and translate automatically to fit screen
+			else
+				canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null);
 			holder.unlockCanvasAndPost(canvas);
 
 			long elapsedTime = (System.nanoTime() - startTime) / 1000000;

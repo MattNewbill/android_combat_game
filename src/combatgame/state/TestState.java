@@ -10,10 +10,10 @@ public class TestState extends State {
 
 	int width = 96;
 	int height = 96;
-	int[][] map = {{1, 0, 1, 0, 1},
-				   {0, 1, 0, 1, 0},
-				   {1, 0, 1, 0, 1},
-				   {0, 1, 0, 1, 0}};
+	int[][] map = {{1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+				   {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
+				   {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+				   {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}};
 	Paint paint;
 	
 	public TestState(StateManager stateManager) {
