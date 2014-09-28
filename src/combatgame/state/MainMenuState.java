@@ -11,7 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-public class MainMenuState extends State{
+public class MainMenuState extends State {
 
 	static final int V_BUTTON_MARGIN = 10;
 	
@@ -23,11 +23,8 @@ public class MainMenuState extends State{
 	int aboutButtonX, aboutButtonY;
 	int exitButtonX, exitButtonY;
 	
-	StateManager stateManager;
-	
 	public MainMenuState(StateManager stateManager) {
 		super(stateManager);
-		this.stateManager = stateManager;
 		this.stateManager.shouldScale(true);
 		AssetManager am = stateManager.getAssetManager();
 		//load main menu assets
@@ -55,10 +52,12 @@ public class MainMenuState extends State{
 				if(Util.isInBounds(events.get(i), startButtonX, startButtonY, startButton.getWidth(), startButton.getHeight())) {
 					Log.i("combatgame", "start button pressed");
 					//bring up the next screen, whether that's the connection screen or straight to the game screen
+					stateManager.setState(new TestState(stateManager));
 				}
 				else if(Util.isInBounds(events.get(i), aboutButtonX, aboutButtonY, aboutButton.getWidth(), aboutButton.getHeight())) {
 					Log.i("combatgame", "about button pressed");
 					//spash screen shamelessly promoting the hard work we've all put in
+					stateManager.setState(new AboutState(stateManager));
 				}
 				else if(Util.isInBounds(events.get(i), exitButtonX, exitButtonY, exitButton.getWidth(), exitButton.getHeight())) {
 					Log.i("combatgame", "exit button pressed");

@@ -36,6 +36,10 @@ public class Game extends Activity implements StateManager {
 	public static final int G_WIDTH = 1280;
 	public static final int G_HEIGHT = 720;
 	
+	//actual width and height of phone
+	public static int P_WIDTH;
+	public static int P_HEIGHT;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,7 +53,8 @@ public class Game extends Activity implements StateManager {
         Point size = new Point();
         display.getSize(size);
         
-        //the optimal width and height
+        P_WIDTH = size.x;
+        P_HEIGHT = size.y;
         Log.i("combatgame", ""+size.x);
         Log.i("combatgame", ""+size.y);
         
@@ -106,6 +111,12 @@ public class Game extends Activity implements StateManager {
 	@Override
 	public State getInitialState() {
 		return new MainMenuState(this);
+	}
+	
+	//override the back button event so the app doesn't close when the user hits the back key
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
 	}
 	
 	@Override
