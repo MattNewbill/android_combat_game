@@ -12,20 +12,16 @@ import android.graphics.Color;
 import android.util.Log;
 import android.content.res.AssetManager;
 
-public class TestState extends State {
-
+public class GameState extends State {
+	protected Map map;
 	TouchEvent previousEvent; //used to calculate which direction we are scrolling
 	public static final int MAX_OUT_OF_BOUNDS = 100; //max distance you can scroll past the edge of the map
 	public static final int SCROLL_DISTANCE = 5; //how far we scroll due to a single touch event
 	int mapOffsetX = 0, mapOffsetY = 0;
-	int mapWidth, mapHeight;
-	int tileWidth = 96;
-	int tileHeight = 96;
-	int[][] map;
 	
 	Paint paint;
 	
-	public TestState(StateManager stateManager) {
+	public GameState(StateManager stateManager) {
 		super(stateManager);
 		this.stateManager.shouldScale(false);
 		
@@ -33,7 +29,8 @@ public class TestState extends State {
 		
 		//load assets
 		AssetManager am = this.stateManager.getAssetManager();
-		Map map = new Map (am, "maps/test_map.txt");
+		map = new Map (am, "maps/test_map.txt");
+		//initializeGame();
 		
 	}
 
@@ -74,34 +71,34 @@ public class TestState extends State {
 		if(mapOffsetX < -MAX_OUT_OF_BOUNDS) {
 			mapOffsetX = -MAX_OUT_OF_BOUNDS;
 		}
-		else if(mapOffsetX > ((mapWidth * tileWidth) + MAX_OUT_OF_BOUNDS) - Game.P_WIDTH) {
-			mapOffsetX = ((mapWidth * tileWidth) + MAX_OUT_OF_BOUNDS) - Game.P_WIDTH;
+		else if(mapOffsetX > ((map.getNum_horizontal_tiles() * map.getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.P_WIDTH) {
+			mapOffsetX = ((map.getNum_horizontal_tiles() * map.getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.P_WIDTH;
 		}
 		if(mapOffsetY < -MAX_OUT_OF_BOUNDS) {
 			mapOffsetY = -MAX_OUT_OF_BOUNDS;
 		}
-		else if(mapOffsetY > ((mapHeight * tileHeight) + MAX_OUT_OF_BOUNDS) - Game.P_HEIGHT) {
-			mapOffsetY = ((mapHeight * tileHeight) + MAX_OUT_OF_BOUNDS) - Game.P_HEIGHT;
+		else if(mapOffsetY > ((map.getNum_vertical_tiles() * map.getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.P_HEIGHT) {
+			mapOffsetY = ((map.getNum_vertical_tiles() * map.getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.P_HEIGHT;
 		}
 	}
 
 	@Override
 	public void render(Graphics2D g, float delta) {
-		for(int row = 0; row < mapHeight; row++) {
-			for(int col = 0; col < mapWidth; col++) {
-				if(map[row][col] == 0) {
+		for(int row = 0; row < map.getNum_vertical_tiles(); row++) {
+			for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
+				if(map.getFeature(row, col) == MapFeature.TERRAIN) {
 					//normal terrain
 					paint.setColor(Color.YELLOW);
 				}
-				else if(map[row][col] == 1) {
+				else if(map.getFeature(row, col) == MapFeature.ROCK) {
 					//rock
 					paint.setColor(Color.DKGRAY);
 				}
-				else {
+				else {// == MapFeature.TREE
 					//tree
 					paint.setColor(Color.GREEN);
 				}
-				g.drawRect((col * tileWidth) - mapOffsetX, (row * tileHeight) - mapOffsetY, (col * tileWidth + tileWidth) - mapOffsetX, (row * tileHeight + tileHeight) - mapOffsetY, paint);
+				g.drawRect((col * map.getTileWidthInPx()) - mapOffsetX, (row * map.getTileHeightInPx()) - mapOffsetY, (col * map.getTileWidthInPx() + map.getTileWidthInPx()) - mapOffsetX, (row * map.getTileHeightInPx() + map.getTileHeightInPx()) - mapOffsetY, paint);
 			}
 		}
 	}
