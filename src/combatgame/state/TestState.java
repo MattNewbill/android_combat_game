@@ -1,6 +1,7 @@
 package combatgame.state;
 
 import combatgame.main.*;
+import combatgame.objects.Map;
 import combatgame.graphics.*;
 import combatgame.input.*;
 import java.util.List;
@@ -32,26 +33,7 @@ public class TestState extends State {
 		
 		//load assets
 		AssetManager am = this.stateManager.getAssetManager();
-		try {
-			//read in map
-			BufferedReader reader = new BufferedReader(new InputStreamReader((am.open("maps/test_map.txt"))));
-			
-			//first line contains dimensions for map
-			String[] dimensions = reader.readLine().split(" ");
-			mapWidth = Integer.parseInt(dimensions[0]);
-			mapHeight = Integer.parseInt(dimensions[1]);
-			
-			//parse map into tiles
-			map = new int[mapHeight][mapWidth];
-			for(int row = 0; row < mapHeight; row++) {
-				String[] tiles = reader.readLine().split(" ");
-				for(int col = 0; col < mapWidth; col++) {
-					map[row][col] = Integer.parseInt(tiles[col]);
-				}
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		Map map = new Map (am, "maps/test_map.txt");
 		
 	}
 
