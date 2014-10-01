@@ -44,8 +44,8 @@ public abstract class Unit {
 			this.isDead=true;
 	}
 	
-	public void heal(int d) {
-		this.health += d;
+	public void heal(int h) {
+		this.health += h;
 		
 		if(health>100)
 			this.health=100;
