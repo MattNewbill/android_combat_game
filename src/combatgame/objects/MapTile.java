@@ -13,5 +13,15 @@ public class MapTile {
 		unit = null;
 		hasUnit = false;
 	}
+	
+	public void setUnit(Unit U) {
+		hasUnit = true;
+		this.unit = U;
+	}
+	
+	public void clearUnit() {
+		hasUnit = false;
+		this.unit = null;
+	}
 
 }
