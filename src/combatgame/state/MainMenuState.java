@@ -61,7 +61,7 @@ public class MainMenuState extends State {
 		if(startButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "start button pressed");
 			//bring up the next screen, whether that's the connection screen or straight to the game screen
-			stateManager.setState(new TestState(stateManager));
+			stateManager.setState(new GameState(stateManager));
 		}
 		else if(aboutButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "about button pressed");
