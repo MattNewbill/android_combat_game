@@ -2,6 +2,7 @@ package combatgame.state;
 
 import combatgame.main.*;
 import combatgame.objects.Map;
+import combatgame.objects.MapFeature;
 import combatgame.graphics.*;
 import combatgame.input.*;
 import java.util.List;
@@ -31,7 +32,6 @@ public class GameState extends State {
 		AssetManager am = this.stateManager.getAssetManager();
 		map = new Map (am, "maps/test_map.txt");
 		//initializeGame();
-		
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class GameState extends State {
 					//normal terrain
 					paint.setColor(Color.YELLOW);
 				}
-				else if(map.getFeature(row, col) == MapFeature.ROCK) {
+				else if(map.getFeature(row, col) == MapFeature.HEDGEHOG) {
 					//rock
 					paint.setColor(Color.DKGRAY);
 				}

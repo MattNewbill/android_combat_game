@@ -4,12 +4,12 @@ package combatgame.objects;
  * Individual tile of Map, contains properties to determine game flow
  */
 public class MapTile {
-	private MapFeature	spaceType;
+	private MapFeature	feature;
 	private boolean hasUnit;
 	private Unit unit;
 	
 	public MapTile (int mapFeature_int ) {
-		spaceType = new MapFeature (mapFeature_int);
+		feature = new MapFeature (mapFeature_int);
 		unit = null;
 		hasUnit = false;
 	}
@@ -22,6 +22,10 @@ public class MapTile {
 	public void clearUnit() {
 		hasUnit = false;
 		this.unit = null;
+	}
+	
+	public int getFeatureType() {
+		return feature.getFeatureType();
 	}
 
 }

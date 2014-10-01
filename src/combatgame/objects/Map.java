@@ -27,7 +27,7 @@ public class Map {
 			num_vertical_tiles = Integer.parseInt(dimensions[1]);
 			
 			//parse map into tiles
-			board = new MapTile[num_horizontal_tiles][num_horizontal_tiles];
+			board = new MapTile[num_vertical_tiles][num_horizontal_tiles];
 			for(int row = 0; row < num_vertical_tiles; row++) {
 				String[] tiles = reader.readLine().split(" ");
 				for(int col = 0; col < num_horizontal_tiles; col++) {
