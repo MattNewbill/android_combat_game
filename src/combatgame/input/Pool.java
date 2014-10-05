@@ -3,6 +3,10 @@ package combatgame.input;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * **HAPPY**
+ */
+
 public class Pool<T> {
 	
 	public interface PoolObjectFactory<T> {

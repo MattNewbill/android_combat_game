@@ -2,6 +2,10 @@ package combatgame.util;
 
 import combatgame.input.*;
 
+/**
+ * **HAPPY**
+ */
+
 public class Util {
 
 	private Util() {}

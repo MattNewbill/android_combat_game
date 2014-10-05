@@ -12,6 +12,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+/**
+ * **HAPPY**
+ */
+
 public class MainMenuState extends State {
 
 	static final int V_BUTTON_MARGIN = 10;
@@ -23,10 +27,11 @@ public class MainMenuState extends State {
 	public MainMenuState(StateManager stateManager) {
 		super(stateManager);
 		this.stateManager.shouldScale(true);
+		
 		AssetManager am = stateManager.getAssetManager();
-		//load main menu assets
+		
 		try {
-			//load images and determine button coordinates
+			//load images
 			Bitmap startButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/start_button_original.png"));
 			Bitmap aboutButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/about_button_original.png"));
 			Bitmap exitButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/exit_button_original.png"));
@@ -35,6 +40,7 @@ public class MainMenuState extends State {
 			Bitmap aboutButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/about_button_original_armed.png"));
 			Bitmap exitButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/exit_button_original_armed.png"));
 			
+			//determine button coordinates
 			int startButtonX = (Game.G_WIDTH / 2) - startButtonDisarmed.getWidth() / 2;
 			int startButtonY = (int) (Game.G_HEIGHT / 2 - (startButtonDisarmed.getHeight() * 1.5));
 			int aboutButtonX = (Game.G_WIDTH / 2) - aboutButtonDisarmed.getWidth() / 2;
@@ -74,27 +80,6 @@ public class MainMenuState extends State {
 			//not sure if this is considered bad form or not....guess we'll find out
 			System.exit(0);
 		}
-		
-		/*for(int i = 0; i < events.size(); i++) {
-			if(events.get(i).type == TouchEvent.TOUCH_UP) {
-				if(Util.isInBounds(events.get(i), startButtonX, startButtonY, startButton.getWidth(), startButton.getHeight())) {
-					Log.i("combatgame", "start button pressed");
-					//bring up the next screen, whether that's the connection screen or straight to the game screen
-					stateManager.setState(new TestState(stateManager));
-				}
-				else if(Util.isInBounds(events.get(i), aboutButtonX, aboutButtonY, aboutButton.getWidth(), aboutButton.getHeight())) {
-					Log.i("combatgame", "about button pressed");
-					//spash screen shamelessly promoting the hard work we've all put in
-					stateManager.setState(new AboutState(stateManager));
-				}
-				else if(Util.isInBounds(events.get(i), exitButtonX, exitButtonY, exitButton.getWidth(), exitButton.getHeight())) {
-					Log.i("combatgame", "exit button pressed");
-					//exit the app
-					//not sure if this is considered bad form or not....guess we'll find out
-					System.exit(0);
-				}
-			}
-		}*/
 	}
 
 	@Override
@@ -121,9 +106,12 @@ public class MainMenuState extends State {
 
 	@Override
 	public void dispose() {
-		startButton.recycle();
-		aboutButton.recycle();
-		exitButton.recycle();
+		if(startButton != null)
+			startButton.recycle();
+		if(aboutButton != null)
+			aboutButton.recycle();
+		if(exitButton != null)
+			exitButton.recycle();
 	}
 
 }

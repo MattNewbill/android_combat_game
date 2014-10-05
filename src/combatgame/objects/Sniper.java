@@ -1,17 +1,22 @@
 package combatgame.objects;
 
-import android.graphics.Point;
+import combatgame.assets.*;
+
+/**
+ * **NOT HAPPY**
+ * TODO: Change single sprite to array of sprites
+ */
 
 public class Sniper extends Unit {
-	public Sniper (int player_id, Point xyCoordinate) {
+	public Sniper (int player_id) {
 		this.player_id = player_id;
-		this.xyCoordinate = xyCoordinate;
 		this.shootingCost = 3;
 		this.movementCost = 1;
 		this.visionRadius = 5;
 		this.damage = 50;
 		this.health = 100;
-		isDead=false;
+		this.isDead=false;
+		this.sprite = GameplayAssets.sniperIcon; //TODO
 	}
 	
 }
