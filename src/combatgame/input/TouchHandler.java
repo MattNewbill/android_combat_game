@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.util.Log;
 
+/**
+ * **HAPPY**
+ */
+
 public class TouchHandler implements OnTouchListener {
 
 	public static final int MAX_POOL_SIZE = 100;
@@ -59,8 +63,6 @@ public class TouchHandler implements OnTouchListener {
 					isTouched = false;
 					break;
 			}
-			//Log.i("combatgame", "before x: " +event.getX());
-			//Log.i("combatgame", "before y: " +event.getY());
 			if(game.isScaled()) {
 				touchEvent.x = touchX = (int)(event.getX() * scaleX);
 				touchEvent.y = touchY = (int)(event.getY() * scaleY);
@@ -69,8 +71,6 @@ public class TouchHandler implements OnTouchListener {
 				touchEvent.x = touchX = (int)event.getX();
 				touchEvent.y = touchY = (int)event.getY();
 			}
-			//Log.i("combatgame", "after x: " +touchEvent.x);
-			//Log.i("combatgame", "after y: " +touchEvent.y);
 			touchEventsBuffer.add(touchEvent);
 		}
 		return true;

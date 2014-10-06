@@ -1,5 +1,9 @@
 package combatgame.objects;
 
+/**
+ * **HAPPY**
+ */
+
 /*
  * Individual tile of Map, contains properties to determine game flow
  */

@@ -11,6 +11,10 @@ import android.graphics.Paint;
 import android.graphics.Color;
 import android.util.Log;
 
+/**
+ * **HAPPY**
+ */
+
 public class RenderView extends SurfaceView implements Runnable {
 
 	Game game;
@@ -39,8 +43,7 @@ public class RenderView extends SurfaceView implements Runnable {
 				continue;
 			}
 			
-			drawingCanvas.drawRGB(0, 0, 0);
-			//drawingCanvas.drawRGB(0, 0, 0); //clear the screen
+			drawingCanvas.drawRGB(0, 0, 0); //clear the screen
 			
 			long delta = (System.nanoTime() - startTime) / 1000000;
 			startTime = System.nanoTime();
@@ -56,6 +59,7 @@ public class RenderView extends SurfaceView implements Runnable {
 				canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null);
 			holder.unlockCanvasAndPost(canvas);
 
+			//fps stuff
 			long elapsedTime = (System.nanoTime() - startTime) / 1000000;
 			//Log.i("combatgame", ""+(1000/elapsedTime));
 			

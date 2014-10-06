@@ -18,6 +18,11 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Point;
 import android.util.Log;
 
+/**
+ * **NOT HAPPY**
+ * TODO: Find a way to propogate back button presses to each state in a clean way
+ */
+
 public class Game extends Activity implements StateManager {
 
 	State currentState;
@@ -113,7 +118,7 @@ public class Game extends Activity implements StateManager {
 		return new MainMenuState(this);
 	}
 	
-	//override the back button event so the app doesn't close when the user hits the back key
+	//TODO
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();

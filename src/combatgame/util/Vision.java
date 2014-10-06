@@ -6,6 +6,10 @@ package combatgame.util;
 import java.util.*;
 import android.graphics.Point;
 
+/**
+ * **HAPPY**
+ */
+
 public class Vision
 {
 	private Point loc;

@@ -9,6 +9,10 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.util.Log;
 
+/**
+ * **HAPPY**
+ */
+
 public class Button {
 
 	public static final int DISARMED = 0;
@@ -25,11 +29,10 @@ public class Button {
 		if(disarmedImage == null)
 			throw new IllegalArgumentException("disarmed image cannot be null");
 		//if the armed image is null then we use the disarmed image instead
-		if(armedImage == null) 
+		if(armedImage == null)
 			this.armedImage = disarmedImage;
 		else
 			this.armedImage = armedImage;
-		this.armedImage = armedImage;
 		this.disarmedImage = disarmedImage;
 		this.x = x;
 		this.y = y;
@@ -71,6 +74,14 @@ public class Button {
 			g.drawBitmap(armedImage, x, y, null);
 		else
 			g.drawBitmap(disarmedImage, x, y, null);
+	}
+	
+	public void disarm() {
+		state = DISARMED;
+	}
+	
+	public void arm() {
+		state = ARMED;
 	}
 	
 	public void recycle() {

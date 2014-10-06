@@ -3,6 +3,10 @@ package combatgame.graphics;
 import android.graphics.Paint;
 import android.graphics.Bitmap;
 
+/**
+ * **HAPPY**
+ */
+
 public interface Graphics2D {
 
 	
