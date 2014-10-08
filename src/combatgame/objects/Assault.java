@@ -4,8 +4,7 @@ import combatgame.assets.*;
 import android.graphics.Point;
 
 /**
- * **NOT HAPPY**
- * TODO: Change single sprite to array of sprites
+ * **HAPPY**
  */
 
 public class Assault extends Unit {
@@ -17,7 +16,7 @@ public class Assault extends Unit {
 		this.damage = 25;
 		this.health = 100;
 		this.isDead=false;
-		this.sprite = GameplayAssets.assaultIcon; //TODO
+		this.sprites = GameplayAssets.assaultIcons;
 	}
 	
 }

@@ -45,6 +45,7 @@ public class Game extends Activity implements StateManager {
 	public static int P_WIDTH;
 	public static int P_HEIGHT;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,15 +54,20 @@ public class Game extends Activity implements StateManager {
                                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
         
-        //this is only available >= API 13
         Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        
-        P_WIDTH = size.x;
-        P_HEIGHT = size.y;
-        Log.i("combatgame", ""+size.x);
-        Log.i("combatgame", ""+size.y);
+        if(android.os.Build.VERSION.SDK_INT >= 13) {
+             Point size = new Point();
+             display.getSize(size);
+             P_WIDTH = size.x;
+             P_HEIGHT = size.y;
+        }
+        else {
+        	P_WIDTH = display.getWidth();
+        	P_HEIGHT = display.getHeight();
+        }
+       
+        Log.i("combatgame", ""+P_WIDTH);
+        Log.i("combatgame", ""+P_HEIGHT);
         
         //create the frame buffer that we draw everything to
         //we create the sprites and do all updates/draws relative to these coordinates
@@ -71,8 +77,8 @@ public class Game extends Activity implements StateManager {
         
         //add scaling factor here so we can translate the relative coordinates of our
         //framebuffer to the actual target phone's screen coordinates
-        double scaleX = G_WIDTH / (double)size.x;
-        double scaleY = G_HEIGHT / (double)size.y;
+        double scaleX = G_WIDTH / (double)P_WIDTH;
+        double scaleY = G_HEIGHT / (double)P_HEIGHT;
         
         Log.i("combatgame", "scale x: " +scaleX);
         Log.i("combatgame", "scale y: " +scaleY);

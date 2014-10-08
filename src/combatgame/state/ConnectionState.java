@@ -59,13 +59,16 @@ public class ConnectionState extends State {
 		events = hotSeatButton.update(events);
 		
 		if(internetButton.state == Button.ACTIVATED) {
-			//set up the internet interface
+			//new game over the internet
+			stateManager.setState(new InternetGameState(stateManager));
 		}
 		else if(bluetoothButton.state == Button.ACTIVATED){
-			//set up the internet interface
+			//new game over bluetooth
+			stateManager.setState(new BluetoothGameState(stateManager));
 		}
 		else if(hotSeatButton.state == Button.ACTIVATED) {
-			stateManager.setState(new GameState(stateManager));
+			//new game with two players on one phone
+			stateManager.setState(new HotSeatState(stateManager));
 		}
 		
 	}

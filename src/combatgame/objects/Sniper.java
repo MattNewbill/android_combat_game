@@ -3,8 +3,7 @@ package combatgame.objects;
 import combatgame.assets.*;
 
 /**
- * **NOT HAPPY**
- * TODO: Change single sprite to array of sprites
+ * **HAPPY**
  */
 
 public class Sniper extends Unit {
@@ -16,7 +15,7 @@ public class Sniper extends Unit {
 		this.damage = 50;
 		this.health = 100;
 		this.isDead=false;
-		this.sprite = GameplayAssets.sniperIcon; //TODO
+		this.sprites = GameplayAssets.sniperIcons;
 	}
 	
 }

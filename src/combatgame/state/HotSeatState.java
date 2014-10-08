@@ -12,12 +12,11 @@ import android.content.res.AssetManager;
 
 /**
  * **NOT HAPPY**
- * TODO: Potentially change the way "switching turns" is handled...Get feedback on how that should be implemented.  
- * Playing on the same phone vs playing on two different phones will also play a part in how this should be structured...
+ * TODO: Potentially change the way "switching turns" is handled...Get feedback on how that should be implemented.
  * Change how players are created, we might need to change the constructors depending on how much info we have when the game first starts
  */
 
-public class GameState extends State {
+public class HotSeatState extends State {
 	
 	Map map;
 	Player player1, player2; //TODO
@@ -25,7 +24,7 @@ public class GameState extends State {
 	
 	Paint paint;
 	
-	public GameState(StateManager stateManager) {
+	public HotSeatState(StateManager stateManager) {
 		super(stateManager);
 		this.stateManager.shouldScale(false);
 		
@@ -81,7 +80,7 @@ public class GameState extends State {
 
 	@Override
 	public void dispose() {
-		
+		GameplayAssets.dispose();
 	}
 
 }

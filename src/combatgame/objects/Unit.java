@@ -4,9 +4,7 @@ import android.graphics.Point;
 import android.graphics.Bitmap;
 
 /**
- * **NOT HAPPY**
- * TODO: Need four sprites to represent each direction the unit can be facing,
- * currently just using one sprite.
+ * **HAPPY**
  */
 
 public abstract class Unit {
@@ -19,8 +17,9 @@ public abstract class Unit {
 	protected int health;
 	protected boolean isDead;
 	protected int directionFacing;
-	protected Bitmap sprite; //TODO
+	protected Bitmap[] sprites;
 	public static final int POINTS_PER_TURN = 5;
+	
 	public static final int NORTH = 0;
 	public static final int SOUTH = 1;
 	public static final int EAST = 2;
@@ -75,9 +74,8 @@ public abstract class Unit {
 		directionFacing = direction;
 	}
 	
-	//TODO
 	public Bitmap getSprite() {
-		return this.sprite;
+		return this.sprites[directionFacing];
 	}
 	
 }

@@ -21,7 +21,7 @@ import android.graphics.Point;
  */
 public class Player {
 
-	private GameState state;
+	private HotSeatState state;
 	private int playerId;
 	
 	//gameplay state
@@ -38,7 +38,7 @@ public class Player {
 	//determine presses vs scrolls
 	private TouchEvent previousEvent;
 	
-	public Player(GameState state, int numUnits, Map map) {
+	public Player(HotSeatState state, int numUnits, Map map) {
 		this.state = state;
 		playerId = (int)System.currentTimeMillis(); //id generated is for test purposes, eventually it will be better...
 		
