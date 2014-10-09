@@ -8,7 +8,9 @@ import android.graphics.Bitmap;
  */
 
 public abstract class Unit {
-	protected int player_id;
+	protected String name;
+	protected int player_id = -1;
+	protected int unit_id = -1;
 	protected Point xyCoordinate;
 	protected int shootingCost;
 	protected int movementCost;
@@ -25,8 +27,14 @@ public abstract class Unit {
 	public static final int EAST = 2;
 	public static final int WEST = 3;
 	
+	public String getName() {
+		return name;	}
+	
 	public int getPlayer_id() {
 		return this.player_id;	}
+	
+	public int getUnit_id() {
+		return this.unit_id;	}
 	
 	public void setXYCoordinate(Point xyCoordinate) {
 		this.xyCoordinate = xyCoordinate;	}

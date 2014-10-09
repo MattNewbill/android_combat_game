@@ -18,6 +18,10 @@ import android.util.Log;
 
 public class Map {
 	
+	//players
+	Player player1, player2;
+	Player thisPlayersTurn;
+	
 	//map data
 	protected int tileWidthInPx = 96;
 	protected int tileHeightInPx = 96;
@@ -28,7 +32,7 @@ public class Map {
 	
 	//scrolling data
 	TouchEvent previousEvent; //used to calculate which direction we are scrolling
-	public static final int MAX_OUT_OF_BOUNDS = 100; //max distance you can scroll past the edge of the map
+	public static final int MAX_OUT_OF_BOUNDS = 125; //max distance you can scroll past the edge of the map
 	public static final int SCROLL_DISTANCE = 10; //how far we scroll due to a single touch event
 	public static final int FLING_DISTANCE = 70; //how far we scroll due to a single "fling" event
 	public static final int FLING_THRESHOLD = 17; //the distance apart to scroll events have to be to determine a "fling"
@@ -36,6 +40,11 @@ public class Map {
 	
 	
 	public Map (AssetManager am, String filePath) {
+		//create players
+		player1 = new Player(this, 3);
+		player2 = new Player(this, 3);
+		thisPlayersTurn = player1;
+		
 		try {
 			//read in map
 			BufferedReader reader = new BufferedReader(new InputStreamReader((am.open("maps/test_map.txt"))));
@@ -58,11 +67,28 @@ public class Map {
 		}
 	}
 	
+	public void switchTurn() {
+		if(thisPlayersTurn == player1)
+			thisPlayersTurn = player2;
+		else
+			thisPlayersTurn = player1;
+	}
+	
+	public void update(List<TouchEvent> events) {
+		
+		//update current player's turn
+		thisPlayersTurn.update(events);
+		
+		//update map scroll
+		updateMap(events);
+	}
+	
 	/**
 	 * Updates the scroll offset for the map depending on the user input
 	 * @param events List of TouchEvents to determine scroll distance
 	 */
-	public void update(List<TouchEvent> events) {
+	private void updateMap(List<TouchEvent> events) {
+		//update scroll data
 		for(int i = 0; i < events.size(); i++) {
 			if(events.get(i).type == TouchEvent.TOUCH_DRAGGED) {
 				//check for map scrolling
@@ -131,6 +157,7 @@ public class Map {
 	 * @param paint Paint object to use for colors
 	 */
 	public void render(Graphics2D g, Paint paint) {
+		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
 				if(getFeature(row, col) == MapFeature.TERRAIN) {
@@ -148,6 +175,12 @@ public class Map {
 				g.drawRect((col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, (col * tileWidthInPx + tileWidthInPx) - mapOffsetX, (row * tileHeightInPx + tileHeightInPx) - mapOffsetY, paint);
 			}
 		}
+		
+		//render current player
+		thisPlayersTurn.render(g);
+		
+		//draw player id text top, center of screen
+		g.drawText(""+thisPlayersTurn.getId(), Game.P_WIDTH / 2, 20, new Paint());
 	}
 	
 	/**
@@ -161,6 +194,13 @@ public class Map {
 		if(x < 0 || x > num_horizontal_tiles || y < 0 || y > num_vertical_tiles)
 			return null;
 		return new Point((int)x, (int)y);
+	}
+	
+	public void dispose() {
+		if(player1 != null)
+			player1.dispose();
+		if(player2 != null)
+			player2.dispose();
 	}
 	
 	public int getTileWidthInPx() {
@@ -201,17 +241,6 @@ public class Map {
 	
 	public int getMapOffsetY() {
 		return mapOffsetY;
-	}
-
-	/***
-	 * Returns true if map  was initialized correctly
-	 * @param mapId
-	 * @return
-	 */
-	public boolean initializeMap (int mapId) {
-		//set map based off mapId
-		
-		return true;
 	}
 
 	public int getFeature(int row, int col) {

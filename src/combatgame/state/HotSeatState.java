@@ -11,16 +11,12 @@ import android.util.Log;
 import android.content.res.AssetManager;
 
 /**
- * **NOT HAPPY**
- * TODO: Potentially change the way "switching turns" is handled...Get feedback on how that should be implemented.
- * Change how players are created, we might need to change the constructors depending on how much info we have when the game first starts
+ * **HAPPY**
  */
 
 public class HotSeatState extends State {
 	
 	Map map;
-	Player player1, player2; //TODO
-	Player thisPlayersTurn; //TODO
 	
 	Paint paint;
 	
@@ -30,42 +26,24 @@ public class HotSeatState extends State {
 		
 		paint = new Paint();
 		
-		//create map
 		AssetManager am = this.stateManager.getAssetManager();
-		map = new Map (am, "maps/test_map.txt");
 		
 		//load all gameplay assets
 		GameplayAssets.loadGameplayAssets(am);
 		
-		//create players
-		player1 = new Player(this, 3, map); //TODO
-		player2 = new Player(this, 3, map); //TODO
-		thisPlayersTurn = player1; //TODO
-		
-		//initializeGame();
-	}
-	
-	//TODO
-	public void switchTurn() {
-		if(thisPlayersTurn == player1)
-			thisPlayersTurn = player2;
-		else
-			thisPlayersTurn = player1;
+		//create map
+		map = new Map (am, "maps/test_map.txt");
 	}
 
 	@Override
 	public void update(float delta) {
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
 		map.update(events);
-		thisPlayersTurn.update(events);
 	}
 
 	@Override
 	public void render(Graphics2D g, float delta) {
 		map.render(g, paint);
-		player1.render(g);
-		player2.render(g);
-		g.drawText(""+thisPlayersTurn.getId(), Game.P_WIDTH / 2, 20, new Paint());
 	}
 
 	@Override
@@ -81,6 +59,8 @@ public class HotSeatState extends State {
 	@Override
 	public void dispose() {
 		GameplayAssets.dispose();
+		if(map != null)
+			map.dispose();
 	}
 
 }

@@ -1,6 +1,12 @@
 package combatgame.util;
 
 import combatgame.input.*;
+import java.util.Random;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 
 /**
  * **HAPPY**
@@ -8,6 +14,8 @@ import combatgame.input.*;
 
 public class Util {
 
+	private static Random rand = new Random(System.currentTimeMillis());
+	
 	private Util() {}
 	
 	/**
@@ -30,4 +38,27 @@ public class Util {
 		}
 	}
 	
+	/**
+	 * Converts a bitmap to a grayscaled version
+	 * @param original Bitmap to be grayscaled
+	 * @return New grayscaled Bitmap
+	 */
+	public static Bitmap toGrayscale(Bitmap original) {
+		int width = original.getWidth();
+		int height = original.getHeight();
+		
+		Bitmap grayscale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+		Canvas c = new Canvas(grayscale);
+		Paint paint = new Paint();
+		ColorMatrix matrix = new ColorMatrix();
+		matrix.setSaturation(0);
+		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+		paint.setColorFilter(filter);
+		c.drawBitmap(original, 0, 0, paint);
+		return grayscale;
+	}
+	
+	public static int getRand() {
+		return rand.nextInt();
+	}
 }

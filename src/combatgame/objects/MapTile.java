@@ -10,22 +10,26 @@ package combatgame.objects;
 public class MapTile {
 	private MapFeature	feature;
 	private boolean hasUnit;
-	private Unit unit;
+	private int player_id;
+	private int unit_id;
 	
 	public MapTile (int mapFeature_int ) {
 		feature = new MapFeature (mapFeature_int);
-		unit = null;
+		player_id = -1;
+		unit_id = -1;
 		hasUnit = false;
 	}
 	
-	public void setUnit(Unit U) {
+	public void setUnit(int unit_id, int player_id) {
 		hasUnit = true;
-		this.unit = U;
+		this.unit_id = unit_id;
+		this.player_id = player_id;
 	}
 	
 	public void clearUnit() {
 		hasUnit = false;
-		this.unit = null;
+		this.unit_id = -1;
+		this.player_id = -1;
 	}
 	
 	public int getFeatureType() {

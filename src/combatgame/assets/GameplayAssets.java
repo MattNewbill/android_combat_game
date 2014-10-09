@@ -15,6 +15,10 @@ public class GameplayAssets {
 	public static Bitmap[] assaultIcons = new Bitmap[4];
 	
 	//hud icons
+	public static Bitmap unitInfoIcon;
+	public static Bitmap moveIcon;
+	public static Bitmap abilityIcon;
+	public static Bitmap deselectIcon;
 	public static Bitmap endTurnIcon;
 	
 	private GameplayAssets(){}
@@ -24,7 +28,11 @@ public class GameplayAssets {
 			sniperIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_resized.png"));
 			assaultIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_resized.png"));
 			
-			endTurnIcon = BitmapFactory.decodeStream(am.open("sprites/hud/end_turn_original.png"));
+			unitInfoIcon = BitmapFactory.decodeStream(am.open("sprites/hud/test.png"));
+			moveIcon = BitmapFactory.decodeStream(am.open("sprites/hud/move_icon.png"));
+			abilityIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_icon.png"));
+			deselectIcon = BitmapFactory.decodeStream(am.open("sprites/hud/deselect_icon.png"));
+			endTurnIcon = BitmapFactory.decodeStream(am.open("sprites/hud/end_turn_icon.png"));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
