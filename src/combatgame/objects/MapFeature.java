@@ -51,4 +51,18 @@ public class MapFeature {
 		return featureType;
 	}
 	
+	public boolean isPassable()
+	{
+		return isPassable;
+	}
+	
+	public boolean isSeethrough()
+	{
+		return isSeethrough;
+	}
+	
+	public boolean isSlowing()
+	{
+		return isSlowing;
+	}
 }

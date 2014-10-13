@@ -160,11 +160,11 @@ public class Map {
 		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
-				if(getFeature(row, col) == MapFeature.TERRAIN) {
+				if(getFeatureType(row, col) == MapFeature.TERRAIN) {
 					//normal terrain
 					paint.setColor(Color.YELLOW);
 				}
-				else if(getFeature(row, col) == MapFeature.HEDGEHOG) {
+				else if(getFeatureType(row, col) == MapFeature.HEDGEHOG) {
 					//rock
 					paint.setColor(Color.DKGRAY);
 				}
@@ -243,8 +243,16 @@ public class Map {
 		return mapOffsetY;
 	}
 
-	public int getFeature(int row, int col) {
+	public int getFeatureType(int row, int col) {
 		return board[row][col].getFeatureType();
+		}
+	
+	public MapFeature getFeature(int row, int col) {
+		return board[row][col].getFeature();
+	}
+	
+	public MapTile getTile(int row, int col) {
+		return board[row][col];
 	}
 
 }
