@@ -20,6 +20,7 @@ public class Assault extends Unit {
 		this.health = 100;
 		this.isDead=false;
 		this.sprites = GameplayAssets.assaultIcons;
+		this.maxHealth = 100;
 	}
 	
 }

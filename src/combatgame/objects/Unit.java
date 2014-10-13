@@ -21,6 +21,7 @@ public abstract class Unit {
 	protected int directionFacing;
 	protected Bitmap[] sprites;
 	protected int pointsLeft;
+	protected int maxHealth;
 	public static final int POINTS_PER_TURN = 5;
 	
 	public static final int FACING_UP = 0;
@@ -45,6 +46,14 @@ public abstract class Unit {
 	public Point getXYCoordinate() {
 		return this.xyCoordinate;	}
 	
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+
+	public void setMaxHealth(int maxHealth) {
+		this.maxHealth = maxHealth;
+	}
+
 	public int getShootingCost() {
 		return this.shootingCost;	}
 	

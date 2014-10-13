@@ -106,6 +106,8 @@ public class Player {
 		//--TURN BASED GAME LOGIC--
 		//----------------------------------------
 		
+		if(selectedUnitIndex != -1)
+			unitInfoButton.updateTextInfo(units[selectedUnitIndex]);
 		switch(currentAction) {
 			case SELECTION:
 				selection(events);
@@ -236,7 +238,6 @@ public class Player {
 					selectedUnitIndex = i;
 					isUnitSelected = true;
 					enableButtons();
-					unitInfoButton.updateTextInfo(units[i]);
 					break;
 				}
 			}

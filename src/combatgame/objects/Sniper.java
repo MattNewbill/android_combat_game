@@ -20,6 +20,7 @@ public class Sniper extends Unit {
 		this.health = 100;
 		this.isDead=false;
 		this.sprites = GameplayAssets.sniperIcons;
+		this.maxHealth = 100;
 	}
 	
 }
