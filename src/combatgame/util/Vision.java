@@ -12,31 +12,28 @@ import android.graphics.Point;
 
 public class Vision
 {
-	private Point loc;
-	private int view;
-	private int width;
-	private int height;
-	private char direction;
+	private static Point loc;
+	private static int view;
+	private static int width;
+	private static int height;
+	private static char direction;
 
-	private int px, nx, py, ny;
-	private Point[] ans=new Point[0];
+	private static int px, nx, py, ny;
+	private static Point[] ans=new Point[0];
 
-	public Vision( Point locIn, int viewIn, int widthIn, int heightIn, char directionIn)
+	public static Point[] getVision( Point locIn, int viewIn, int widthIn, int heightIn, char directionIn)
 	{
 		loc= new Point(locIn.x+1,locIn.y+1);
 		view=viewIn;
 		width=widthIn;
 		height=heightIn;
 		direction=directionIn;
-	}//public vision( Point locIn, int viewIn, int widthIn, int heightIn, char directionIn)
-
-	public Point[] getVision()
-	{
+		
 		work();
 		return ans;
-	}//public Point getVision()
+	}//public vision( Point locIn, int viewIn, int widthIn, int heightIn, char directionIn)
 
-	private void work()
+	private static void work()
 	{
 		limit();
 
@@ -64,7 +61,7 @@ public class Vision
 
 	}//private void work()
 
-	private void limit()
+	private static void limit()
 	{
 		if(direction=='u')
 		{

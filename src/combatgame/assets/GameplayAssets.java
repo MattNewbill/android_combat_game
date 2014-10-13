@@ -21,6 +21,9 @@ public class GameplayAssets {
 	public static Bitmap deselectIcon;
 	public static Bitmap endTurnIcon;
 	
+	//selection overlays
+	public static Bitmap selectionOverlay;
+	
 	private GameplayAssets(){}
 	
 	public static void loadGameplayAssets(AssetManager am) {
@@ -33,6 +36,8 @@ public class GameplayAssets {
 			abilityIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_icon.png"));
 			deselectIcon = BitmapFactory.decodeStream(am.open("sprites/hud/deselect_icon.png"));
 			endTurnIcon = BitmapFactory.decodeStream(am.open("sprites/hud/end_turn_icon.png"));
+			
+			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/selection_overlay.png"));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

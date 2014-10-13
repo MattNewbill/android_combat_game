@@ -32,6 +32,18 @@ public class MapTile {
 		this.player_id = -1;
 	}
 	
+	public boolean hasUnit() {
+		return hasUnit;
+	}
+	
+	public int getPlayer_id() {
+		return player_id;
+	}
+	
+	public int getUnit_id() {
+		return unit_id;
+	}
+	
 	public int getFeatureType() {
 		return feature.getFeatureType();
 	}

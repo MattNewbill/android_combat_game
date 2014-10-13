@@ -23,10 +23,10 @@ public abstract class Unit {
 	protected int pointsLeft;
 	public static final int POINTS_PER_TURN = 5;
 	
-	public static final int NORTH = 0;
-	public static final int SOUTH = 1;
-	public static final int EAST = 2;
-	public static final int WEST = 3;
+	public static final int FACING_UP = 0;
+	public static final int FACING_DOWN = 1;
+	public static final int FACING_LEFT = 2;
+	public static final int FACING_RIGHT = 3;
 	
 	public String getName() {
 		return name;	}
@@ -37,8 +37,10 @@ public abstract class Unit {
 	public int getUnit_id() {
 		return this.unit_id;	}
 	
-	public void setXYCoordinate(Point xyCoordinate) {
-		this.xyCoordinate = xyCoordinate;	}
+	public void setXYCoordinate(Point xyCoordinate, Map map) {
+		this.xyCoordinate = xyCoordinate;
+		map.getTile(xyCoordinate).setUnit(unit_id, player_id);;
+	}
 	
 	public Point getXYCoordinate() {
 		return this.xyCoordinate;	}

@@ -13,7 +13,8 @@ import android.graphics.Point;
 import android.util.Log;
 
 /**
- * **HAPPY**
+ * **NOT HAPPY**
+ * TODO: implement scrollToTile() method
  */
 
 public class Map {
@@ -188,7 +189,7 @@ public class Map {
 	 * @param event The event to be tested with
 	 * @return null if the event is out of bounds and a Point with the coordinates of the tile if it's in bounds
 	 */
-	public Point getTile(TouchEvent event) {
+	public Point getTileTouched(TouchEvent event) {
 		double x = (event.x + mapOffsetX) / (double)tileWidthInPx;
 		double y = (event.y + mapOffsetY) / (double)tileHeightInPx;
 		if(x < 0 || x > num_horizontal_tiles || y < 0 || y > num_vertical_tiles)
@@ -201,6 +202,18 @@ public class Map {
 			player1.dispose();
 		if(player2 != null)
 			player2.dispose();
+	}
+	
+	public MapTile getTile(Point tile) {
+		if(tile.x < 0 || tile.y < 0 ||
+		   tile.x >= num_horizontal_tiles || tile.y >= num_vertical_tiles)
+			return null;
+		return board[tile.y][tile.x];
+	}
+	
+	//TODO scroll the map to the selected tile
+	public void scrollToTile(Point tile) {
+		
 	}
 	
 	public int getTileWidthInPx() {
