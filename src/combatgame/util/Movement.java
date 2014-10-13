@@ -1,11 +1,15 @@
-/// Point[][] result = movement.getMovement(map, location, distance );
+// Point[][] result = movement.getMovement( Map, Unit );
+
 package combatgame.util;
 
 import java.util.*;
 import combatgame.objects.*;
 import combatgame.objects.Map;
-import combatgame.objects.MapFeature;
 import android.graphics.Point;
+
+/**
+ * **HAPPY**
+ */
 
 public class Movement
 {
