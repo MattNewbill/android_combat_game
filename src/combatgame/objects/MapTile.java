@@ -49,13 +49,8 @@ public class MapTile {
 	}
 	
 	public MapFeature getFeature() {
-		//return feature.getFeatureType();
 		return feature;
 	}
 	
-	public boolean hasUnit()
-	{
-		return hasUnit;
-	}
 
 }
