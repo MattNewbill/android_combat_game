@@ -1,14 +1,17 @@
 package combatgame.objects;
 
-import combatgame.util.Util;
-import combatgame.main.*;
-import combatgame.assets.*;
-import combatgame.input.*;
-import combatgame.graphics.*;
-import combatgame.widgets.*;
 import java.util.List;
-import android.util.Log;
+
 import android.graphics.Point;
+import android.util.Log;
+
+import combatgame.assets.GameplayAssets;
+import combatgame.graphics.Graphics2D;
+import combatgame.input.TouchEvent;
+import combatgame.main.Game;
+import combatgame.util.Util;
+import combatgame.widgets.Button;
+import combatgame.widgets.UnitInfoDrawableButton;
 
 /**
  * **NOT HAPPY**
@@ -35,7 +38,7 @@ public class Player {
 	private Map map;
 	
 	//hud icons
-	private Button unitInfoButton;
+	private UnitInfoDrawableButton unitInfoButton;
 	private Button moveButton;
 	private Button abilityButton;
 	private Button deselectButton;
@@ -68,7 +71,7 @@ public class Player {
 		int endTurnButtonY = Game.P_HEIGHT - GameplayAssets.endTurnIcon.getHeight();
 		
 		//create buttons
-		unitInfoButton = new Button(GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
+		unitInfoButton = new UnitInfoDrawableButton(GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
 		moveButton = new Button(GameplayAssets.moveIcon, null, moveButtonX, moveButtonY);
 		abilityButton = new Button(GameplayAssets.abilityIcon, null, abilityButtonX, abilityButtonY);
 		deselectButton = new Button(GameplayAssets.deselectIcon, null, deselectButtonX, deselectButtonY);
@@ -233,6 +236,7 @@ public class Player {
 					selectedUnitIndex = i;
 					isUnitSelected = true;
 					enableButtons();
+					unitInfoButton.updateTextInfo(units[i]);
 					break;
 				}
 			}
@@ -268,6 +272,7 @@ public class Player {
 				//draw the selection overlay if we have this unit selected
 				if(i == selectedUnitIndex)
 					g.drawBitmap(GameplayAssets.selectionOverlay, coordinate.x * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.y * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+				
 				g.drawBitmap(units[i].getSprite(), coordinate.x * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.y * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 			}
 		}
