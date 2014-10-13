@@ -20,6 +20,7 @@ public abstract class Unit {
 	protected boolean isDead;
 	protected int directionFacing;
 	protected Bitmap[] sprites;
+	protected int pointsLeft;
 	public static final int POINTS_PER_TURN = 5;
 	
 	public static final int FACING_UP = 0;
@@ -88,4 +89,18 @@ public abstract class Unit {
 		return this.sprites[directionFacing];
 	}
 	
+	public void resetPoints()
+	{
+		pointsLeft = POINTS_PER_TURN;
+	}
+	
+	public void usePoints( int num )
+	{
+		pointsLeft -= num;
+	}
+	
+	public int getPointsLeft()
+	{
+		return pointsLeft;
+	}
 }

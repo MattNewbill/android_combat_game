@@ -47,5 +47,10 @@ public class MapTile {
 	public int getFeatureType() {
 		return feature.getFeatureType();
 	}
+	
+	public MapFeature getFeature() {
+		return feature;
+	}
+	
 
 }
