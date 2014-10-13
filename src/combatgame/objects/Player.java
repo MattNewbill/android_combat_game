@@ -20,6 +20,12 @@ public class Player {
 
 	private int playerId;
 	
+	//action
+	public static final int SELECTION = 0;
+	public static final int MOVEMENT = 1;
+	public static final int ABILITY = 2;
+	private int currentAction = SELECTION;
+	
 	//gameplay state
 	private boolean isSetupPhase = true;
 	
@@ -70,6 +76,11 @@ public class Player {
 	}
 	
 	public void update(List<TouchEvent> events) {
+		
+		//----------------------------------------
+		//--UPDATE BUTTON STATES--
+		//----------------------------------------
+		
 		//first thing we do is update all the hud buttons so the user can't select stuff through the hud
 		events = unitInfoButton.update(events);
 		events = moveButton.update(events);
@@ -77,24 +88,43 @@ public class Player {
 		events = deselectButton.update(events);
 		events = endTurnButton.update(events);
 		
+		//----------------------------------------
+		//--SET UP PHASE--
+		//----------------------------------------
+		
 		//if we are in the setup phase then only update the setup phase method
 		if(isSetupPhase) {
 			updateSetupPhase(events);
 			return;
 		}
 		
-		//TODO
 		//now that the setup phase is over we have to start implementing the actual game logic
-		//
-		//check what tile is pressed by the user, using the getTile(events)
-		//method will give you the tile that the player pressed (if they in fact pressed a tile)
-		//if that tile has a unit, check if it's ours, if it's ours, enable the hud buttons
+		//----------------------------------------
+		//--TURN BASED GAME LOGIC--
+		//----------------------------------------
 		
+		switch(currentAction) {
+			case SELECTION:
+				selection(events);
+				break;
+			case MOVEMENT:
+				movement(events);
+				break;
+			case ABILITY:
+				abilities(events);
+				break;
+			default:
+				throw new IllegalArgumentException("no such action");
+		}
+		
+		//----------------------------------------
+		//--CHECK BUTTON STATES--
+		//----------------------------------------
 		
 		//check if hud icons were pressed
-		//TODO if a unit is selected this needs to scroll to that unit
 		if(unitInfoButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "unit info activated");
+			map.scrollToTile(units[selectedUnitIndex].getXYCoordinate());
 			unitInfoButton.disarm();
 		}
 		//TODO if a unit is selected this needs to call the Map to determine where this guy can move
@@ -136,9 +166,10 @@ public class Player {
 			}
 		}
 		else {
+			//TODO make sure the tile can be landed on (isPassable or something like that) and that it's within the "spawn" zone
 			Point tile = getTileTouched(events);
-			if(tile != null) {
-				units[selectedUnitIndex].setXYCoordinate(tile);
+			if(tile != null && !map.getTile(tile).hasUnit()) {
+				units[selectedUnitIndex].setXYCoordinate(tile, map);
 				selectedUnitIndex++;
 			}
 		}
@@ -163,7 +194,7 @@ public class Player {
 			if(events.get(i).type == TouchEvent.TOUCH_UP &&
 			   previousEvent.type == TouchEvent.TOUCH_DOWN) {
 				//call the map to get the exact tile that was touched
-				pointTouched = map.getTile(events.get(i));
+				pointTouched = map.getTileTouched(events.get(i));
 				isUsed = true; //we used this touch event
 				if(pointTouched != null) {
 					Log.i("combatgame", "x: " + pointTouched.x);
@@ -187,6 +218,46 @@ public class Player {
 		return pointTouched;
 	}
 	
+	////////////////////////////////////////////
+	////PLAYER IS SELECTING UNIT
+	////////////////////////////////////////////
+	private void selection(List<TouchEvent> events) {
+		//check what tile is pressed by the user
+		Point tileTouched = getTileTouched(events); //get the tile touched by the user
+		if(tileTouched != null) {
+			Point tile = null;
+			boolean isUnitSelected = false;
+			for(int i = 0; i < units.length; i++) { //loop through our units to see if we touched one
+				tile = units[i].getXYCoordinate();
+				if(tile.x == tileTouched.x && tile.y == tileTouched.y) { //if we did touch it, set that unit as the currently selected unit
+					selectedUnitIndex = i;
+					isUnitSelected = true;
+					enableButtons();
+					break;
+				}
+			}
+			//if none of our units were selected then we deselect the currently selected unit
+			if(!isUnitSelected) {
+				selectedUnitIndex = -1;
+				disableButtons();
+			}
+		}
+	}
+	
+	////////////////////////////////////////////
+	////PLAYER IS MOVING A SELECTED UNIT
+	////////////////////////////////////////////
+	private void movement(List<TouchEvent> events) {
+		
+	}
+	
+	////////////////////////////////////////////
+	////PLAYER IS USING A UNIT'S ABILITIES
+	////////////////////////////////////////////
+	private void abilities(List<TouchEvent> events) {
+		
+	}
+	
 	//TODO rendering needs to consult the map to see what can/can not be seen by the current player
 	//get a "glow" effect going for selected players as well as positions they can move to and the action points that it costs to move them there
 	public void render(Graphics2D g) {
@@ -194,6 +265,9 @@ public class Player {
 		for(int i = 0; i < units.length; i++) {
 			Point coordinate = units[i].getXYCoordinate();
 			if(!units[i].isDead() && coordinate != null) {
+				//draw the selection overlay if we have this unit selected
+				if(i == selectedUnitIndex)
+					g.drawBitmap(GameplayAssets.selectionOverlay, coordinate.x * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.y * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 				g.drawBitmap(units[i].getSprite(), coordinate.x * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.y * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 			}
 		}
@@ -214,6 +288,7 @@ public class Player {
 		return playerId;
 	}
 	
+	//disable the hud buttons (generally if no unit is selected)
 	private void disableButtons() {
 		unitInfoButton.disable();
 		moveButton.disable();
@@ -221,6 +296,7 @@ public class Player {
 		deselectButton.disable();
 	}
 	
+	//enable the hud buttons (generally when a player has just selected one of their units)
 	private void enableButtons() {
 		unitInfoButton.enable();
 		moveButton.enable();
