@@ -1,9 +1,10 @@
+// Point[] result = Vision.getVision( Map, Unit );
+
 package combatgame.util;
-/* vision v1 = new vision(Point location, int view, int width, int height, char direction);
- * Point[] result1 = v1.getVision();
- */
 
 import java.util.*;
+import combatgame.objects.Map;
+import combatgame.objects.Unit;
 import android.graphics.Point;
 
 /**
@@ -12,26 +13,33 @@ import android.graphics.Point;
 
 public class Vision
 {
-	private static Point loc;
+	private static Point loc, temp;
 	private static int view;
 	private static int width;
 	private static int height;
-	private static char direction;
+	private static int direction;
+	
+	private static Map MAP;
+	private static Unit UNIT;
 
 	private static int px, nx, py, ny;
 	private static Point[] ans=new Point[0];
 
-	public static Point[] getVision( Point locIn, int viewIn, int widthIn, int heightIn, char directionIn)
+	public static Point[] getVision( Map iMAP, Unit iUNIT )
 	{
-		loc= new Point(locIn.x+1,locIn.y+1);
-		view=viewIn;
-		width=widthIn;
-		height=heightIn;
-		direction=directionIn;
+		MAP=iMAP;
+		UNIT=iUNIT;
+		
+		temp= UNIT.getXYCoordinate();
+		loc= new Point(temp.x +1, temp.y +1);
+		view=UNIT.getVisionRadius();
+		width = MAP.getNum_horizontal_tiles();
+		height = MAP.getNum_vertical_tiles();
+		direction=UNIT.getDirectionFacing();
 		
 		work();
 		return ans;
-	}//public vision( Point locIn, int viewIn, int widthIn, int heightIn, char directionIn)
+	}
 
 	private static void work()
 	{
@@ -39,7 +47,7 @@ public class Vision
 
 		for(int i=ny;i<=py;i++)
 			for(int j=nx;j<=px;j++)
-				if( (direction=='u')||(direction=='d') )
+				if( (direction==0)||(direction==1) ) //up or down
 				{
 					if( Math.abs(loc.x-j) <= Math.abs(loc.y-i) )
 						if( (view+.5) > (Math.sqrt( ((loc.x-j)*(loc.x-j))+((loc.y-i)*(loc.y-i)) )) )
@@ -48,7 +56,7 @@ public class Vision
 							ans[ans.length-1]=new Point(j-1,i-1);
 						}
 				}
-				else
+				else //left or right
 				{
 					if( Math.abs(loc.x-j) >= Math.abs(loc.y-i) )
 						if( (view+.5) > (Math.sqrt( ((loc.x-j)*(loc.x-j))+((loc.y-i)*(loc.y-i)) )) )
@@ -59,7 +67,7 @@ public class Vision
 				}
 
 
-	}//private void work()
+	}
 
 	private static void limit()
 	{
@@ -135,6 +143,6 @@ public class Vision
 			if(py>height)
 				py=height;
 		}//dir right
-	}//private void limit()
+	}
 
-}//public class vision
+}
