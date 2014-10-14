@@ -21,10 +21,11 @@ public class Button {
 	public static final int DISABLED = 3;
 	public int state = 0;
 	
-	private Bitmap armedImage;
-	private Bitmap disarmedImage;
-	private Bitmap disabledImage;
-	private int x, y;
+	protected Bitmap armedImage;
+	protected Bitmap disarmedImage;
+	protected Bitmap disabledImage;
+	protected int x;
+	protected int y;
 	
 	public Button(Bitmap disarmedImage, Bitmap armedImage, int x, int y) {
 		//disarmed image cannot be null
