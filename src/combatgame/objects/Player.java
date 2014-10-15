@@ -300,6 +300,7 @@ public class Player {
 		movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
 		GPoint tileTouched = getTileTouched(events);
 		if(tileTouched != null) {
+			//check to see if we selected a movement tile
 			for(int row = 1; row < movementPoints.length; row++) {
 				for(int col = 0; col < movementPoints[row].length; col++) {
 					if(tileTouched.col == movementPoints[row][col].col && tileTouched.row == movementPoints[row][col].row) {
@@ -307,6 +308,18 @@ public class Player {
 						units[selectedUnitIndex].usePoints(row * units[selectedUnitIndex].getMovementCost());
 						return;
 					}
+				}
+			}
+			GPoint unitTile;
+			//check to see if we selected one of our units instead
+			for(int i = 0; i < units.length; i++) {
+				//if we're talking about the currently selected unit, skip him
+				if(i == selectedUnitIndex)
+					continue;
+				unitTile = units[i].getXYCoordinate();
+				if(tileTouched.row == unitTile.row && tileTouched.col == unitTile.col) {
+					selectedUnitIndex = i;
+					return;
 				}
 			}
 			currentAction = SELECTION;
