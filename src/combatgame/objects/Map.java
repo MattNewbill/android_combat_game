@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.util.Log;
 
 /**
@@ -41,7 +40,7 @@ public class Map {
 	
 	//auto scrolling data
 	protected boolean isAutoScrolling = false;
-	protected Point tileToScrollTo;
+	protected GPoint tileToScrollTo;
 	public static final int LEEWAY = 30;
 	public static final int FAST_SCROLL_DISTANCE = 20;
 	
@@ -153,16 +152,16 @@ public class Map {
 		
 		//update our auto scrolling
 		if(isAutoScrolling) {
-			if(mapOffsetX < (tileToScrollTo.x * tileWidthInPx) - (Game.P_WIDTH / 2) - LEEWAY)
+			if(mapOffsetX < (tileToScrollTo.col * tileWidthInPx) - (Game.P_WIDTH / 2) - LEEWAY)
 				mapOffsetX += FAST_SCROLL_DISTANCE;
-			else if(mapOffsetX > (tileToScrollTo.x * tileWidthInPx) - (Game.P_WIDTH / 2) + LEEWAY) {
+			else if(mapOffsetX > (tileToScrollTo.col * tileWidthInPx) - (Game.P_WIDTH / 2) + LEEWAY) {
 				Log.i("combatgame", "mapoffset >");
 				mapOffsetX -= FAST_SCROLL_DISTANCE;
 			}
 			
-			if(mapOffsetY < (tileToScrollTo.y * tileHeightInPx) - (Game.P_HEIGHT / 2) - LEEWAY)
+			if(mapOffsetY < (tileToScrollTo.row * tileHeightInPx) - (Game.P_HEIGHT / 2) - LEEWAY)
 				mapOffsetY += FAST_SCROLL_DISTANCE;
-			else if(mapOffsetY > (tileToScrollTo.y * tileHeightInPx) - (Game.P_HEIGHT / 2) + LEEWAY)
+			else if(mapOffsetY > (tileToScrollTo.row * tileHeightInPx) - (Game.P_HEIGHT / 2) + LEEWAY)
 				mapOffsetY -= FAST_SCROLL_DISTANCE;
 			
 		}
@@ -225,12 +224,12 @@ public class Map {
 	 * @param event The event to be tested with
 	 * @return null if the event is out of bounds and a Point with the coordinates of the tile if it's in bounds
 	 */
-	public Point getTileTouched(TouchEvent event) {
+	public GPoint getTileTouched(TouchEvent event) {
 		double x = (event.x + mapOffsetX) / (double)tileWidthInPx;
 		double y = (event.y + mapOffsetY) / (double)tileHeightInPx;
 		if(x < 0 || x > num_horizontal_tiles || y < 0 || y > num_vertical_tiles)
 			return null;
-		return new Point((int)x, (int)y);
+		return new GPoint((int)x, (int)y);
 	}
 	
 	public void dispose() {
@@ -240,15 +239,15 @@ public class Map {
 			player2.dispose();
 	}
 	
-	public MapTile getTile(Point tile) {
-		if(tile.x < 0 || tile.y < 0 ||
-		   tile.x >= num_horizontal_tiles || tile.y >= num_vertical_tiles)
+	public MapTile getTile(GPoint tile) {
+		if(tile.col < 0 || tile.row < 0 ||
+		   tile.col >= num_horizontal_tiles || tile.row >= num_vertical_tiles)
 			return null;
-		return board[tile.y][tile.x];
+		return board[tile.row][tile.col];
 	}
 	
 	//TODO scroll the map to the selected tile
-	public void scrollToTile(Point tile) {
+	public void scrollToTile(GPoint tile) {
 		tileToScrollTo = tile;
 		isAutoScrolling = true;
 	}

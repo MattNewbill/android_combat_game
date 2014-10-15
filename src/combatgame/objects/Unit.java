@@ -1,6 +1,6 @@
 package combatgame.objects;
 
-import android.graphics.Point;
+import combatgame.graphics.*;
 import android.graphics.Bitmap;
 
 /**
@@ -11,7 +11,7 @@ public abstract class Unit {
 	protected String name;
 	protected int player_id = -1;
 	protected int unit_id = -1;
-	protected Point xyCoordinate;
+	protected GPoint xyCoordinate;
 	protected int shootingCost;
 	protected int movementCost;
 	protected int visionRadius;
@@ -38,12 +38,12 @@ public abstract class Unit {
 	public int getUnit_id() {
 		return this.unit_id;	}
 	
-	public void setXYCoordinate(Point xyCoordinate, Map map) {
+	public void setXYCoordinate(GPoint xyCoordinate, Map map) {
 		this.xyCoordinate = xyCoordinate;
 		map.getTile(xyCoordinate).setUnit(unit_id, player_id);;
 	}
 	
-	public Point getXYCoordinate() {
+	public GPoint getXYCoordinate() {
 		return this.xyCoordinate;	}
 	
 	public int getMaxHealth() {

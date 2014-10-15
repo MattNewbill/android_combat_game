@@ -1,11 +1,9 @@
 package combatgame.widgets;
 
 import java.util.List;
-
 import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
 import combatgame.objects.Unit;
-
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 

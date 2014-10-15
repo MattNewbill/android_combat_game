@@ -1,12 +1,9 @@
 package combatgame.objects;
 
 import java.util.List;
-
-import android.graphics.Point;
 import android.util.Log;
-
 import combatgame.assets.GameplayAssets;
-import combatgame.graphics.Graphics2D;
+import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.util.*;
@@ -38,7 +35,7 @@ public class Player {
 	private int currentAction = SELECTION;
 	
 	//movement state
-	private Point[][] movementPoints;
+	private GPoint[][] movementPoints;
 	
 	//gameplay state
 	private boolean isSetupPhase = true;
@@ -57,7 +54,7 @@ public class Player {
 	
 	//determine presses vs scrolls
 	private TouchEvent previousEvent;
-	private Point previousTouchDownTile;
+	private GPoint previousTouchDownTile;
 	
 	public Player(boolean isPlayerOne, Map map, int numUnits) {
 		this.isPlayerOne = isPlayerOne;
@@ -194,7 +191,7 @@ public class Player {
 			}
 		}
 		else {
-			Point tile = getTileTouched(events);
+			GPoint tile = getTileTouched(events);
 			//only let player one spawn in player one's base
 			if(isPlayerOne) {
 				if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_ONE_BASE && !map.getTile(tile).hasUnit()) {
@@ -217,8 +214,8 @@ public class Player {
 	 * @param events List of TouchEvents to loop through
 	 * @return Return a point specifying what tile was touched
 	 */
-	public Point getTileTouched(List<TouchEvent> events) {
-		Point pointTouched = null;
+	public GPoint getTileTouched(List<TouchEvent> events) {
+		GPoint pointTouched = null;
 		boolean isUsed = false;
 		//loop through our TouchEvents
 		for(int i = 0; i < events.size(); i++) {
@@ -234,14 +231,14 @@ public class Player {
 			if(events.get(i).type == TouchEvent.TOUCH_UP &&
 			   previousEvent.type == TouchEvent.TOUCH_DOWN ||
 			   (previousTouchDownTile != null && events.get(i).type == TouchEvent.TOUCH_UP &&
-			   map.getTileTouched(events.get(i)).x == previousTouchDownTile.x &&
-			   map.getTileTouched(events.get(i)).y == previousTouchDownTile.y)) {
+			   map.getTileTouched(events.get(i)).col == previousTouchDownTile.col &&
+			   map.getTileTouched(events.get(i)).row == previousTouchDownTile.row)) {
 				//call the map to get the exact tile that was touched
 				pointTouched = map.getTileTouched(events.get(i));
 				isUsed = true; //we used this touch event
 				if(pointTouched != null) {
-					Log.i("combatgame", "x: " + pointTouched.x);
-					Log.i("combatgame", "y: " + pointTouched.y);
+					Log.i("combatgame", "row: " + pointTouched.row);
+					Log.i("combatgame", "col: " + pointTouched.col);
 				}
 				//the point is null if the point touched was out of bounds
 				else {
@@ -266,13 +263,13 @@ public class Player {
 	////////////////////////////////////////////
 	private void selection(List<TouchEvent> events) {
 		//check what tile is pressed by the user
-		Point tileTouched = getTileTouched(events); //get the tile touched by the user
+		GPoint tileTouched = getTileTouched(events); //get the tile touched by the user
 		if(tileTouched != null) {
-			Point tile = null;
+			GPoint tile = null;
 			boolean isUnitSelected = false;
 			for(int i = 0; i < units.length; i++) { //loop through our units to see if we touched one
 				tile = units[i].getXYCoordinate();
-				if(tile.x == tileTouched.x && tile.y == tileTouched.y) { //if we did touch it, set that unit as the currently selected unit
+				if(tile.col == tileTouched.col && tile.row == tileTouched.row) { //if we did touch it, set that unit as the currently selected unit
 					selectedUnitIndex = i;
 					isUnitSelected = true;
 					enableButtons();
@@ -291,12 +288,12 @@ public class Player {
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
 	private void movement(List<TouchEvent> events) {
-		movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
-		Point tileTouched = getTileTouched(events);
+		/*movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
+		GPoint tileTouched = getTileTouched(events);
 		if(tileTouched != null) {
 			for(int row = 1; row < movementPoints.length; row++) {
 				for(int col = 0; col < movementPoints[row].length; col++) {
-					if(tileTouched.x == movementPoints[row][col].x && tileTouched.y == movementPoints[row][col].y) {
+					if(tileTouched.col == movementPoints[row][col].col && tileTouched.row == movementPoints[row][col].row) {
 						units[selectedUnitIndex].setXYCoordinate(tileTouched, map);
 						//units[selectedUnitIndex].usePoints()
 					}
@@ -304,7 +301,7 @@ public class Player {
 			}
 			currentAction = SELECTION;
 		}
-		
+		*/
 	}
 	
 	////////////////////////////////////////////
@@ -341,7 +338,7 @@ public class Player {
 		if(currentAction == MOVEMENT && movementPoints != null) {
 			for(int row = 1; row < movementPoints.length; row++) {
 				for(int col = 0; col < movementPoints[row].length; col++) {
-					g.drawBitmap(GameplayAssets.selectionOverlay, movementPoints[row][col].x * map.getTileWidthInPx() - map.getMapOffsetX(), movementPoints[row][col].y * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+					g.drawBitmap(GameplayAssets.selectionOverlay, movementPoints[row][col].col * map.getTileWidthInPx() - map.getMapOffsetX(), movementPoints[row][col].row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 				}
 			}
 		}
@@ -350,13 +347,13 @@ public class Player {
 		//--Render our units on the map
 		//---------------------------------------
 		for(int i = 0; i < units.length; i++) {
-			Point coordinate = units[i].getXYCoordinate();
+			GPoint coordinate = units[i].getXYCoordinate();
 			if(!units[i].isDead() && coordinate != null) {
 				//draw the selection overlay if we have this unit selected
 				if(i == selectedUnitIndex)
-					g.drawBitmap(GameplayAssets.selectionOverlay, coordinate.x * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.y * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+					g.drawBitmap(GameplayAssets.selectionOverlay, coordinate.col * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 				
-				g.drawBitmap(units[i].getSprite(), coordinate.x * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.y * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+				g.drawBitmap(units[i].getSprite(), coordinate.col * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 			}
 		}
 		
@@ -387,14 +384,14 @@ public class Player {
 				for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
 					if(isPlayerOne) {
 						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_ONE_BASE) {
-							map.scrollToTile(new Point(col, row));
+							map.scrollToTile(new GPoint(col, row));
 							return;
 						}
 					}
 					else
 						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE) {
 							Log.i("combatgame", "row: " + row + ", col: " + col);
-							map.scrollToTile(new Point(col, row));
+							map.scrollToTile(new GPoint(col, row));
 							return;
 						}
 				}
