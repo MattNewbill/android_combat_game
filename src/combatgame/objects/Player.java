@@ -9,7 +9,7 @@ import combatgame.assets.GameplayAssets;
 import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
-import combatgame.util.Util;
+import combatgame.util.*;
 import combatgame.widgets.Button;
 import combatgame.widgets.UnitInfoDrawableButton;
 
@@ -19,8 +19,16 @@ import combatgame.widgets.UnitInfoDrawableButton;
  * If you see something that looks stupid, it probably is and should be changed
  * 
  */
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-- X ALWAYS CORRESPONDS TO COLUMNS AND Y ALWAYS CORRESPONDS TO ROWS
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 public class Player {
 
+	//used for determining what base to spawn in/attack
+	boolean isPlayerOne;
+	
 	private int playerId;
 	
 	//action
@@ -28,6 +36,9 @@ public class Player {
 	public static final int MOVEMENT = 1;
 	public static final int ABILITY = 2;
 	private int currentAction = SELECTION;
+	
+	//movement state
+	private Point[][] movementPoints;
 	
 	//gameplay state
 	private boolean isSetupPhase = true;
@@ -46,8 +57,10 @@ public class Player {
 	
 	//determine presses vs scrolls
 	private TouchEvent previousEvent;
+	private Point previousTouchDownTile;
 	
-	public Player(Map map, int numUnits) {
+	public Player(boolean isPlayerOne, Map map, int numUnits) {
+		this.isPlayerOne = isPlayerOne;
 		playerId = (int)System.currentTimeMillis() + Util.getRand(); //TODO potentially get a better ID system going...
 		
 		units = new Unit[numUnits];
@@ -106,8 +119,11 @@ public class Player {
 		//--TURN BASED GAME LOGIC--
 		//----------------------------------------
 		
+		//update the unit info button's text
 		if(selectedUnitIndex != -1)
 			unitInfoButton.updateTextInfo(units[selectedUnitIndex]);
+		
+		//what action is the player currently doing
 		switch(currentAction) {
 			case SELECTION:
 				selection(events);
@@ -135,11 +151,17 @@ public class Player {
 		//TODO if a unit is selected this needs to call the Map to determine where this guy can move
 		if(moveButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "move button activated");
+			//if the movement button has already been selected, then we deselect it
+			if(currentAction == MOVEMENT)
+				currentAction = SELECTION;
+			else
+				currentAction = MOVEMENT;
 			moveButton.disarm();
 		}
 		//TODO if a unit is selected this needs to pull up the "drop-up" menu to show the last of abilities
 		if(abilityButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "ability button activated");
+			//currentAction = ABILITY;
 			abilityButton.disarm();
 		}
 		//deselected the current unit
@@ -147,6 +169,7 @@ public class Player {
 			Log.i("combatgame", "deselect button activated");
 			deselectButton.disarm();
 			selectedUnitIndex = -1; //deselect the unit
+			currentAction = SELECTION;
 			disableButtons(); //disable hud buttons
 		}
 		//ends the turn
@@ -171,11 +194,20 @@ public class Player {
 			}
 		}
 		else {
-			//TODO make sure the tile can be landed on (isPassable or something like that) and that it's within the "spawn" zone
 			Point tile = getTileTouched(events);
-			if(tile != null && !map.getTile(tile).hasUnit()) {
-				units[selectedUnitIndex].setXYCoordinate(tile, map);
-				selectedUnitIndex++;
+			//only let player one spawn in player one's base
+			if(isPlayerOne) {
+				if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_ONE_BASE && !map.getTile(tile).hasUnit()) {
+					units[selectedUnitIndex].setXYCoordinate(tile, map);
+					selectedUnitIndex++;
+				}
+			}
+			//only let player two spawn in player two's base
+			else {
+				if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_TWO_BASE && !map.getTile(tile).hasUnit()) {
+					units[selectedUnitIndex].setXYCoordinate(tile, map);
+					selectedUnitIndex++;
+				}
 			}
 		}
 	}
@@ -190,6 +222,9 @@ public class Player {
 		boolean isUsed = false;
 		//loop through our TouchEvents
 		for(int i = 0; i < events.size(); i++) {
+			//record the last time we touched down on the screen
+			if(events.get(i).type == TouchEvent.TOUCH_DOWN)
+				previousTouchDownTile = map.getTileTouched(events.get(i));
 			//if our previousEvent pointer is null then copy the first TouchEvent into it
 			if(previousEvent == null) {
 				previousEvent = new TouchEvent();
@@ -197,7 +232,10 @@ public class Player {
 			}
 			//if the previous touch event was TOUCH_DOWN and the current event is TOUCH_UP then the user clicked a tile
 			if(events.get(i).type == TouchEvent.TOUCH_UP &&
-			   previousEvent.type == TouchEvent.TOUCH_DOWN) {
+			   previousEvent.type == TouchEvent.TOUCH_DOWN ||
+			   (previousTouchDownTile != null && events.get(i).type == TouchEvent.TOUCH_UP &&
+			   map.getTileTouched(events.get(i)).x == previousTouchDownTile.x &&
+			   map.getTileTouched(events.get(i)).y == previousTouchDownTile.y)) {
 				//call the map to get the exact tile that was touched
 				pointTouched = map.getTileTouched(events.get(i));
 				isUsed = true; //we used this touch event
@@ -253,6 +291,19 @@ public class Player {
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
 	private void movement(List<TouchEvent> events) {
+		movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
+		Point tileTouched = getTileTouched(events);
+		if(tileTouched != null) {
+			for(int row = 1; row < movementPoints.length; row++) {
+				for(int col = 0; col < movementPoints[row].length; col++) {
+					if(tileTouched.x == movementPoints[row][col].x && tileTouched.y == movementPoints[row][col].y) {
+						units[selectedUnitIndex].setXYCoordinate(tileTouched, map);
+						//units[selectedUnitIndex].usePoints()
+					}
+				}
+			}
+			currentAction = SELECTION;
+		}
 		
 	}
 	
@@ -266,7 +317,38 @@ public class Player {
 	//TODO rendering needs to consult the map to see what can/can not be seen by the current player
 	//get a "glow" effect going for selected players as well as positions they can move to and the action points that it costs to move them there
 	public void render(Graphics2D g) {
-		//render units
+		//---------------------------------------
+		//--Render spawn overlays in our base, but only during setup phase
+		//---------------------------------------
+		if(isSetupPhase && selectedUnitIndex != units.length) {
+			for(int row = 0; row < map.getNum_vertical_tiles(); row++) {
+				for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
+					if(isPlayerOne) {
+						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_ONE_BASE && !map.getTile(row, col).hasUnit())
+							g.drawBitmap(GameplayAssets.selectionOverlay, col * map.getTileWidthInPx() - map.getMapOffsetX(), row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+					}
+					else {
+						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE && !map.getTile(row, col).hasUnit())
+							g.drawBitmap(GameplayAssets.selectionOverlay, col * map.getTileWidthInPx() - map.getMapOffsetX(), row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+					}
+				}
+			}
+		}
+		
+		//---------------------------------------
+		//--Render movement overlays if we are trying to move a unit
+		//---------------------------------------
+		if(currentAction == MOVEMENT && movementPoints != null) {
+			for(int row = 1; row < movementPoints.length; row++) {
+				for(int col = 0; col < movementPoints[row].length; col++) {
+					g.drawBitmap(GameplayAssets.selectionOverlay, movementPoints[row][col].x * map.getTileWidthInPx() - map.getMapOffsetX(), movementPoints[row][col].y * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+				}
+			}
+		}
+		
+		//---------------------------------------
+		//--Render our units on the map
+		//---------------------------------------
 		for(int i = 0; i < units.length; i++) {
 			Point coordinate = units[i].getXYCoordinate();
 			if(!units[i].isDead() && coordinate != null) {
@@ -278,7 +360,9 @@ public class Player {
 			}
 		}
 		
-		//draw the hud buttons
+		//---------------------------------------
+		//--Render our HUD at the very end
+		//---------------------------------------
 		unitInfoButton.render(g);
 		moveButton.render(g);
 		abilityButton.render(g);
@@ -288,6 +372,51 @@ public class Player {
 	
 	public void dispose() {
 		
+	}
+	
+	//TODO construct a light map for this player determining which tiles are visible and which aren't
+	public boolean[][] constructLightMap() {
+		return null;
+	}
+	
+	//our turn has just now started
+	public void newTurn() {
+		//if it's the setup phase then scroll to our base
+		if(isSetupPhase)
+			for(int row = 0; row < map.getNum_vertical_tiles(); row++) {
+				for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
+					if(isPlayerOne) {
+						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_ONE_BASE) {
+							map.scrollToTile(new Point(col, row));
+							return;
+						}
+					}
+					else
+						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE) {
+							Log.i("combatgame", "row: " + row + ", col: " + col);
+							map.scrollToTile(new Point(col, row));
+							return;
+						}
+				}
+			}
+		//otherwise scroll to the selected unit (if there is no selected unit, pick a new unit to be selected and scroll to him), reset action points
+		else {
+			for(int i = 0; i < units.length; i++)
+				units[i].resetPoints();
+				
+			if(selectedUnitIndex != -1 && !units[selectedUnitIndex].isDead()) {
+				map.scrollToTile(units[selectedUnitIndex].getXYCoordinate());
+			}
+			else {
+				for(int i = 0; i < units.length; i++) {
+					if(!units[i].isDead()) {
+						enableButtons();
+						selectedUnitIndex = i;
+						map.scrollToTile(units[selectedUnitIndex].getXYCoordinate());
+					}
+				}
+			}
+		}
 	}
 	
 	public int getId() {

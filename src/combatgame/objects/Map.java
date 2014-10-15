@@ -39,11 +39,17 @@ public class Map {
 	public static final int FLING_THRESHOLD = 17; //the distance apart to scroll events have to be to determine a "fling"
 	int mapOffsetX = 0, mapOffsetY = 0;
 	
+	//auto scrolling data
+	protected boolean isAutoScrolling = false;
+	protected Point tileToScrollTo;
+	public static final int LEEWAY = 30;
+	public static final int FAST_SCROLL_DISTANCE = 20;
+	
 	
 	public Map (AssetManager am, String filePath) {
 		//create players
-		player1 = new Player(this, 3);
-		player2 = new Player(this, 3);
+		player1 = new Player(true, this, 3);
+		player2 = new Player(false, this, 3);
 		thisPlayersTurn = player1;
 		
 		try {
@@ -66,6 +72,8 @@ public class Map {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		thisPlayersTurn.newTurn();
 	}
 	
 	public void switchTurn() {
@@ -73,6 +81,7 @@ public class Map {
 			thisPlayersTurn = player2;
 		else
 			thisPlayersTurn = player1;
+		thisPlayersTurn.newTurn();
 	}
 	
 	public void update(List<TouchEvent> events) {
@@ -91,6 +100,10 @@ public class Map {
 	private void updateMap(List<TouchEvent> events) {
 		//update scroll data
 		for(int i = 0; i < events.size(); i++) {
+			//stop auto scrolling if the user presses down
+			if(events.get(i).type == TouchEvent.TOUCH_DOWN)
+				isAutoScrolling = false;
+			
 			if(events.get(i).type == TouchEvent.TOUCH_DRAGGED) {
 				//check for map scrolling
 				if(previousEvent.type == TouchEvent.TOUCH_DRAGGED) {
@@ -137,6 +150,23 @@ public class Map {
 			}
 			previousEvent.copy(events.get(i));
 		}
+		
+		//update our auto scrolling
+		if(isAutoScrolling) {
+			if(mapOffsetX < (tileToScrollTo.x * tileWidthInPx) - (Game.P_WIDTH / 2) - LEEWAY)
+				mapOffsetX += FAST_SCROLL_DISTANCE;
+			else if(mapOffsetX > (tileToScrollTo.x * tileWidthInPx) - (Game.P_WIDTH / 2) + LEEWAY) {
+				Log.i("combatgame", "mapoffset >");
+				mapOffsetX -= FAST_SCROLL_DISTANCE;
+			}
+			
+			if(mapOffsetY < (tileToScrollTo.y * tileHeightInPx) - (Game.P_HEIGHT / 2) - LEEWAY)
+				mapOffsetY += FAST_SCROLL_DISTANCE;
+			else if(mapOffsetY > (tileToScrollTo.y * tileHeightInPx) - (Game.P_HEIGHT / 2) + LEEWAY)
+				mapOffsetY -= FAST_SCROLL_DISTANCE;
+			
+		}
+		
 		//make sure we don't scroll too far past the edge of the map
 		if(mapOffsetX < -MAX_OUT_OF_BOUNDS) {
 			mapOffsetX = -MAX_OUT_OF_BOUNDS;
@@ -158,20 +188,26 @@ public class Map {
 	 * @param paint Paint object to use for colors
 	 */
 	public void render(Graphics2D g, Paint paint) {
+		//lightmap to determine what is visible and what isn't
+		boolean[][] lightmap = thisPlayersTurn.constructLightMap();
+		
 		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
 				if(getFeatureType(row, col) == MapFeature.TERRAIN) {
-					//normal terrain
 					paint.setColor(Color.YELLOW);
 				}
 				else if(getFeatureType(row, col) == MapFeature.HEDGEHOG) {
-					//rock
 					paint.setColor(Color.DKGRAY);
 				}
-				else {// == MapFeature.TREE
-					//tree
+				else if(getFeatureType(row, col) == MapFeature.TREE) {
 					paint.setColor(Color.GREEN);
+				}
+				else if(getFeatureType(row, col) == MapFeature.PLAYER_ONE_BASE) {
+					paint.setColor(Color.MAGENTA);
+				}
+				else if(getFeatureType(row, col) == MapFeature.PLAYER_TWO_BASE) {
+					paint.setColor(Color.RED);
 				}
 				g.drawRect((col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, (col * tileWidthInPx + tileWidthInPx) - mapOffsetX, (row * tileHeightInPx + tileHeightInPx) - mapOffsetY, paint);
 			}
@@ -213,7 +249,8 @@ public class Map {
 	
 	//TODO scroll the map to the selected tile
 	public void scrollToTile(Point tile) {
-		
+		tileToScrollTo = tile;
+		isAutoScrolling = true;
 	}
 	
 	public int getTileWidthInPx() {

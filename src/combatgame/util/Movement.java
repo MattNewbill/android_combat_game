@@ -47,7 +47,7 @@ public class Movement
 		return ans;
 	}
 	
-	private static void setM()
+	 private static void setM()
 	{
 		ans[0] = Arrays.copyOf(ans[0], ans[0].length + 1);
 		ans[0][0] = new Point(loc);

@@ -28,8 +28,14 @@ public class GameplayAssets {
 	
 	public static void loadGameplayAssets(AssetManager am) {
 		try {
-			sniperIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_resized.png"));
-			assaultIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_resized.png"));
+			sniperIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_up.png"));
+			sniperIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_down.png"));
+			sniperIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_left.png"));
+			sniperIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_right.png"));
+			assaultIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_up.png"));
+			assaultIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_down.png"));
+			assaultIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_left.png"));
+			assaultIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_right.png"));
 			
 			unitInfoIcon = BitmapFactory.decodeStream(am.open("sprites/hud/test.png"));
 			moveIcon = BitmapFactory.decodeStream(am.open("sprites/hud/move_icon.png"));

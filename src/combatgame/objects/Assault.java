@@ -21,6 +21,7 @@ public class Assault extends Unit {
 		this.isDead=false;
 		this.sprites = GameplayAssets.assaultIcons;
 		this.maxHealth = 100;
+		this.pointsLeft = POINTS_PER_TURN;
 	}
 	
 }

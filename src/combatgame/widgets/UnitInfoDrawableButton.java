@@ -23,21 +23,22 @@ public class UnitInfoDrawableButton extends Button {
 	@Override
 	public void render(Graphics2D g) {
 		super.render(g);
-		g.drawText(unit_type, x + 0, y + 5, new Paint());
-		g.drawText(hp, x + 0, y + 15, new Paint());
-		g.drawText(ability_points, x + 0, y + 25, new Paint());
+		g.drawText(unit_type, x + 10, y + 30, new Paint());
+		g.drawText(hp, x + 10, y + 60, new Paint());
+		g.drawText(ability_points, x + 10, y + 90, new Paint());
 		
 	}
 
 	@Override
 	public void disable() {
-		// TODO Auto-generated method stub
 		super.disable();
+		ability_points = "";
+		hp = "";
+		unit_type = "";
 	}
 
 	@Override
 	public void enable() {
-		// TODO Auto-generated method stub
 		super.enable();
 	}
 

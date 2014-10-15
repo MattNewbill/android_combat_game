@@ -14,6 +14,8 @@ public class MapFeature {
 	public final static int HEDGEHOG = 1;
 	public final static int TREE = 2;
 	public final static int WATER = 3;
+	public final static int PLAYER_ONE_BASE = 4;
+	public final static int PLAYER_TWO_BASE = 5;
 
 	public MapFeature(int mapFeature_int) {
 
@@ -41,6 +43,18 @@ public class MapFeature {
 				isSeethrough = true;
 				isSlowing = true;
 				featureType = WATER;
+				break;
+			case PLAYER_ONE_BASE:
+				isPassable = true;
+				isSeethrough = true;
+				isSlowing = false;
+				featureType = PLAYER_ONE_BASE;
+				break;
+			case PLAYER_TWO_BASE:
+				isPassable = true;
+				isSeethrough = true;
+				isSlowing = false;
+				featureType = PLAYER_TWO_BASE;
 				break;
 			default:
 				throw new IllegalArgumentException("Error: Map feature not defined.");
