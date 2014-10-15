@@ -36,6 +36,7 @@ public class RenderView extends SurfaceView implements Runnable {
 		
 		Rect destinationRect = new Rect();
 		long startTime = System.nanoTime();
+		long fps = 0;
 		
 		while(isRunning) {
 			//make sure we have a surface to draw on
@@ -50,6 +51,7 @@ public class RenderView extends SurfaceView implements Runnable {
 			
 			game.getCurrentState().update(delta); //update current state (screen)
 			game.getCurrentState().render(drawingCanvas, delta); //render current state (screen)
+			//drawingCanvas.drawText(Long.toString(fps), 30, 30, new Paint()); //draw fps
 			
 			Canvas canvas = holder.lockCanvas();
 			canvas.getClipBounds(destinationRect);
@@ -61,7 +63,7 @@ public class RenderView extends SurfaceView implements Runnable {
 
 			//fps stuff
 			long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-			//Log.i("combatgame", ""+(1000/elapsedTime));
+			fps = 1000/elapsedTime;
 			
 		}
 	}

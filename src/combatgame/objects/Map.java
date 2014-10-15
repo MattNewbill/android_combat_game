@@ -229,7 +229,7 @@ public class Map {
 		double y = (event.y + mapOffsetY) / (double)tileHeightInPx;
 		if(x < 0 || x > num_horizontal_tiles || y < 0 || y > num_vertical_tiles)
 			return null;
-		return new GPoint((int)x, (int)y);
+		return new GPoint((int)y, (int)x);
 	}
 	
 	public void dispose() {

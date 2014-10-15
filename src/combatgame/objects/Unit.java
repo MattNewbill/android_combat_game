@@ -22,6 +22,8 @@ public abstract class Unit {
 	protected Bitmap[] sprites;
 	protected int pointsLeft;
 	protected int maxHealth;
+	protected Ability[] abilities;
+	
 	public static final int POINTS_PER_TURN = 5;
 	
 	public static final int FACING_UP = 0;
@@ -39,6 +41,8 @@ public abstract class Unit {
 		return this.unit_id;	}
 	
 	public void setXYCoordinate(GPoint xyCoordinate, Map map) {
+		if(this.xyCoordinate != null)
+			map.getTile(this.xyCoordinate).clearUnit();
 		this.xyCoordinate = xyCoordinate;
 		map.getTile(xyCoordinate).setUnit(unit_id, player_id);;
 	}
@@ -98,18 +102,19 @@ public abstract class Unit {
 		return this.sprites[directionFacing];
 	}
 	
-	public void resetPoints()
-	{
+	public void resetPoints() {
 		pointsLeft = POINTS_PER_TURN;
 	}
 	
-	public void usePoints( int num )
-	{
+	public void usePoints( int num ) {
 		pointsLeft -= num;
 	}
 	
-	public int getPointsLeft()
-	{
+	public int getPointsLeft() {
 		return pointsLeft;
+	}
+	
+	public Ability[] getAbilities() {
+		return abilities;
 	}
 }

@@ -31,7 +31,8 @@ public class Player {
 	//action
 	public static final int SELECTION = 0;
 	public static final int MOVEMENT = 1;
-	public static final int ABILITY = 2;
+	public static final int CHOOSE_ABILITY = 2;
+	public static final int USE_ABILITY = 3;
 	private int currentAction = SELECTION;
 	
 	//movement state
@@ -128,8 +129,11 @@ public class Player {
 			case MOVEMENT:
 				movement(events);
 				break;
-			case ABILITY:
+			case CHOOSE_ABILITY:
 				abilities(events);
+				break;
+			case USE_ABILITY:
+				useAbility(events);
 				break;
 			default:
 				throw new IllegalArgumentException("no such action");
@@ -270,6 +274,7 @@ public class Player {
 			for(int i = 0; i < units.length; i++) { //loop through our units to see if we touched one
 				tile = units[i].getXYCoordinate();
 				if(tile.col == tileTouched.col && tile.row == tileTouched.row) { //if we did touch it, set that unit as the currently selected unit
+					movementPoints = null;
 					selectedUnitIndex = i;
 					isUnitSelected = true;
 					enableButtons();
@@ -288,26 +293,41 @@ public class Player {
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
 	private void movement(List<TouchEvent> events) {
-		/*movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
+		if(units[selectedUnitIndex].getPointsLeft() == 0) {
+			currentAction = SELECTION;
+			return;
+		}
+		movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
 		GPoint tileTouched = getTileTouched(events);
 		if(tileTouched != null) {
 			for(int row = 1; row < movementPoints.length; row++) {
 				for(int col = 0; col < movementPoints[row].length; col++) {
 					if(tileTouched.col == movementPoints[row][col].col && tileTouched.row == movementPoints[row][col].row) {
 						units[selectedUnitIndex].setXYCoordinate(tileTouched, map);
-						//units[selectedUnitIndex].usePoints()
+						units[selectedUnitIndex].usePoints(row * units[selectedUnitIndex].getMovementCost());
+						return;
 					}
 				}
 			}
 			currentAction = SELECTION;
 		}
-		*/
+		
 	}
 	
 	////////////////////////////////////////////
-	////PLAYER IS USING A UNIT'S ABILITIES
+	////PLAYER IS SELECTING A UNIT'S ABILITY TO USE
 	////////////////////////////////////////////
 	private void abilities(List<TouchEvent> events) {
+		Ability[] abilities = units[selectedUnitIndex].getAbilities();
+		for(int i = 0; i < abilities.length; i++) {
+			abilities[i].update(events);
+		}
+	}
+	
+	////////////////////////////////////////////
+	////PLAYER IS USING A UNIT'S ABILITY
+	////////////////////////////////////////////
+	private void useAbility(List<TouchEvent> events) {
 		
 	}
 	
@@ -340,6 +360,16 @@ public class Player {
 				for(int col = 0; col < movementPoints[row].length; col++) {
 					g.drawBitmap(GameplayAssets.selectionOverlay, movementPoints[row][col].col * map.getTileWidthInPx() - map.getMapOffsetX(), movementPoints[row][col].row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 				}
+			}
+		}
+		
+		//---------------------------------------
+		//--Render ability buttons if the user has pressed the "ability" button
+		//---------------------------------------
+		if(currentAction == CHOOSE_ABILITY) {
+			Ability[] abilities = units[selectedUnitIndex].getAbilities();
+			for(int i = 0; i < abilities.length; i++) {
+				//abilities.render(g, 50, Game.P_HEIGHT - abilityButton.getHeight() - (abilities.length * GameplayAssets.basicAttack.getHeight()));
 			}
 		}
 		
@@ -384,14 +414,14 @@ public class Player {
 				for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
 					if(isPlayerOne) {
 						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_ONE_BASE) {
-							map.scrollToTile(new GPoint(col, row));
+							map.scrollToTile(new GPoint(row, col));
 							return;
 						}
 					}
 					else
 						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE) {
 							Log.i("combatgame", "row: " + row + ", col: " + col);
-							map.scrollToTile(new GPoint(col, row));
+							map.scrollToTile(new GPoint(row, col));
 							return;
 						}
 				}
@@ -400,7 +430,8 @@ public class Player {
 		else {
 			for(int i = 0; i < units.length; i++)
 				units[i].resetPoints();
-				
+			
+			currentAction = SELECTION;
 			if(selectedUnitIndex != -1 && !units[selectedUnitIndex].isDead()) {
 				map.scrollToTile(units[selectedUnitIndex].getXYCoordinate());
 			}
