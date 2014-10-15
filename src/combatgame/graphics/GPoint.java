@@ -10,4 +10,10 @@ public class GPoint {
 		this.col = col;
 	}
 	
+	public GPoint(GPoint GP)
+	{
+		this.row = GP.row;
+		this.col = GP.col;
+	}
+	
 }
