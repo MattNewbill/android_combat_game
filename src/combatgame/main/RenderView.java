@@ -51,7 +51,7 @@ public class RenderView extends SurfaceView implements Runnable {
 			
 			game.getCurrentState().update(delta); //update current state (screen)
 			game.getCurrentState().render(drawingCanvas, delta); //render current state (screen)
-			//drawingCanvas.drawText(Long.toString(fps), 30, 30, new Paint()); //draw fps
+			drawingCanvas.drawText(Long.toString(fps), 30, 30, new Paint()); //draw fps
 			
 			Canvas canvas = holder.lockCanvas();
 			canvas.getClipBounds(destinationRect);

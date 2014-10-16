@@ -30,6 +30,9 @@ public class Map {
 	protected MapTile[][] board;
 	protected int mapId;
 	
+	//lightmap
+	protected boolean[][] lightmap;
+	
 	//scrolling data
 	TouchEvent previousEvent; //used to calculate which direction we are scrolling
 	public static final int MAX_OUT_OF_BOUNDS = 125; //max distance you can scroll past the edge of the map
@@ -68,6 +71,9 @@ public class Map {
 					board[row][col] = new MapTile(Integer.parseInt(tiles[col]));
 				}
 			}
+			
+			//create lightmap object
+			lightmap = new boolean[num_vertical_tiles][num_horizontal_tiles];
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -90,6 +96,9 @@ public class Map {
 		
 		//update map scroll
 		updateMap(events);
+		
+		//get new lightmap
+		lightmap = thisPlayersTurn.constructLightMap(lightmap);
 	}
 	
 	/**
@@ -187,13 +196,15 @@ public class Map {
 	 * @param paint Paint object to use for colors
 	 */
 	public void render(Graphics2D g, Paint paint) {
-		//lightmap to determine what is visible and what isn't
-		boolean[][] lightmap = thisPlayersTurn.constructLightMap();
 		
 		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
-				if(getFeatureType(row, col) == MapFeature.TERRAIN) {
+				//if we can't see the tile, make it black (eventually we'll replace this with our shaded sprite of the particular tile, but this works for now)
+				if(!lightmap[row][col]) {
+					paint.setColor(Color.BLACK);
+				}
+				else if(getFeatureType(row, col) == MapFeature.TERRAIN) {
 					paint.setColor(Color.YELLOW);
 				}
 				else if(getFeatureType(row, col) == MapFeature.HEDGEHOG) {

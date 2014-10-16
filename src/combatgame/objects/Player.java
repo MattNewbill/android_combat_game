@@ -415,8 +415,17 @@ public class Player {
 	}
 	
 	//TODO construct a light map for this player determining which tiles are visible and which aren't
-	public boolean[][] constructLightMap() {
-		return null;
+	public boolean[][] constructLightMap(boolean[][] lightmap) {
+		lightmap = new boolean[map.getNum_vertical_tiles()][map.getNum_horizontal_tiles()];
+		for(int i = 0; i < units.length; i++) {
+			if(units[i].getXYCoordinate() != null) {
+				List<GPoint> lightPoints = Vision.getVision(map, units[i]);
+				for(int k = 0; k < lightPoints.size(); k++) {
+					lightmap[lightPoints.get(k).row][lightPoints.get(k).col] = true;
+				}
+			}
+		}
+		return lightmap;
 	}
 	
 	//our turn has just now started
