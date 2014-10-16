@@ -31,7 +31,7 @@ public class Vision
 	private static int left, right, top, bottom;
 	private static List<GPoint> ans= new ArrayList<GPoint>();
 	
-/*	
+
 	private static Pool<GPoint> pool;
 	public static final int MAX_POOL_SIZE = 120;
 	
@@ -44,7 +44,7 @@ public class Vision
 		};
 		pool = new Pool<GPoint>(factory, MAX_POOL_SIZE);
 	}
-*/
+
 	
 //	public static List<GPoint> getVision( GPoint locIn, int viewIn, int widthIn, int heightIn, char directionIn)
 	public static List<GPoint> getVision( Map iMAP, Unit iUNIT )
@@ -74,16 +74,16 @@ public class Vision
 
 		for(int i=left;i<=right;i++)
 			for(int j=top;j<=bottom;j++) {
-//				GPoint point = pool.newObject();
+				GPoint point = pool.newObject();
 				if( (direction==Unit.FACING_UP)||(direction==Unit.FACING_DOWN) ) //up or down
 //				if( (direction=='u')||(direction=='d') )
 				{
 					if( Math.abs(loc.row-j) >= Math.abs(loc.col-i) )
 						if( (view+.5) > (Math.sqrt( ((loc.row-j)*(loc.row-j))+((loc.col-i)*(loc.col-i)) )) )
 						{
-//							point.row = j-1; point.col = i-1;
-//							ans.add(point);
-							ans.add(new GPoint(j,i));
+							point.row = j; point.col = i;
+							ans.add(point);
+//							ans.add(new GPoint(j,i));
 						}
 				}
 				else //left or right
@@ -91,9 +91,9 @@ public class Vision
 					if( Math.abs(loc.row-j) <= Math.abs(loc.col-i) )
 						if( (view+.5) > (Math.sqrt( ((loc.row-j)*(loc.row-j))+((loc.col-i)*(loc.col-i)) )) )
 						{
-//							point.row = j-1; point.col = i-1;
-//							ans.add(point);
-							ans.add(new GPoint(j,i));
+							point.row = j; point.col = i;
+							ans.add(point);
+//							ans.add(new GPoint(j,i));
 						}
 				}
 			}
