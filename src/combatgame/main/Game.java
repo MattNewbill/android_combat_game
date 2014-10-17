@@ -6,6 +6,7 @@ import combatgame.state.*;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.Display;
@@ -45,6 +46,7 @@ public class Game extends Activity implements StateManager {
 	public static int P_WIDTH;
 	public static int P_HEIGHT;
 	
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +126,6 @@ public class Game extends Activity implements StateManager {
 		return new MainMenuState(this);
 	}
 	
-	//TODO
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();

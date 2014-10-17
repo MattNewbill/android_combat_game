@@ -98,7 +98,16 @@ public class Map {
 		updateMap(events);
 		
 		//get new lightmap
+		clearLightMap();
 		lightmap = thisPlayersTurn.constructLightMap(lightmap);
+	}
+	
+	private void clearLightMap() {
+		for(int row= 0; row < num_vertical_tiles; row++) {
+			for(int col = 0; col < num_horizontal_tiles; col++) {
+				lightmap[row][col] = false;
+			}
+		}
 	}
 	
 	/**
