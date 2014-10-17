@@ -24,12 +24,17 @@ public class RenderView extends SurfaceView implements Runnable {
 	Graphics2D drawingCanvas;
 	volatile boolean isRunning = false;
 	
+	Paint fpsPaint;
+	
 	public RenderView(Game game, Bitmap frameBuffer) {
 		super(game);
 		this.game = game;
 		this.frameBuffer = frameBuffer;
 		holder = getHolder();
 		drawingCanvas = new GraphicsCPU(frameBuffer);
+		
+		fpsPaint = new Paint();
+		fpsPaint.setColor(Color.WHITE);
 	}
 
 	public void run() {
@@ -51,7 +56,7 @@ public class RenderView extends SurfaceView implements Runnable {
 			
 			game.getCurrentState().update(delta); //update current state (screen)
 			game.getCurrentState().render(drawingCanvas, delta); //render current state (screen)
-			drawingCanvas.drawText(Long.toString(fps), 30, 30, new Paint()); //draw fps
+			drawingCanvas.drawText(Long.toString(fps), 30, 30, fpsPaint); //draw fps
 			
 			Canvas canvas = holder.lockCanvas();
 			canvas.getClipBounds(destinationRect);
