@@ -54,7 +54,7 @@ public class Vision
 //		width=widthIn;
 //		height=heightIn;
 //		direction=directionIn;
-	
+		
 		MAP=iMAP;
 		UNIT=iUNIT;
 		
@@ -72,6 +72,10 @@ public class Vision
 	{
 		limit();
 
+		ans.clear();
+		
+		ans.add(loc);
+		
 		for(int i=left;i<=right;i++)
 			for(int j=top;j<=bottom;j++) {
 				GPoint point = pool.newObject();

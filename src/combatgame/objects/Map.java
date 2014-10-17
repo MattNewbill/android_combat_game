@@ -90,7 +90,6 @@ public class Map {
 	}
 	
 	public void update(List<TouchEvent> events) {
-		
 		//update current player's turn
 		thisPlayersTurn.update(events);
 		
