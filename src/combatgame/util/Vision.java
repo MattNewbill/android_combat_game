@@ -55,14 +55,14 @@ public class Vision
 //		height=heightIn;
 //		direction=directionIn;
 		
-		MAP=iMAP;
-		UNIT=iUNIT;
+		MAP = iMAP;
+		UNIT = iUNIT;
 		
-		loc= UNIT.getXYCoordinate();
-		view=UNIT.getVisionRadius();
+		loc = UNIT.getXYCoordinate();
+		view = UNIT.getVisionRadius();
 		width = MAP.getNum_horizontal_tiles();
 		height = MAP.getNum_vertical_tiles();
-		direction=UNIT.getDirectionFacing();
+		direction = UNIT.getDirectionFacing();
 		
 		work();
 		return ans;
