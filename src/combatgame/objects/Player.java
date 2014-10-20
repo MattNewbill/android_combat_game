@@ -416,6 +416,16 @@ public class Player {
 	
 	//TODO construct a light map for this player determining which tiles are visible and which aren't
 	public boolean[][] constructLightMap(boolean[][] lightmap) {
+		//our base is always visible, so find out where our base currently is
+		for(int row = 0; row < map.getNum_vertical_tiles(); row++) {
+			for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
+				if(isPlayerOne && map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_ONE_BASE)
+					lightmap[row][col] = true;
+				else if(!isPlayerOne && map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE)
+					lightmap[row][col] = true;	
+			}
+		}
+		//get the lightmaps for all of our units
 		for(int i = 0; i < units.length; i++) {
 			if(units[i].getXYCoordinate() != null) {
 				List<GPoint> lightPoints = Vision.getVision(map, units[i]);
