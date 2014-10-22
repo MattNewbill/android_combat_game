@@ -114,6 +114,44 @@ public class Vision
 		work();
 		return ans;
 	}
+	
+	public static List<GPoint> getLaunchVision( Map iMAP, Unit iUNIT, int distance )
+	{
+//		loc= new GPoint(locIn);
+//		view=viewIn;
+//		width=widthIn;
+//		height=heightIn;
+//		direction=directionIn;
+		
+		MAP = iMAP;
+		UNIT = iUNIT;
+		
+		loc = UNIT.getXYCoordinate();
+		//view = UNIT.getVisionRadius()/2;
+		view = distance;
+		width = MAP.getNum_horizontal_tiles();
+		height = MAP.getNum_vertical_tiles();
+//		direction = UNIT.getDirectionFacing();
+		
+		notUsed = new boolean[height][width];
+		
+		for(int a=0; a<notUsed.length; a++)
+			for(int b=0; b<notUsed[a].length; b++)
+				notUsed[a][b]=true;
+		
+		ans.clear();	
+		ans.add(loc);
+		
+		direction = Unit.FACING_LEFT;
+		work();
+		direction = Unit.FACING_DOWN;
+		work();
+		direction = Unit.FACING_RIGHT;
+		work();
+		direction = Unit.FACING_UP;
+		work();
+		return ans;
+	}
 
 	private static void work()
 	{
