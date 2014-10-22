@@ -17,10 +17,6 @@ import combatgame.widgets.UnitInfoDrawableButton;
  * 
  */
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//-- X ALWAYS CORRESPONDS TO COLUMNS AND Y ALWAYS CORRESPONDS TO ROWS
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 public class Player {
 
 	//used for determining what base to spawn in/attack
@@ -241,43 +237,48 @@ public class Player {
 	public GPoint getTileTouched(List<TouchEvent> events) {
 		GPoint pointTouched = null;
 		boolean isUsed = false;
-		//loop through our TouchEvents
-		for(int i = 0; i < events.size(); i++) {
-			//record the last time we touched down on the screen
-			if(events.get(i).type == TouchEvent.TOUCH_DOWN)
-				previousTouchDownTile = map.getTileTouched(events.get(i));
-			//if our previousEvent pointer is null then copy the first TouchEvent into it
-			if(previousEvent == null) {
-				previousEvent = new TouchEvent();
-				previousEvent.copy(events.get(0));
-			}
-			//if the previous touch event was TOUCH_DOWN and the current event is TOUCH_UP then the user clicked a tile
-			if(events.get(i).type == TouchEvent.TOUCH_UP &&
-			   previousEvent.type == TouchEvent.TOUCH_DOWN ||
-			   (previousTouchDownTile != null && events.get(i).type == TouchEvent.TOUCH_UP &&
-			   map.getTileTouched(events.get(i)).col == previousTouchDownTile.col &&
-			   map.getTileTouched(events.get(i)).row == previousTouchDownTile.row)) {
-				//call the map to get the exact tile that was touched
-				pointTouched = map.getTileTouched(events.get(i));
-				isUsed = true; //we used this touch event
-				if(pointTouched != null) {
-					Log.i("combatgame", "row: " + pointTouched.row);
-					Log.i("combatgame", "col: " + pointTouched.col);
+		//sometimes getting null pointer exceptions for reasons unknown (haha, the killers)
+		try {
+			//loop through our TouchEvents
+			for(int i = 0; i < events.size(); i++) {
+				//record the last time we touched down on the screen
+				if(events.get(i).type == TouchEvent.TOUCH_DOWN)
+					previousTouchDownTile = map.getTileTouched(events.get(i));
+				//if our previousEvent pointer is null then copy the first TouchEvent into it
+				if(previousEvent == null) {
+					previousEvent = new TouchEvent();
+					previousEvent.copy(events.get(0));
 				}
-				//the point is null if the point touched was out of bounds
+				//if the previous touch event was TOUCH_DOWN and the current event is TOUCH_UP then the user clicked a tile
+				if(events.get(i).type == TouchEvent.TOUCH_UP &&
+				   previousEvent.type == TouchEvent.TOUCH_DOWN ||
+				   (previousTouchDownTile != null && events.get(i).type == TouchEvent.TOUCH_UP &&
+				   map.getTileTouched(events.get(i)).col == previousTouchDownTile.col &&
+				   map.getTileTouched(events.get(i)).row == previousTouchDownTile.row)) {
+					//call the map to get the exact tile that was touched
+					pointTouched = map.getTileTouched(events.get(i));
+					isUsed = true; //we used this touch event
+					if(pointTouched != null) {
+						Log.i("combatgame", "row: " + pointTouched.row);
+						Log.i("combatgame", "col: " + pointTouched.col);
+					}
+					//the point is null if the point touched was out of bounds
+					else {
+						Log.i("combatgame", "out of bounds");
+					}
+				}
+				//we did not use this particular touch event
 				else {
-					Log.i("combatgame", "out of bounds");
+					isUsed = false;
 				}
+				//copy the current event into the previous event pointer
+				previousEvent.copy(events.get(i));
+				 //we used the touch event, now remove it from the list
+				if(isUsed)
+					events.remove(i);
 			}
-			//we did not use this particular touch event
-			else {
-				isUsed = false;
-			}
-			//copy the current event into the previous event pointer
-			previousEvent.copy(events.get(i));
-			 //we used the touch event, now remove it from the list
-			if(isUsed)
-				events.remove(i);
+		} catch(Exception e) {
+			//we don't care
 		}
 		return pointTouched;
 	}
