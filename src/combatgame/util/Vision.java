@@ -1,4 +1,4 @@
-// Point[] result = Vision.getVision( Map, Unit );
+// List<GPoint> result = Vision.getVision( Map, Unit );
 
 package combatgame.util;
 

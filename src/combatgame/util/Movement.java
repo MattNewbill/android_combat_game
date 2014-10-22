@@ -27,6 +27,7 @@ public class Movement
 	private static boolean[][] notUsed;
 	private static GPoint tempPoint;
 	private static GPoint[][] ans;
+	private static List<GPoint> vis;
 
 	public static GPoint[][] getMovement( Map iMAP, Unit iUNIT )
 //	public static GPoint[][] getMovement( int[][]Imap, GPoint Iloc, int Idistance )
@@ -48,7 +49,12 @@ public class Movement
 		
 		for(int a=0; a<notUsed.length; a++)
 			for(int b=0; b<notUsed[a].length; b++)
-				notUsed[a][b]=true;
+				notUsed[a][b]=false;
+		
+		vis = Vision.getVision( MAP, UNIT );
+		
+		for(int v=0; v < vis.size(); v++)
+			notUsed[vis.get(v).row][vis.get(v).col]=true;
 		
 		ans = new GPoint[distance+1][0];
 		
