@@ -51,7 +51,7 @@ public class Movement
 			for(int b=0; b<notUsed[a].length; b++)
 				notUsed[a][b]=false;
 		
-		vis = Vision.getVision( MAP, UNIT );
+		vis = Vision.getSprintVision( MAP, UNIT );
 		
 		for(int v=0; v < vis.size(); v++)
 			notUsed[vis.get(v).row][vis.get(v).col]=true;
