@@ -30,9 +30,10 @@ public class Player {
 	
 	//action
 	public static final int SELECTION = 0;
-	public static final int MOVEMENT = 1;
-	public static final int CHOOSE_ABILITY = 2;
-	public static final int USE_ABILITY = 3;
+	public static final int CHOOSE_MOVEMENT = 1;
+	public static final int USE_MOVEMENT = 2;
+	public static final int CHOOSE_ABILITY = 3;
+	public static final int USE_ABILITY = 4;
 	private int currentAction = SELECTION;
 	
 	//movement state
@@ -52,6 +53,11 @@ public class Player {
 	private Button abilityButton;
 	private Button deselectButton;
 	private Button endTurnButton;
+	
+	//movement hud icons
+	private Button movementButton;
+	private Button leftRotateButton;
+	private Button rightRotateButton;
 	
 	//determine presses vs scrolls
 	private TouchEvent previousEvent;
@@ -81,12 +87,23 @@ public class Player {
 		int endTurnButtonX = (Game.P_WIDTH / 2) + (GameplayAssets.endTurnIcon.getWidth() / 2) + GameplayAssets.endTurnIcon.getWidth();
 		int endTurnButtonY = Game.P_HEIGHT - GameplayAssets.endTurnIcon.getHeight();
 		
+		int rightRotateButtonX = moveButtonX;
+		int rightRotateButtonY = moveButtonY - GameplayAssets.rightRotateIcon.getHeight();
+		int leftRotateButtonX = moveButtonX;
+		int leftRotateButtonY = rightRotateButtonY - GameplayAssets.leftRotateIcon.getHeight();
+		int movementButtonX = moveButtonX;
+		int movementButtonY = leftRotateButtonY - GameplayAssets.movementIcon.getHeight();
+		
 		//create buttons
 		unitInfoButton = new UnitInfoDrawableButton(GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
 		moveButton = new Button(GameplayAssets.moveIcon, null, moveButtonX, moveButtonY);
 		abilityButton = new Button(GameplayAssets.abilityIcon, null, abilityButtonX, abilityButtonY);
 		deselectButton = new Button(GameplayAssets.deselectIcon, null, deselectButtonX, deselectButtonY);
 		endTurnButton = new Button(GameplayAssets.endTurnIcon, null, endTurnButtonX, endTurnButtonY);
+		
+		movementButton = new Button(GameplayAssets.movementIcon, null, movementButtonX, movementButtonY);
+		leftRotateButton = new Button(GameplayAssets.leftRotateIcon, null, leftRotateButtonX, leftRotateButtonY);
+		rightRotateButton = new Button(GameplayAssets.rightRotateIcon, null, rightRotateButtonX, rightRotateButtonY);
 	}
 	
 	public void update(List<TouchEvent> events) {
@@ -126,8 +143,11 @@ public class Player {
 			case SELECTION:
 				selection(events);
 				break;
-			case MOVEMENT:
-				movement(events);
+			case CHOOSE_MOVEMENT:
+				chooseMovement(events);
+				break;
+			case USE_MOVEMENT:
+				useMovement(events);
 				break;
 			case CHOOSE_ABILITY:
 				abilities(events);
@@ -153,10 +173,10 @@ public class Player {
 		if(moveButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "move button activated");
 			//if the movement button has already been selected, then we deselect it
-			if(currentAction == MOVEMENT)
+			if(currentAction == CHOOSE_MOVEMENT)
 				currentAction = SELECTION;
 			else
-				currentAction = MOVEMENT;
+				currentAction = CHOOSE_MOVEMENT;
 			moveButton.disarm();
 		}
 		//TODO if a unit is selected this needs to pull up the "drop-up" menu to show the last of abilities
@@ -292,7 +312,7 @@ public class Player {
 	////////////////////////////////////////////
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
-	private void movement(List<TouchEvent> events) {
+	private void useMovement(List<TouchEvent> events) {
 		if(units[selectedUnitIndex].getPointsLeft() == 0) {
 			currentAction = SELECTION;
 			return;
@@ -325,6 +345,43 @@ public class Player {
 			currentAction = SELECTION;
 		}
 		
+	}
+	
+	private void chooseMovement(List<TouchEvent> events) {
+		events = movementButton.update(events);
+		events = leftRotateButton.update(events);
+		events = rightRotateButton.update(events);
+		
+		if(movementButton.state == Button.ACTIVATED) {
+			currentAction = USE_MOVEMENT;
+			movementButton.disarm();
+		}
+		if(leftRotateButton.state == Button.ACTIVATED) {
+			Log.i("combatgame", "left rotate button pressed!");
+			if(units[selectedUnitIndex].getPointsLeft() >= units[selectedUnitIndex].getRotationCost()) {
+				units[selectedUnitIndex].rotateLeft();
+				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
+			}
+			currentAction = SELECTION;
+			leftRotateButton.disarm();
+		}
+		if(rightRotateButton.state == Button.ACTIVATED) {
+			Log.i("combatgame", "right rotate button pressed!");
+			if(units[selectedUnitIndex].getPointsLeft() >= units[selectedUnitIndex].getRotationCost()) {
+				units[selectedUnitIndex].rotateRight();
+				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
+			}
+			currentAction = SELECTION;
+			rightRotateButton.disarm();
+		}
+		//if we touch something other than the movement buttons then exit out of the movement state
+		for(int i = 0; i < events.size(); i++) {
+			GPoint tileTouched = getTileTouched(events);
+			if(tileTouched != null) {
+				currentAction = SELECTION;
+				Log.i("combatgame", "here!");
+			}
+		}
 	}
 	
 	////////////////////////////////////////////
@@ -368,21 +425,11 @@ public class Player {
 		//---------------------------------------
 		//--Render movement overlays if we are trying to move a unit
 		//---------------------------------------
-		if(currentAction == MOVEMENT && movementPoints != null) {
+		if(currentAction == USE_MOVEMENT && movementPoints != null) {
 			for(int row = 1; row < movementPoints.length; row++) {
 				for(int col = 0; col < movementPoints[row].length; col++) {
 					g.drawBitmap(GameplayAssets.selectionOverlay, movementPoints[row][col].col * map.getTileWidthInPx() - map.getMapOffsetX(), movementPoints[row][col].row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 				}
-			}
-		}
-		
-		//---------------------------------------
-		//--Render ability buttons if the user has pressed the "ability" button
-		//---------------------------------------
-		if(currentAction == CHOOSE_ABILITY) {
-			Ability[] abilities = units[selectedUnitIndex].getAbilities();
-			for(int i = 0; i < abilities.length; i++) {
-				//abilities.render(g, 50, Game.P_HEIGHT - abilityButton.getHeight() - (abilities.length * GameplayAssets.basicAttack.getHeight()));
 			}
 		}
 		
@@ -408,6 +455,25 @@ public class Player {
 		abilityButton.render(g);
 		deselectButton.render(g);
 		endTurnButton.render(g);
+		
+		//---------------------------------------
+		//--Render movement buttons if the user has pressed the "move" button
+		//---------------------------------------
+		if(currentAction == CHOOSE_MOVEMENT) {
+			movementButton.render(g);
+			leftRotateButton.render(g);
+			rightRotateButton.render(g);
+		}
+		
+		//---------------------------------------
+		//--Render ability buttons if the user has pressed the "ability" button
+		//---------------------------------------
+		if(currentAction == CHOOSE_ABILITY) {
+			Ability[] abilities = units[selectedUnitIndex].getAbilities();
+			for(int i = 0; i < abilities.length; i++) {
+				//abilities.render(g, 50, Game.P_HEIGHT - abilityButton.getHeight() - (abilities.length * GameplayAssets.basicAttack.getHeight()));
+			}
+		}
 	}
 	
 	public void dispose() {
@@ -428,7 +494,7 @@ public class Player {
 		//get the lightmaps for all of our units
 		for(int i = 0; i < units.length; i++) {
 			if(units[i].getXYCoordinate() != null) {
-				List<GPoint> lightPoints = Vision.getVision(map, units[i]);
+				List<GPoint> lightPoints = Vision.getSprintVision(map, units[i]);
 				for(int k = 0; k < lightPoints.size(); k++) {
 					lightmap[lightPoints.get(k).row][lightPoints.get(k).col] = true;
 				}

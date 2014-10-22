@@ -172,7 +172,6 @@ public class Map {
 			if(mapOffsetX < (tileToScrollTo.col * tileWidthInPx) - (Game.P_WIDTH / 2) - LEEWAY)
 				mapOffsetX += FAST_SCROLL_DISTANCE;
 			else if(mapOffsetX > (tileToScrollTo.col * tileWidthInPx) - (Game.P_WIDTH / 2) + LEEWAY) {
-				Log.i("combatgame", "mapoffset >");
 				mapOffsetX -= FAST_SCROLL_DISTANCE;
 			}
 			

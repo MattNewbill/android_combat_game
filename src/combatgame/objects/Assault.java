@@ -22,6 +22,7 @@ public class Assault extends Unit {
 		this.sprites = GameplayAssets.assaultIcons;
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
+		this.rotationCost = 1;
 	}
 	
 }
