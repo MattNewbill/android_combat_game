@@ -29,6 +29,9 @@ public class GameplayAssets {
 	//selection overlays
 	public static Bitmap selectionOverlay;
 	
+	//spawn unit
+	public static Bitmap spawnUnitIcon;
+	
 	private GameplayAssets(){}
 	
 	public static void loadGameplayAssets(AssetManager am) {
@@ -53,6 +56,8 @@ public class GameplayAssets {
 			rightRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/right_rotate_icon.png"));
 			
 			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/selection_overlay.png"));
+			
+			spawnUnitIcon = BitmapFactory.decodeStream(am.open("sprites/hud/spawn_unit_icon.png"));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
