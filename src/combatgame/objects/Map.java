@@ -252,6 +252,12 @@ public class Map {
 			}
 		}
 		
+		//render "enemy" units if they are visible
+		if(thisPlayersTurn == player1) //if it's player1's turn then the "enemy" is player2
+			player2.renderVisibleUnits(g, lightmap);
+		else //vice versa
+			player1.renderVisibleUnits(g, lightmap);
+		
 		//render current player
 		thisPlayersTurn.render(g);
 		

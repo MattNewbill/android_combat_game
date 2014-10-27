@@ -604,6 +604,22 @@ public class Player {
 		}
 	}
 	
+	////////////////////////////////////////////
+	////RENDER OUR UNITS IF THEY ARE VISIBLE BY THE OTHER PLAYER
+	////////////////////////////////////////////
+	public void renderVisibleUnits(Graphics2D g, boolean[][] lightmap) {
+		for(int row = 0; row < lightmap.length; row++) {
+			for(int col = 0; col < lightmap[0].length; col++) {
+				if(lightmap[row][col])
+					for(int i = 0; i < units.length; i++) {
+						GPoint coordinate = units[i].getXYCoordinate();
+						if(coordinate != null && coordinate.row == row && coordinate.col == col)
+							g.drawBitmap(units[i].getSprite(), coordinate.col * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+					}
+			}
+		}
+	}
+	
 	public void dispose() {
 		
 	}
