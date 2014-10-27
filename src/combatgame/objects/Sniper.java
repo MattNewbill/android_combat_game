@@ -22,6 +22,7 @@ public class Sniper extends Unit {
 		this.sprites = GameplayAssets.sniperIcons;
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
+		this.rotationCost = 1;
 	}
 	
 }

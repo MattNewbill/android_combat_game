@@ -23,13 +23,14 @@ public abstract class Unit {
 	protected int pointsLeft;
 	protected int maxHealth;
 	protected Ability[] abilities;
+	protected int rotationCost;
 	
 	public static final int POINTS_PER_TURN = 5;
 	
 	public static final int FACING_UP = 0;
-	public static final int FACING_DOWN = 1;
-	public static final int FACING_LEFT = 2;
-	public static final int FACING_RIGHT = 3;
+	public static final int FACING_RIGHT = 1;
+	public static final int FACING_DOWN = 2;
+	public static final int FACING_LEFT = 3;
 	
 	public String getName() {
 		return name;	}
@@ -116,5 +117,21 @@ public abstract class Unit {
 	
 	public Ability[] getAbilities() {
 		return abilities;
+	}
+	
+	public void rotateLeft() {
+		directionFacing--;
+		if(directionFacing < FACING_UP)
+			directionFacing = FACING_LEFT;
+	}
+	
+	public void rotateRight() {
+		directionFacing++;
+		if(directionFacing > FACING_LEFT)
+			directionFacing = FACING_UP;
+	}
+	
+	public int getRotationCost() {
+		return rotationCost;
 	}
 }

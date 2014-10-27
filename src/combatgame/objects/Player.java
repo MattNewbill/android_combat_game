@@ -17,10 +17,6 @@ import combatgame.widgets.UnitInfoDrawableButton;
  * 
  */
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//-- X ALWAYS CORRESPONDS TO COLUMNS AND Y ALWAYS CORRESPONDS TO ROWS
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 public class Player {
 
 	//used for determining what base to spawn in/attack
@@ -30,9 +26,11 @@ public class Player {
 	
 	//action
 	public static final int SELECTION = 0;
-	public static final int MOVEMENT = 1;
-	public static final int CHOOSE_ABILITY = 2;
-	public static final int USE_ABILITY = 3;
+	public static final int CHOOSE_MOVEMENT = 1;
+	public static final int USE_MOVEMENT = 2;
+	public static final int CHOOSE_ABILITY = 3;
+	public static final int USE_ABILITY = 4;
+	public static final int SPAWN_UNIT = 5;
 	private int currentAction = SELECTION;
 	
 	//movement state
@@ -44,6 +42,7 @@ public class Player {
 	//gameplay objects
 	private Unit[] units;
 	private int selectedUnitIndex = 0;
+	private int spawnUnitIndex = 0; //index of next unit that needs to be spawned in (setup phase)
 	private Map map;
 	
 	//hud icons
@@ -52,6 +51,13 @@ public class Player {
 	private Button abilityButton;
 	private Button deselectButton;
 	private Button endTurnButton;
+	
+	private Button spawnUnitButton;
+	
+	//movement hud icons
+	private Button movementButton;
+	private Button leftRotateButton;
+	private Button rightRotateButton;
 	
 	//determine presses vs scrolls
 	private TouchEvent previousEvent;
@@ -81,16 +87,111 @@ public class Player {
 		int endTurnButtonX = (Game.P_WIDTH / 2) + (GameplayAssets.endTurnIcon.getWidth() / 2) + GameplayAssets.endTurnIcon.getWidth();
 		int endTurnButtonY = Game.P_HEIGHT - GameplayAssets.endTurnIcon.getHeight();
 		
+		int rightRotateButtonX = moveButtonX;
+		int rightRotateButtonY = moveButtonY - GameplayAssets.rightRotateIcon.getHeight();
+		int leftRotateButtonX = moveButtonX;
+		int leftRotateButtonY = rightRotateButtonY - GameplayAssets.leftRotateIcon.getHeight();
+		int movementButtonX = moveButtonX;
+		int movementButtonY = leftRotateButtonY - GameplayAssets.movementIcon.getHeight();
+		
+		int spawnUnitButtonX = (Game.P_WIDTH / 2) - (GameplayAssets.abilityIcon.getWidth() / 2);
+		int spawnUnitButtonY = Game.P_HEIGHT - GameplayAssets.abilityIcon.getHeight();
+		
 		//create buttons
 		unitInfoButton = new UnitInfoDrawableButton(GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
 		moveButton = new Button(GameplayAssets.moveIcon, null, moveButtonX, moveButtonY);
 		abilityButton = new Button(GameplayAssets.abilityIcon, null, abilityButtonX, abilityButtonY);
 		deselectButton = new Button(GameplayAssets.deselectIcon, null, deselectButtonX, deselectButtonY);
 		endTurnButton = new Button(GameplayAssets.endTurnIcon, null, endTurnButtonX, endTurnButtonY);
+		
+		movementButton = new Button(GameplayAssets.movementIcon, null, movementButtonX, movementButtonY);
+		leftRotateButton = new Button(GameplayAssets.leftRotateIcon, null, leftRotateButtonX, leftRotateButtonY);
+		rightRotateButton = new Button(GameplayAssets.rightRotateIcon, null, rightRotateButtonX, rightRotateButtonY);
+		
+		spawnUnitButton = new Button(GameplayAssets.spawnUnitIcon, null, spawnUnitButtonX, spawnUnitButtonY);
+		
+		disableButtons();
 	}
 	
 	public void update(List<TouchEvent> events) {
 		
+		//----------------------------------------
+		//--SET UP PHASE--
+		//----------------------------------------
+		if(isSetupPhase) {
+			updateSetupPhase(events);
+		}
+		//----------------------------------------
+		//--TURN PHASE--
+		//----------------------------------------
+		else {
+			updateTurnPhase(events);
+		}
+	}
+	
+	//only runs during the setup phase
+	//setup phase consists of unit placement
+	private void updateSetupPhase(List<TouchEvent> events) {
+		
+		//----------------------------------------
+		//--UPDATE BUTTON STATES--
+		//----------------------------------------
+		events = moveButton.update(events);
+		events = spawnUnitButton.update(events);
+		events = deselectButton.update(events);
+		if(spawnUnitIndex == units.length) {
+			events = endTurnButton.update(events);
+			if(endTurnButton.state == Button.ACTIVATED) {
+				endTurnButton.disarm();
+				isSetupPhase = false;
+				selectedUnitIndex = 0;
+				map.switchTurn();
+			}
+		}
+		
+		//what action is the player currently doing
+		switch(currentAction) {
+			case SELECTION:
+				selection(events);
+				break;
+			case CHOOSE_MOVEMENT:
+				chooseMovementSetup(events);
+				break;
+			case SPAWN_UNIT:
+				spawnUnit(events);
+				break;
+			default:
+				throw new IllegalArgumentException("no such action");
+		}
+		
+		if(moveButton.state == Button.ACTIVATED) {
+			moveButton.disarm();
+			if(selectedUnitIndex != -1) {
+				if(currentAction == CHOOSE_MOVEMENT)
+					currentAction = SELECTION;
+				else
+					currentAction = CHOOSE_MOVEMENT;
+			}
+		}
+		
+		if(spawnUnitButton.state == Button.ACTIVATED) {
+			spawnUnitButton.disarm();
+			if(currentAction == SPAWN_UNIT)
+				currentAction = SELECTION;
+			else
+				currentAction = SPAWN_UNIT;
+		}
+		
+		//deselected the current unit
+		if(deselectButton.state == Button.ACTIVATED) {
+			deselectButton.disarm();
+			selectedUnitIndex = -1; //deselect the unit
+			currentAction = SELECTION;
+			disableButtons(); //disable hud buttons
+		}
+	}
+	
+	private void updateTurnPhase(List<TouchEvent> events) {
 		//----------------------------------------
 		//--UPDATE BUTTON STATES--
 		//----------------------------------------
@@ -102,17 +203,6 @@ public class Player {
 		events = deselectButton.update(events);
 		events = endTurnButton.update(events);
 		
-		//----------------------------------------
-		//--SET UP PHASE--
-		//----------------------------------------
-		
-		//if we are in the setup phase then only update the setup phase method
-		if(isSetupPhase) {
-			updateSetupPhase(events);
-			return;
-		}
-		
-		//now that the setup phase is over we have to start implementing the actual game logic
 		//----------------------------------------
 		//--TURN BASED GAME LOGIC--
 		//----------------------------------------
@@ -126,8 +216,11 @@ public class Player {
 			case SELECTION:
 				selection(events);
 				break;
-			case MOVEMENT:
-				movement(events);
+			case CHOOSE_MOVEMENT:
+				chooseMovementTurn(events);
+				break;
+			case USE_MOVEMENT:
+				useMovement(events);
 				break;
 			case CHOOSE_ABILITY:
 				abilities(events);
@@ -153,10 +246,10 @@ public class Player {
 		if(moveButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "move button activated");
 			//if the movement button has already been selected, then we deselect it
-			if(currentAction == MOVEMENT)
+			if(currentAction == CHOOSE_MOVEMENT)
 				currentAction = SELECTION;
 			else
-				currentAction = MOVEMENT;
+				currentAction = CHOOSE_MOVEMENT;
 			moveButton.disarm();
 		}
 		//TODO if a unit is selected this needs to pull up the "drop-up" menu to show the last of abilities
@@ -182,37 +275,6 @@ public class Player {
 		}
 	}
 	
-	//only runs during the setup phase
-	//setup phase consists of unit placement
-	private void updateSetupPhase(List<TouchEvent> events) {
-		if(selectedUnitIndex == units.length) {
-			events = endTurnButton.update(events);
-			if(endTurnButton.state == Button.ACTIVATED) {
-				endTurnButton.disarm();
-				isSetupPhase = false;
-				selectedUnitIndex = 0;
-				map.switchTurn();
-			}
-		}
-		else {
-			GPoint tile = getTileTouched(events);
-			//only let player one spawn in player one's base
-			if(isPlayerOne) {
-				if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_ONE_BASE && !map.getTile(tile).hasUnit()) {
-					units[selectedUnitIndex].setXYCoordinate(tile, map);
-					selectedUnitIndex++;
-				}
-			}
-			//only let player two spawn in player two's base
-			else {
-				if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_TWO_BASE && !map.getTile(tile).hasUnit()) {
-					units[selectedUnitIndex].setXYCoordinate(tile, map);
-					selectedUnitIndex++;
-				}
-			}
-		}
-	}
-	
 	/**
 	 * Loop through the events to check if a tile was touched by the player
 	 * @param events List of TouchEvents to loop through
@@ -221,45 +283,81 @@ public class Player {
 	public GPoint getTileTouched(List<TouchEvent> events) {
 		GPoint pointTouched = null;
 		boolean isUsed = false;
-		//loop through our TouchEvents
-		for(int i = 0; i < events.size(); i++) {
-			//record the last time we touched down on the screen
-			if(events.get(i).type == TouchEvent.TOUCH_DOWN)
-				previousTouchDownTile = map.getTileTouched(events.get(i));
-			//if our previousEvent pointer is null then copy the first TouchEvent into it
-			if(previousEvent == null) {
-				previousEvent = new TouchEvent();
-				previousEvent.copy(events.get(0));
-			}
-			//if the previous touch event was TOUCH_DOWN and the current event is TOUCH_UP then the user clicked a tile
-			if(events.get(i).type == TouchEvent.TOUCH_UP &&
-			   previousEvent.type == TouchEvent.TOUCH_DOWN ||
-			   (previousTouchDownTile != null && events.get(i).type == TouchEvent.TOUCH_UP &&
-			   map.getTileTouched(events.get(i)).col == previousTouchDownTile.col &&
-			   map.getTileTouched(events.get(i)).row == previousTouchDownTile.row)) {
-				//call the map to get the exact tile that was touched
-				pointTouched = map.getTileTouched(events.get(i));
-				isUsed = true; //we used this touch event
-				if(pointTouched != null) {
-					Log.i("combatgame", "row: " + pointTouched.row);
-					Log.i("combatgame", "col: " + pointTouched.col);
+		//sometimes getting null pointer exceptions for reasons unknown (haha, the killers)
+		try {
+			//loop through our TouchEvents
+			for(int i = 0; i < events.size(); i++) {
+				//record the last time we touched down on the screen
+				if(events.get(i).type == TouchEvent.TOUCH_DOWN)
+					previousTouchDownTile = map.getTileTouched(events.get(i));
+				//if our previousEvent pointer is null then copy the first TouchEvent into it
+				if(previousEvent == null) {
+					previousEvent = new TouchEvent();
+					previousEvent.copy(events.get(0));
 				}
-				//the point is null if the point touched was out of bounds
+				//if the previous touch event was TOUCH_DOWN and the current event is TOUCH_UP then the user clicked a tile
+				if(events.get(i).type == TouchEvent.TOUCH_UP &&
+				   previousEvent.type == TouchEvent.TOUCH_DOWN ||
+				   (previousTouchDownTile != null && events.get(i).type == TouchEvent.TOUCH_UP &&
+				   map.getTileTouched(events.get(i)).col == previousTouchDownTile.col &&
+				   map.getTileTouched(events.get(i)).row == previousTouchDownTile.row)) {
+					//call the map to get the exact tile that was touched
+					pointTouched = map.getTileTouched(events.get(i));
+					isUsed = true; //we used this touch event
+					if(pointTouched != null) {
+						Log.i("combatgame", "row: " + pointTouched.row);
+						Log.i("combatgame", "col: " + pointTouched.col);
+					}
+					//the point is null if the point touched was out of bounds
+					else {
+						Log.i("combatgame", "out of bounds");
+					}
+				}
+				//we did not use this particular touch event
 				else {
-					Log.i("combatgame", "out of bounds");
+					isUsed = false;
 				}
+				//copy the current event into the previous event pointer
+				previousEvent.copy(events.get(i));
+				 //we used the touch event, now remove it from the list
+				if(isUsed)
+					events.remove(i);
 			}
-			//we did not use this particular touch event
-			else {
-				isUsed = false;
-			}
-			//copy the current event into the previous event pointer
-			previousEvent.copy(events.get(i));
-			 //we used the touch event, now remove it from the list
-			if(isUsed)
-				events.remove(i);
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		return pointTouched;
+	}
+	
+	////////////////////////////////////////////
+	////PLAYER IS ATTEMPTING TO SPAWN A UNIT
+	////////////////////////////////////////////
+	private void spawnUnit(List<TouchEvent> events) {
+		selectedUnitIndex = -1;
+		disableButtons();
+		GPoint tile = getTileTouched(events);
+		//only let player one spawn in player one's base
+		if(isPlayerOne) {
+			if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_ONE_BASE && !map.getTile(tile).hasUnit()) {
+				units[spawnUnitIndex].setXYCoordinate(tile, map);
+				selectedUnitIndex = spawnUnitIndex;
+				spawnUnitIndex++;
+				currentAction = SELECTION;
+				enableButtons();
+			}
+		}
+		//only let player two spawn in player two's base
+		else {
+			if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_TWO_BASE && !map.getTile(tile).hasUnit()) {
+				units[spawnUnitIndex].setXYCoordinate(tile, map);
+				selectedUnitIndex = spawnUnitIndex;
+				spawnUnitIndex++;
+				currentAction = SELECTION;
+				enableButtons();
+			}
+		}
+		if(spawnUnitIndex == units.length)
+			spawnUnitButton.disable();
 	}
 	
 	////////////////////////////////////////////
@@ -273,7 +371,7 @@ public class Player {
 			boolean isUnitSelected = false;
 			for(int i = 0; i < units.length; i++) { //loop through our units to see if we touched one
 				tile = units[i].getXYCoordinate();
-				if(tile.col == tileTouched.col && tile.row == tileTouched.row) { //if we did touch it, set that unit as the currently selected unit
+				if(tile != null && tile.col == tileTouched.col && tile.row == tileTouched.row) { //if we did touch it, set that unit as the currently selected unit
 					movementPoints = null;
 					selectedUnitIndex = i;
 					isUnitSelected = true;
@@ -292,7 +390,7 @@ public class Player {
 	////////////////////////////////////////////
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
-	private void movement(List<TouchEvent> events) {
+	private void useMovement(List<TouchEvent> events) {
 		if(units[selectedUnitIndex].getPointsLeft() == 0) {
 			currentAction = SELECTION;
 			return;
@@ -328,6 +426,73 @@ public class Player {
 	}
 	
 	////////////////////////////////////////////
+	////PLAYER IS ALLOWED TO ROTATE A SPAWNED UNIT DURING SETUP
+	////////////////////////////////////////////
+	private void chooseMovementSetup(List<TouchEvent> events) {
+		events = leftRotateButton.update(events);
+		events = rightRotateButton.update(events);
+		
+		if(leftRotateButton.state == Button.ACTIVATED) {
+			Log.i("combatgame", "left rotate button pressed!");
+			units[selectedUnitIndex].rotateLeft();
+			currentAction = SELECTION;
+			leftRotateButton.disarm();
+		}
+		if(rightRotateButton.state == Button.ACTIVATED) {
+			Log.i("combatgame", "right rotate button pressed!");
+			units[selectedUnitIndex].rotateRight();
+			currentAction = SELECTION;
+			rightRotateButton.disarm();
+		}
+		//if we touch something other than the movement buttons then exit out of the movement state
+		for(int i = 0; i < events.size(); i++) {
+			GPoint tileTouched = getTileTouched(events);
+			if(tileTouched != null) {
+				currentAction = SELECTION;
+			}
+		}
+	}
+	
+	////////////////////////////////////////////
+	////PLAYER IS SELECTING HOW TO MOVE A SELECTED UNIT DURING ACTUAL TURN
+	////////////////////////////////////////////
+	private void chooseMovementTurn(List<TouchEvent> events) {
+		events = movementButton.update(events);
+		events = leftRotateButton.update(events);
+		events = rightRotateButton.update(events);
+		
+		if(movementButton.state == Button.ACTIVATED) {
+			currentAction = USE_MOVEMENT;
+			movementButton.disarm();
+		}
+		if(leftRotateButton.state == Button.ACTIVATED) {
+			Log.i("combatgame", "left rotate button pressed!");
+			if(units[selectedUnitIndex].getPointsLeft() >= units[selectedUnitIndex].getRotationCost()) {
+				units[selectedUnitIndex].rotateLeft();
+				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
+			}
+			currentAction = SELECTION;
+			leftRotateButton.disarm();
+		}
+		if(rightRotateButton.state == Button.ACTIVATED) {
+			Log.i("combatgame", "right rotate button pressed!");
+			if(units[selectedUnitIndex].getPointsLeft() >= units[selectedUnitIndex].getRotationCost()) {
+				units[selectedUnitIndex].rotateRight();
+				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
+			}
+			currentAction = SELECTION;
+			rightRotateButton.disarm();
+		}
+		//if we touch something other than the movement buttons then exit out of the movement state
+		for(int i = 0; i < events.size(); i++) {
+			GPoint tileTouched = getTileTouched(events);
+			if(tileTouched != null) {
+				currentAction = SELECTION;
+			}
+		}
+	}
+	
+	////////////////////////////////////////////
 	////PLAYER IS SELECTING A UNIT'S ABILITY TO USE
 	////////////////////////////////////////////
 	private void abilities(List<TouchEvent> events) {
@@ -350,7 +515,7 @@ public class Player {
 		//---------------------------------------
 		//--Render spawn overlays in our base, but only during setup phase
 		//---------------------------------------
-		if(isSetupPhase && selectedUnitIndex != units.length) {
+		if(isSetupPhase && spawnUnitIndex != units.length && currentAction == SPAWN_UNIT) {
 			for(int row = 0; row < map.getNum_vertical_tiles(); row++) {
 				for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
 					if(isPlayerOne) {
@@ -368,21 +533,11 @@ public class Player {
 		//---------------------------------------
 		//--Render movement overlays if we are trying to move a unit
 		//---------------------------------------
-		if(currentAction == MOVEMENT && movementPoints != null) {
+		if(currentAction == USE_MOVEMENT && movementPoints != null) {
 			for(int row = 1; row < movementPoints.length; row++) {
 				for(int col = 0; col < movementPoints[row].length; col++) {
 					g.drawBitmap(GameplayAssets.selectionOverlay, movementPoints[row][col].col * map.getTileWidthInPx() - map.getMapOffsetX(), movementPoints[row][col].row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 				}
-			}
-		}
-		
-		//---------------------------------------
-		//--Render ability buttons if the user has pressed the "ability" button
-		//---------------------------------------
-		if(currentAction == CHOOSE_ABILITY) {
-			Ability[] abilities = units[selectedUnitIndex].getAbilities();
-			for(int i = 0; i < abilities.length; i++) {
-				//abilities.render(g, 50, Game.P_HEIGHT - abilityButton.getHeight() - (abilities.length * GameplayAssets.basicAttack.getHeight()));
 			}
 		}
 		
@@ -401,13 +556,63 @@ public class Player {
 		}
 		
 		//---------------------------------------
-		//--Render our HUD at the very end
+		//--Render our turn HUD at the very end
 		//---------------------------------------
-		unitInfoButton.render(g);
-		moveButton.render(g);
-		abilityButton.render(g);
-		deselectButton.render(g);
-		endTurnButton.render(g);
+		if(!isSetupPhase) {
+			unitInfoButton.render(g);
+			moveButton.render(g);
+			abilityButton.render(g);
+			deselectButton.render(g);
+			endTurnButton.render(g);
+		}
+		
+		//---------------------------------------
+		//--Render spawn hud if we are in the setup phase
+		//---------------------------------------
+		if(isSetupPhase) {
+			moveButton.render(g);
+			spawnUnitButton.render(g);
+			deselectButton.render(g);
+			endTurnButton.render(g);
+		}
+		
+		//---------------------------------------
+		//--Render rotate buttons if the user has pressed the "move" button during setup phase
+		//---------------------------------------
+		if(currentAction == CHOOSE_MOVEMENT) {
+			leftRotateButton.render(g);
+			rightRotateButton.render(g);
+		}
+		
+		//---------------------------------------
+		//--Render movement buttons if the user has pressed the "move" button during an actual turn
+		//---------------------------------------
+		if(currentAction == CHOOSE_MOVEMENT && !isSetupPhase) {
+			movementButton.render(g);
+			leftRotateButton.render(g);
+			rightRotateButton.render(g);
+		}
+		
+		//---------------------------------------
+		//--Render ability buttons if the user has pressed the "ability" button
+		//---------------------------------------
+		if(currentAction == CHOOSE_ABILITY) {
+			Ability[] abilities = units[selectedUnitIndex].getAbilities();
+			for(int i = 0; i < abilities.length; i++) {
+				//abilities.render(g, 50, Game.P_HEIGHT - abilityButton.getHeight() - (abilities.length * GameplayAssets.basicAttack.getHeight()));
+			}
+		}
+	}
+	
+	////////////////////////////////////////////
+	////RENDER OUR UNITS IF THEY ARE VISIBLE BY THE OTHER PLAYER
+	////////////////////////////////////////////
+	public void renderVisibleUnits(Graphics2D g, boolean[][] lightmap) {
+		for(int i = 0; i < units.length; i++) {
+			GPoint coordinate = units[i].getXYCoordinate();
+			if(coordinate != null && lightmap[coordinate.row][coordinate.col])
+				g.drawBitmap(units[i].getSprite(), coordinate.col * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+		}
 	}
 	
 	public void dispose() {
@@ -428,7 +633,7 @@ public class Player {
 		//get the lightmaps for all of our units
 		for(int i = 0; i < units.length; i++) {
 			if(units[i].getXYCoordinate() != null) {
-				List<GPoint> lightPoints = Vision.getVision(map, units[i]);
+				List<GPoint> lightPoints = Vision.getSprintVision(map, units[i]);
 				for(int k = 0; k < lightPoints.size(); k++) {
 					lightmap[lightPoints.get(k).row][lightPoints.get(k).col] = true;
 				}

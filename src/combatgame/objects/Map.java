@@ -47,6 +47,14 @@ public class Map {
 	public static final int LEEWAY = 30;
 	public static final int FAST_SCROLL_DISTANCE = 20;
 	
+	//////////////////////////////////
+	//--Temp color values for rendering tilemap
+	//////////////////////////////////
+	private int shadedYELLOW = Color.parseColor("#646400");
+	private int shadedDKGRAY = Color.parseColor("#000000");
+	private int shadedGREEN = Color.parseColor("#006400");
+	private int shadedRED = Color.parseColor("#640000");
+	private int shadedMAGENTA = Color.parseColor("#640064");
 	
 	public Map (AssetManager am, String filePath) {
 		//create players
@@ -172,7 +180,6 @@ public class Map {
 			if(mapOffsetX < (tileToScrollTo.col * tileWidthInPx) - (Game.P_WIDTH / 2) - LEEWAY)
 				mapOffsetX += FAST_SCROLL_DISTANCE;
 			else if(mapOffsetX > (tileToScrollTo.col * tileWidthInPx) - (Game.P_WIDTH / 2) + LEEWAY) {
-				Log.i("combatgame", "mapoffset >");
 				mapOffsetX -= FAST_SCROLL_DISTANCE;
 			}
 			
@@ -210,7 +217,21 @@ public class Map {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
 				//if we can't see the tile, make it black (eventually we'll replace this with our shaded sprite of the particular tile, but this works for now)
 				if(!lightmap[row][col]) {
-					paint.setColor(Color.BLACK);
+					if(getFeatureType(row, col) == MapFeature.TERRAIN) {
+						paint.setColor(shadedYELLOW);
+					}
+					else if(getFeatureType(row, col) == MapFeature.HEDGEHOG) {
+						paint.setColor(shadedDKGRAY);
+					}
+					else if(getFeatureType(row, col) == MapFeature.TREE) {
+						paint.setColor(shadedGREEN);
+					}
+					else if(getFeatureType(row, col) == MapFeature.PLAYER_ONE_BASE) {
+						paint.setColor(shadedMAGENTA);
+					}
+					else if(getFeatureType(row, col) == MapFeature.PLAYER_TWO_BASE) {
+						paint.setColor(shadedRED);
+					}
 				}
 				else if(getFeatureType(row, col) == MapFeature.TERRAIN) {
 					paint.setColor(Color.YELLOW);
@@ -230,6 +251,12 @@ public class Map {
 				g.drawRect((col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, (col * tileWidthInPx + tileWidthInPx) - mapOffsetX, (row * tileHeightInPx + tileHeightInPx) - mapOffsetY, paint);
 			}
 		}
+		
+		//render "enemy" units if they are visible
+		if(thisPlayersTurn == player1) //if it's player1's turn then the "enemy" is player2
+			player2.renderVisibleUnits(g, lightmap);
+		else //vice versa
+			player1.renderVisibleUnits(g, lightmap);
 		
 		//render current player
 		thisPlayersTurn.render(g);
