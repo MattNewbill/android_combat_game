@@ -22,7 +22,13 @@ public class HotSeatState extends State {
 	
 	public HotSeatState(StateManager stateManager) {
 		super(stateManager);
-		this.stateManager.shouldScale(false);
+		
+		//if the device's resolution is our target size or lower, then we scale the game to our target size
+		if(Game.P_WIDTH <= Game.G_WIDTH && Game.P_HEIGHT <= Game.G_HEIGHT)
+			Game.shouldScale(true);
+		//anything bigger and we don't scale
+		else
+			Game.shouldScale(false);
 		
 		paint = new Paint();
 		

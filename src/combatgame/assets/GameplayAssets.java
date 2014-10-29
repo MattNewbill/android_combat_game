@@ -75,8 +75,8 @@ public class GameplayAssets {
 			
 			playerBanner = BitmapFactory.decodeStream(am.open("sprites/player_banner.png"));
 			
-			if(Game.P_WIDTH != Game.G_WIDTH && Game.P_HEIGHT != Game.G_HEIGHT)
-				resizeHUD();
+			//if(Game.P_WIDTH != Game.G_WIDTH && Game.P_HEIGHT != Game.G_HEIGHT)
+				//resizeHUD();
 			
 		} catch(Exception e) {
 			e.printStackTrace();

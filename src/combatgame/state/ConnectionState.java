@@ -24,7 +24,7 @@ public class ConnectionState extends State {
 	
 	public ConnectionState(StateManager sm) {
 		super(sm);
-		this.stateManager.shouldScale(true);
+		Game.shouldScale(true);
 		
 		AssetManager am = this.stateManager.getAssetManager();
 		

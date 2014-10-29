@@ -272,8 +272,14 @@ public class Map {
 		thisPlayersTurn.render(g);
 		
 		//draw player gamer tag top, center of screen
-		g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
-		g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 20, gamertagFont);
+		if(Game.isScaled()) { //TODO: scale player font for larget devices
+			g.drawBitmap(GameplayAssets.playerBanner, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 20, gamertagFont);
+		}
+		else {
+			g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 20, gamertagFont);
+		}
 	}
 	
 	/**

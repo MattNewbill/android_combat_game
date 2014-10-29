@@ -23,7 +23,7 @@ public class AboutState extends State {
 	
 	public AboutState(StateManager stateManager) {
 		super(stateManager);
-		this.stateManager.shouldScale(true);
+		Game.shouldScale(true);
 		
 		//load assets
 		AssetManager am = stateManager.getAssetManager();

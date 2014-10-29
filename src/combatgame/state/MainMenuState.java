@@ -26,7 +26,7 @@ public class MainMenuState extends State {
 	
 	public MainMenuState(StateManager stateManager) {
 		super(stateManager);
-		this.stateManager.shouldScale(true);
+		Game.shouldScale(true);
 		
 		AssetManager am = stateManager.getAssetManager();
 		

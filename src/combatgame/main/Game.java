@@ -35,7 +35,7 @@ public class Game extends Activity implements StateManager {
 	
 	//should we scale and translate the rendered iamge to
 	//fit the phone's screen
-	boolean shouldScale = false;
+	static boolean shouldScale = false;
 	
 	//width and height that the game is optimized for and
 	//that positioning is calculated for
@@ -164,13 +164,11 @@ public class Game extends Activity implements StateManager {
 		return touchHandler;
 	}
 	
-	@Override
-	public void shouldScale(boolean shouldScale) {
-		this.shouldScale = shouldScale;
+	public static void shouldScale(boolean scale) {
+		shouldScale = scale;
 	}
 	
-	@Override
-	public boolean isScaled() {
+	public static boolean isScaled() {
 		return shouldScale;
 	}
 

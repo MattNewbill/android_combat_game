@@ -79,16 +79,24 @@ public class Player {
 		units[2] = new Sniper(playerId);
 		
 		//coordinates of each hud button
-		int unitInfoButtonX = (Game.P_WIDTH / 2) - (2 * GameplayAssets.unitInfoIcon.getWidth()) - GameplayAssets.unitInfoIcon.getWidth() / 2;
-		int unitInfoButtonY = Game.P_HEIGHT - GameplayAssets.unitInfoIcon.getHeight();
-		int moveButtonX = (Game.P_WIDTH / 2) - GameplayAssets.moveIcon.getWidth() - GameplayAssets.moveIcon.getWidth() / 2;
-		int moveButtonY = Game.P_HEIGHT - GameplayAssets.moveIcon.getHeight();
-		int abilityButtonX = (Game.P_WIDTH / 2) - (GameplayAssets.abilityIcon.getWidth() / 2);
-		int abilityButtonY = Game.P_HEIGHT - GameplayAssets.abilityIcon.getHeight();
-		int deselectButtonX = (Game.P_WIDTH / 2) + (GameplayAssets.deselectIcon.getWidth() / 2);
-		int deselectButtonY = Game.P_HEIGHT - GameplayAssets.deselectIcon.getHeight();
-		int endTurnButtonX = (Game.P_WIDTH / 2) + (GameplayAssets.endTurnIcon.getWidth() / 2) + GameplayAssets.endTurnIcon.getWidth();
-		int endTurnButtonY = Game.P_HEIGHT - GameplayAssets.endTurnIcon.getHeight();
+		int width, height;
+		if(Game.isScaled()) {
+			width = Game.G_WIDTH; height = Game.G_HEIGHT;
+		}
+		else {
+			width = Game.P_WIDTH; height = Game.P_HEIGHT;
+		}
+		
+		int unitInfoButtonX = (width / 2) - (2 * GameplayAssets.unitInfoIcon.getWidth()) - GameplayAssets.unitInfoIcon.getWidth() / 2;
+		int unitInfoButtonY = height - GameplayAssets.unitInfoIcon.getHeight();
+		int moveButtonX = (width / 2) - GameplayAssets.moveIcon.getWidth() - GameplayAssets.moveIcon.getWidth() / 2;
+		int moveButtonY = height - GameplayAssets.moveIcon.getHeight();
+		int abilityButtonX = (width / 2) - (GameplayAssets.abilityIcon.getWidth() / 2);
+		int abilityButtonY = height - GameplayAssets.abilityIcon.getHeight();
+		int deselectButtonX = (width / 2) + (GameplayAssets.deselectIcon.getWidth() / 2);
+		int deselectButtonY = height - GameplayAssets.deselectIcon.getHeight();
+		int endTurnButtonX = (width / 2) + (GameplayAssets.endTurnIcon.getWidth() / 2) + GameplayAssets.endTurnIcon.getWidth();
+		int endTurnButtonY = height - GameplayAssets.endTurnIcon.getHeight();
 		
 		int rightRotateButtonX = moveButtonX;
 		int rightRotateButtonY = moveButtonY - GameplayAssets.rightRotateIcon.getHeight();
@@ -97,8 +105,8 @@ public class Player {
 		int movementButtonX = moveButtonX;
 		int movementButtonY = leftRotateButtonY - GameplayAssets.movementIcon.getHeight();
 		
-		int spawnUnitButtonX = (Game.P_WIDTH / 2) - (GameplayAssets.abilityIcon.getWidth() / 2);
-		int spawnUnitButtonY = Game.P_HEIGHT - GameplayAssets.abilityIcon.getHeight();
+		int spawnUnitButtonX = (width / 2) - (GameplayAssets.abilityIcon.getWidth() / 2);
+		int spawnUnitButtonY = height - GameplayAssets.abilityIcon.getHeight();
 		
 		//create buttons
 		unitInfoButton = new UnitInfoDrawableButton(new Paint(), GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);

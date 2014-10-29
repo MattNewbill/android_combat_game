@@ -15,7 +15,5 @@ public interface StateManager {
 	public State getInitialState();
 	public android.content.res.AssetManager getAssetManager();
 	public TouchHandler getTouchHandler();
-	public void shouldScale(boolean shouldScale);
-	public boolean isScaled();
 	
 }
