@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
 
 /**
  * **HAPPY**
@@ -56,6 +57,16 @@ public class Util {
 		paint.setColorFilter(filter);
 		c.drawBitmap(original, 0, 0, paint);
 		return grayscale;
+	}
+	
+	public static Bitmap resizeBitmap(Bitmap original, double scaleX, double scaleY) {
+		int width = original.getWidth();
+		int height = original.getHeight();
+		
+		Matrix matrix = new Matrix();
+		matrix.postScale((float)scaleX, (float)scaleY);
+		
+		return Bitmap.createBitmap(original, 0, 0, width, height, matrix, false);
 	}
 	
 	public static int getRand() {

@@ -1,5 +1,8 @@
 package combatgame.assets;
 
+import combatgame.main.Game;
+import combatgame.util.Util;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.res.AssetManager;
@@ -28,9 +31,13 @@ public class GameplayAssets {
 	
 	//selection overlays
 	public static Bitmap selectionOverlay;
+	public static Bitmap[] numberOverlays;
 	
 	//spawn unit
 	public static Bitmap spawnUnitIcon;
+	
+	//player banner
+	public static Bitmap playerBanner;
 	
 	private GameplayAssets(){}
 	
@@ -57,24 +64,79 @@ public class GameplayAssets {
 			
 			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/selection_overlay.png"));
 			
+			numberOverlays = new Bitmap[10];
+			Bitmap temp = BitmapFactory.decodeStream(am.open("sprites/number_overlays.png"));
+			for(int row = 0; row < 2; row++)
+				for(int col = 0; col < 5; col++)
+					numberOverlays[row * 5 + col] = Bitmap.createBitmap(temp, col * 70, row * 70, 70, 70);
+			temp.recycle();
+			
 			spawnUnitIcon = BitmapFactory.decodeStream(am.open("sprites/hud/spawn_unit_icon.png"));
+			
+			playerBanner = BitmapFactory.decodeStream(am.open("sprites/player_banner.png"));
+			
+			if(Game.P_WIDTH != Game.G_WIDTH && Game.P_HEIGHT != Game.G_HEIGHT)
+				resizeHUD();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	private static void resizeHUD() {
+		unitInfoIcon = Util.resizeBitmap(unitInfoIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		moveIcon = Util.resizeBitmap(moveIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		abilityIcon = Util.resizeBitmap(abilityIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		deselectIcon = Util.resizeBitmap(deselectIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		endTurnIcon = Util.resizeBitmap(endTurnIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		
+		movementIcon = Util.resizeBitmap(movementIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		leftRotateIcon = Util.resizeBitmap(leftRotateIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		rightRotateIcon = Util.resizeBitmap(rightRotateIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		
+		spawnUnitIcon = Util.resizeBitmap(spawnUnitIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+		
+		playerBanner = Util.resizeBitmap(playerBanner, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
+	}
+	
 	public static void dispose() {
-		for(int i = 0; i < sniperIcons.length; i++) {
+		for(int i = 0; i < sniperIcons.length; i++)
 			if(sniperIcons[i] != null)
 				sniperIcons[i].recycle();
-		}
 		
-		for(int i = 0; i < assaultIcons.length; i++) {
+		for(int i = 0; i < assaultIcons.length; i++)
 			if(assaultIcons[i] != null)
 				assaultIcons[i].recycle();
-		}
 		
+		if(unitInfoIcon != null)
+			unitInfoIcon.recycle();
+		if(moveIcon != null)
+			moveIcon.recycle();
+		if(abilityIcon != null)
+			abilityIcon.recycle();
+		if(deselectIcon != null)
+			deselectIcon.recycle();
 		if(endTurnIcon != null)
 			endTurnIcon.recycle();
+		
+		if(movementIcon != null)
+			movementIcon.recycle();
+		if(leftRotateIcon != null)
+			leftRotateIcon.recycle();
+		if(rightRotateIcon != null)
+			rightRotateIcon.recycle();
+		
+		if(selectionOverlay != null)
+			selectionOverlay.recycle();
+		
+		for(int i = 0; i < numberOverlays.length; i++)
+			if(numberOverlays[i] != null)
+				numberOverlays[i].recycle();
+		
+		if(spawnUnitIcon != null)
+			spawnUnitIcon.recycle();
+		
+		if(playerBanner != null)
+			playerBanner.recycle();
 	}
 }

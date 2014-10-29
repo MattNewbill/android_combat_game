@@ -8,10 +8,13 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 
 public class UnitInfoDrawableButton extends Button {
+	
+	private Paint paint;
+	
 	private String ability_points = "";
 	private String hp = "";
 	private String unit_type = "";
-
+	
 	@Override
 	public List<TouchEvent> update(List<TouchEvent> events) {
 		// TODO Auto-generated method stub
@@ -21,9 +24,9 @@ public class UnitInfoDrawableButton extends Button {
 	@Override
 	public void render(Graphics2D g) {
 		super.render(g);
-		g.drawText(unit_type, x + 10, y + 30, new Paint());
-		g.drawText(hp, x + 10, y + 60, new Paint());
-		g.drawText(ability_points, x + 10, y + 90, new Paint());
+		g.drawText(unit_type, x + 10, y + 30, paint);
+		g.drawText(hp, x + 10, y + 60, paint);
+		g.drawText(ability_points, x + 10, y + 90, paint);
 		
 	}
 
@@ -40,8 +43,9 @@ public class UnitInfoDrawableButton extends Button {
 		super.enable();
 	}
 
-	public UnitInfoDrawableButton(Bitmap disarmedImage, Bitmap armedImage, int x, int y) {
+	public UnitInfoDrawableButton(Paint paint, Bitmap disarmedImage, Bitmap armedImage, int x, int y) {
 		super(disarmedImage, armedImage, x, y);
+		this.paint = paint;
 		
 	}
 

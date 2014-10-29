@@ -46,6 +46,10 @@ public class Game extends Activity implements StateManager {
 	public static int P_WIDTH;
 	public static int P_HEIGHT;
 	
+	//scale of the current phone in relation to our target phone
+	public static double scaleX;
+	public static double scaleY;
+	
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
@@ -79,8 +83,8 @@ public class Game extends Activity implements StateManager {
         
         //add scaling factor here so we can translate the relative coordinates of our
         //framebuffer to the actual target phone's screen coordinates
-        double scaleX = G_WIDTH / (double)P_WIDTH;
-        double scaleY = G_HEIGHT / (double)P_HEIGHT;
+        scaleX = G_WIDTH / (double)P_WIDTH;
+        scaleY = G_HEIGHT / (double)P_HEIGHT;
         
         Log.i("combatgame", "scale x: " +scaleX);
         Log.i("combatgame", "scale y: " +scaleY);

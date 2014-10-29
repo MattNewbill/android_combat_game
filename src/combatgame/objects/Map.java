@@ -1,5 +1,6 @@
 package combatgame.objects;
 
+import combatgame.assets.GameplayAssets;
 import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.util.Log;
 
 /**
@@ -21,6 +23,9 @@ public class Map {
 	//players
 	Player player1, player2;
 	Player thisPlayersTurn;
+	
+	//gamertag font
+	Paint gamertagFont;
 	
 	//map data
 	protected int tileWidthInPx = 96;
@@ -58,9 +63,14 @@ public class Map {
 	
 	public Map (AssetManager am, String filePath) {
 		//create players
-		player1 = new Player(true, this, 3);
-		player2 = new Player(false, this, 3);
+		player1 = new Player("Player 1", true, this, 3);
+		player2 = new Player("Player 2", false, this, 3);
 		thisPlayersTurn = player1;
+		
+		gamertagFont = new Paint();
+		gamertagFont.setColor(Color.BLACK);
+		gamertagFont.setTextSize(20);
+		gamertagFont.setTextAlign(Align.CENTER);
 		
 		try {
 			//read in map
@@ -261,8 +271,9 @@ public class Map {
 		//render current player
 		thisPlayersTurn.render(g);
 		
-		//draw player id text top, center of screen
-		g.drawText(""+thisPlayersTurn.getId(), Game.P_WIDTH / 2, 20, new Paint());
+		//draw player gamer tag top, center of screen
+		g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+		g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 20, gamertagFont);
 	}
 	
 	/**

@@ -2,6 +2,7 @@ package combatgame.objects;
 
 import java.util.List;
 import android.util.Log;
+import android.graphics.Paint;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
@@ -22,6 +23,7 @@ public class Player {
 	//used for determining what base to spawn in/attack
 	boolean isPlayerOne;
 	
+	private String gamertag;
 	private int playerId;
 	
 	//action
@@ -63,7 +65,8 @@ public class Player {
 	private TouchEvent previousEvent;
 	private GPoint previousTouchDownTile;
 	
-	public Player(boolean isPlayerOne, Map map, int numUnits) {
+	public Player(String gamertag, boolean isPlayerOne, Map map, int numUnits) {
+		this.gamertag = gamertag;
 		this.isPlayerOne = isPlayerOne;
 		playerId = (int)System.currentTimeMillis() + Util.getRand(); //TODO potentially get a better ID system going...
 		
@@ -98,7 +101,7 @@ public class Player {
 		int spawnUnitButtonY = Game.P_HEIGHT - GameplayAssets.abilityIcon.getHeight();
 		
 		//create buttons
-		unitInfoButton = new UnitInfoDrawableButton(GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
+		unitInfoButton = new UnitInfoDrawableButton(new Paint(), GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
 		moveButton = new Button(GameplayAssets.moveIcon, null, moveButtonX, moveButtonY);
 		abilityButton = new Button(GameplayAssets.abilityIcon, null, abilityButtonX, abilityButtonY);
 		deselectButton = new Button(GameplayAssets.deselectIcon, null, deselectButtonX, deselectButtonY);
@@ -435,13 +438,11 @@ public class Player {
 		if(leftRotateButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "left rotate button pressed!");
 			units[selectedUnitIndex].rotateLeft();
-			currentAction = SELECTION;
 			leftRotateButton.disarm();
 		}
 		if(rightRotateButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "right rotate button pressed!");
 			units[selectedUnitIndex].rotateRight();
-			currentAction = SELECTION;
 			rightRotateButton.disarm();
 		}
 		//if we touch something other than the movement buttons then exit out of the movement state
@@ -471,7 +472,9 @@ public class Player {
 				units[selectedUnitIndex].rotateLeft();
 				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
 			}
-			currentAction = SELECTION;
+			else {
+				currentAction = SELECTION;
+			}
 			leftRotateButton.disarm();
 		}
 		if(rightRotateButton.state == Button.ACTIVATED) {
@@ -480,7 +483,9 @@ public class Player {
 				units[selectedUnitIndex].rotateRight();
 				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
 			}
-			currentAction = SELECTION;
+			else {
+				currentAction = SELECTION;
+			}
 			rightRotateButton.disarm();
 		}
 		//if we touch something other than the movement buttons then exit out of the movement state
@@ -537,6 +542,7 @@ public class Player {
 			for(int row = 1; row < movementPoints.length; row++) {
 				for(int col = 0; col < movementPoints[row].length; col++) {
 					g.drawBitmap(GameplayAssets.selectionOverlay, movementPoints[row][col].col * map.getTileWidthInPx() - map.getMapOffsetX(), movementPoints[row][col].row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+					g.drawBitmap(GameplayAssets.numberOverlays[row], movementPoints[row][col].col * map.getTileWidthInPx() - map.getMapOffsetX(), movementPoints[row][col].row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 				}
 			}
 		}
@@ -570,6 +576,7 @@ public class Player {
 		//--Render spawn hud if we are in the setup phase
 		//---------------------------------------
 		if(isSetupPhase) {
+			unitInfoButton.render(g);
 			moveButton.render(g);
 			spawnUnitButton.render(g);
 			deselectButton.render(g);
@@ -685,6 +692,9 @@ public class Player {
 	
 	public int getId() {
 		return playerId;
+	}
+	public String getGamertag() {
+		return gamertag;
 	}
 	
 	//disable the hud buttons (generally if no unit is selected)
