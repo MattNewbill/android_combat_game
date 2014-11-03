@@ -8,15 +8,19 @@ import java.util.List;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import android.content.res.AssetManager;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.ColorFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.util.Log;
 
 /**
  * **NOT HAPPY**
- * TODO: implement scrollToTile() method
+ * TODO: get a better rendering system down for the fog of war overlays...
  */
 
 public class Map {
@@ -55,6 +59,8 @@ public class Map {
 	
 	//shaded portions of the map that we can't see
 	private int fogOfWarColor = Color.parseColor("#E64A3F3F");
+	//private ColorFilter filter = new PorterDuffColorFilter(fogOfWarColor, Mode.OVERLAY);
+	//private int fogOfWarColor = Color.parseColor("#4A3F3F");
 	
 	public Map (AssetManager am, String filePath) {
 		//create players
@@ -216,6 +222,8 @@ public class Map {
 	 * @param paint Paint object to use for colors
 	 */
 	public void render(Graphics2D g, Paint paint) {
+		//set our fog of war color to overlay the tiles we can't see
+		paint.setColor(fogOfWarColor);
 		
 		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
@@ -238,13 +246,13 @@ public class Map {
 					tile = GameplayAssets.player2BaseSprite;
 				}
 				
-				//if the tile is going to be within our screen's dimensions whether it's from scaling or not we need to draw it
+				//if the tile is going to be within our screen's dimensions, whether it's from scaling or not, we need to draw it
 				if(isTileOnScreen(row, col)) {
 					g.drawBitmap(tile, (col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, null);
 					
 					//if we can't see the tile then draw the fog of war on top of the tile
 					if(!lightmap[row][col]) {
-						paint.setColor(fogOfWarColor);
+						//paint.setColor(fogOfWarColor);
 						g.drawRect((col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, (col * tileWidthInPx + tileWidthInPx) - mapOffsetX, (row * tileHeightInPx + tileHeightInPx) - mapOffsetY, paint);
 					}
 				}
@@ -261,7 +269,7 @@ public class Map {
 		thisPlayersTurn.render(g);
 		
 		//draw player gamer tag top, center of screen
-		if(Game.isScaled()) { //TODO: scale player font for larget devices
+		if(Game.isScaled()) { //TODO: scale player font for devices
 			g.drawBitmap(GameplayAssets.playerBanner, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
 			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 20, gamertagFont);
 		}
@@ -313,7 +321,6 @@ public class Map {
 		return board[tile.row][tile.col];
 	}
 	
-	//TODO scroll the map to the selected tile
 	public void scrollToTile(GPoint tile) {
 		tileToScrollTo = tile;
 		isAutoScrolling = true;

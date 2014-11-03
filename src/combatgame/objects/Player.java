@@ -16,7 +16,6 @@ import combatgame.widgets.UnitInfoDrawableButton;
 
 /**
  * **NOT HAPPY**
- * Search for all the TODO's in this file, I've outlined what needs to be implemented
  * If you see something that looks stupid, it probably is and should be changed
  * 
  */
@@ -237,7 +236,7 @@ public class Player {
 				useMovement(events);
 				break;
 			case CHOOSE_ABILITY:
-				abilities(events);
+				chooseAbilities(events);
 				break;
 			case USE_ABILITY:
 				useAbility(events);
@@ -256,7 +255,6 @@ public class Player {
 			map.scrollToTile(units[selectedUnitIndex].getXYCoordinate());
 			unitInfoButton.disarm();
 		}
-		//TODO if a unit is selected this needs to call the Map to determine where this guy can move
 		if(moveButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "move button activated");
 			//if the movement button has already been selected, then we deselect it
@@ -269,7 +267,10 @@ public class Player {
 		//TODO if a unit is selected this needs to pull up the "drop-up" menu to show the last of abilities
 		if(abilityButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "ability button activated");
-			//currentAction = ABILITY;
+			if(currentAction == CHOOSE_ABILITY)
+				currentAction = SELECTION;
+			else
+				currentAction = CHOOSE_ABILITY;
 			abilityButton.disarm();
 		}
 		//deselected the current unit
@@ -511,22 +512,21 @@ public class Player {
 	////////////////////////////////////////////
 	////PLAYER IS SELECTING A UNIT'S ABILITY TO USE
 	////////////////////////////////////////////
-	private void abilities(List<TouchEvent> events) {
-		Ability[] abilities = units[selectedUnitIndex].getAbilities();
-		for(int i = 0; i < abilities.length; i++) {
-			abilities[i].update(events);
-		}
+	private void chooseAbilities(List<TouchEvent> events) {
+		//TODO: get the list of abilities for the selected unit and check to see if we chose any of them
+		//Ability[] abilities = units[selectedUnitIndex].getAbilities();
+		//for(int i = 0; i < abilities.length; i++) {
+		//	abilities[i].update(events);
+		//}
 	}
 	
 	////////////////////////////////////////////
 	////PLAYER IS USING A UNIT'S ABILITY
 	////////////////////////////////////////////
 	private void useAbility(List<TouchEvent> events) {
-		
+		//TODO: check to see what the user did with the action selected
 	}
 	
-	//TODO rendering needs to consult the map to see what can/can not be seen by the current player
-	//get a "glow" effect going for selected players as well as positions they can move to and the action points that it costs to move them there
 	public void render(Graphics2D g) {
 		//---------------------------------------
 		//--Render spawn overlays in our base, but only during setup phase
@@ -573,6 +573,13 @@ public class Player {
 		}
 		
 		//---------------------------------------
+		//--Render ability overlays if the user is trying to use one
+		//---------------------------------------
+		if(currentAction == USE_ABILITY) {
+			//TODO: render the action overlays
+		}
+		
+		//---------------------------------------
 		//--Render our turn HUD at the very end
 		//---------------------------------------
 		if(!isSetupPhase) {
@@ -615,10 +622,11 @@ public class Player {
 		//--Render ability buttons if the user has pressed the "ability" button
 		//---------------------------------------
 		if(currentAction == CHOOSE_ABILITY) {
-			Ability[] abilities = units[selectedUnitIndex].getAbilities();
-			for(int i = 0; i < abilities.length; i++) {
+			//TODO: render ability buttons for the player to choose
+			//Ability[] abilities = units[selectedUnitIndex].getAbilities();
+			//for(int i = 0; i < abilities.length; i++) {
 				//abilities.render(g, 50, Game.P_HEIGHT - abilityButton.getHeight() - (abilities.length * GameplayAssets.basicAttack.getHeight()));
-			}
+			//}
 		}
 	}
 	
@@ -637,7 +645,6 @@ public class Player {
 		
 	}
 	
-	//TODO construct a light map for this player determining which tiles are visible and which aren't
 	public boolean[][] constructLightMap(boolean[][] lightmap) {
 		//our base is always visible, so find out where our base currently is
 		for(int row = 0; row < map.getNum_vertical_tiles(); row++) {

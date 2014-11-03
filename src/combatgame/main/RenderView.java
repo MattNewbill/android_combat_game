@@ -24,6 +24,9 @@ public class RenderView extends SurfaceView implements Runnable {
 	Graphics2D drawingCanvas;
 	volatile boolean isRunning = false;
 	
+	final int TARGET_FPS = 90;
+	int targetTime = 1000 / TARGET_FPS;
+	
 	Paint fpsPaint;
 	
 	public RenderView(Game game, Bitmap frameBuffer) {
@@ -60,14 +63,24 @@ public class RenderView extends SurfaceView implements Runnable {
 			
 			Canvas canvas = holder.lockCanvas();
 			canvas.getClipBounds(destinationRect);
-			if(game.shouldScale)
+			if(Game.isScaled())
 				canvas.drawBitmap(frameBuffer, null, destinationRect, null); //scales and translate automatically to fit screen
 			else
-				canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null);
+				canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null); //TODO: perhaps change this to P_WIDTH, P_HEIGHT....test on larger devices to see for sure
 			holder.unlockCanvasAndPost(canvas);
 
-			//fps stuff
+			//sleep if we've rendered faster than our target tick time
 			long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+			if(elapsedTime < targetTime) {
+				try {
+					Thread.sleep(targetTime - elapsedTime);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//other fps stuff
+			elapsedTime = (System.nanoTime() - startTime) / 1000000;
 			fps = 1000/elapsedTime;
 			
 		}

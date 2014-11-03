@@ -17,7 +17,6 @@ public class UnitInfoDrawableButton extends Button {
 	
 	@Override
 	public List<TouchEvent> update(List<TouchEvent> events) {
-		// TODO Auto-generated method stub
 		return super.update(events);
 	}
 
