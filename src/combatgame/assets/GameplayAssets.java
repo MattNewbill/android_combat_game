@@ -39,6 +39,13 @@ public class GameplayAssets {
 	//player banner
 	public static Bitmap playerBanner;
 	
+	//map tiles
+	public static Bitmap dirtSprite;
+	public static Bitmap hedgehogSprite;
+	public static Bitmap bushSprite;
+	public static Bitmap player1BaseSprite;
+	public static Bitmap player2BaseSprite;
+	
 	private GameplayAssets(){}
 	
 	public static void loadGameplayAssets(AssetManager am) {
@@ -75,8 +82,11 @@ public class GameplayAssets {
 			
 			playerBanner = BitmapFactory.decodeStream(am.open("sprites/player_banner.png"));
 			
-			//if(Game.P_WIDTH != Game.G_WIDTH && Game.P_HEIGHT != Game.G_HEIGHT)
-				//resizeHUD();
+			dirtSprite = BitmapFactory.decodeStream(am.open("sprites/dirt.png"));
+			hedgehogSprite = BitmapFactory.decodeStream(am.open("sprites/hedgehog.png"));
+			bushSprite = BitmapFactory.decodeStream(am.open("sprites/bush.png"));
+			player1BaseSprite = BitmapFactory.decodeStream(am.open("sprites/player1_base.png"));
+			player2BaseSprite = BitmapFactory.decodeStream(am.open("sprites/player2_base.png"));
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -138,5 +148,20 @@ public class GameplayAssets {
 		
 		if(playerBanner != null)
 			playerBanner.recycle();
+		
+		if(dirtSprite != null)
+			dirtSprite.recycle();
+		
+		if(hedgehogSprite != null)
+			hedgehogSprite.recycle();
+		
+		if(bushSprite != null)
+			bushSprite.recycle();
+		
+		if(player1BaseSprite != null)
+			player1BaseSprite.recycle();
+		
+		if(player2BaseSprite != null)
+			player2BaseSprite.recycle();
 	}
 }

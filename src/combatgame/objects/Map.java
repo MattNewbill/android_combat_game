@@ -8,6 +8,7 @@ import java.util.List;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
@@ -52,14 +53,8 @@ public class Map {
 	public static final int LEEWAY = 30;
 	public static final int FAST_SCROLL_DISTANCE = 20;
 	
-	//////////////////////////////////
-	//--Temp color values for rendering tilemap
-	//////////////////////////////////
-	private int shadedYELLOW = Color.parseColor("#646400");
-	private int shadedDKGRAY = Color.parseColor("#000000");
-	private int shadedGREEN = Color.parseColor("#006400");
-	private int shadedRED = Color.parseColor("#640000");
-	private int shadedMAGENTA = Color.parseColor("#640064");
+	//shaded portions of the map that we can't see
+	private int fogOfWarColor = Color.parseColor("#E64A3F3F");
 	
 	public Map (AssetManager am, String filePath) {
 		//create players
@@ -225,40 +220,34 @@ public class Map {
 		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
-				//if we can't see the tile, make it black (eventually we'll replace this with our shaded sprite of the particular tile, but this works for now)
-				if(!lightmap[row][col]) {
-					if(getFeatureType(row, col) == MapFeature.TERRAIN) {
-						paint.setColor(shadedYELLOW);
-					}
-					else if(getFeatureType(row, col) == MapFeature.HEDGEHOG) {
-						paint.setColor(shadedDKGRAY);
-					}
-					else if(getFeatureType(row, col) == MapFeature.TREE) {
-						paint.setColor(shadedGREEN);
-					}
-					else if(getFeatureType(row, col) == MapFeature.PLAYER_ONE_BASE) {
-						paint.setColor(shadedMAGENTA);
-					}
-					else if(getFeatureType(row, col) == MapFeature.PLAYER_TWO_BASE) {
-						paint.setColor(shadedRED);
-					}
-				}
-				else if(getFeatureType(row, col) == MapFeature.TERRAIN) {
-					paint.setColor(Color.YELLOW);
+				//check our map to see which tile we need to draw
+				Bitmap tile = null;
+				if(getFeatureType(row, col) == MapFeature.TERRAIN) {
+					tile = GameplayAssets.dirtSprite;
 				}
 				else if(getFeatureType(row, col) == MapFeature.HEDGEHOG) {
-					paint.setColor(Color.DKGRAY);
+					tile = GameplayAssets.hedgehogSprite;
 				}
 				else if(getFeatureType(row, col) == MapFeature.TREE) {
-					paint.setColor(Color.GREEN);
+					tile = GameplayAssets.bushSprite;
 				}
 				else if(getFeatureType(row, col) == MapFeature.PLAYER_ONE_BASE) {
-					paint.setColor(Color.MAGENTA);
+					tile = GameplayAssets.player1BaseSprite;
 				}
 				else if(getFeatureType(row, col) == MapFeature.PLAYER_TWO_BASE) {
-					paint.setColor(Color.RED);
+					tile = GameplayAssets.player2BaseSprite;
 				}
-				g.drawRect((col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, (col * tileWidthInPx + tileWidthInPx) - mapOffsetX, (row * tileHeightInPx + tileHeightInPx) - mapOffsetY, paint);
+				
+				//if the tile is going to be within our screen's dimensions whether it's from scaling or not we need to draw it
+				if(isTileOnScreen(row, col)) {
+					g.drawBitmap(tile, (col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, null);
+					
+					//if we can't see the tile then draw the fog of war on top of the tile
+					if(!lightmap[row][col]) {
+						paint.setColor(fogOfWarColor);
+						g.drawRect((col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, (col * tileWidthInPx + tileWidthInPx) - mapOffsetX, (row * tileHeightInPx + tileHeightInPx) - mapOffsetY, paint);
+					}
+				}
 			}
 		}
 		
@@ -279,6 +268,21 @@ public class Map {
 		else {
 			g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
 			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 20, gamertagFont);
+		}
+	}
+	
+	public boolean isTileOnScreen(int row, int col) {
+		if(Game.isScaled()) {
+			return (col * tileWidthInPx) - mapOffsetX >=  -tileWidthInPx &&
+			       (col * tileWidthInPx) - mapOffsetX <= Game.G_WIDTH + tileWidthInPx &&
+			       (row * tileHeightInPx) - mapOffsetY >= -tileHeightInPx &&
+			       (row * tileHeightInPx) - mapOffsetY <= Game.G_WIDTH + tileHeightInPx ? true : false;
+		}
+		else {
+			return (col * tileWidthInPx) - mapOffsetX >= -tileWidthInPx &&
+				       (col * tileWidthInPx) - mapOffsetX <= Game.P_WIDTH + tileWidthInPx &&
+				       (row * tileHeightInPx) - mapOffsetY >= -tileHeightInPx &&
+				       (row * tileHeightInPx) - mapOffsetY <= Game.P_WIDTH + tileHeightInPx ? true : false;
 		}
 	}
 	
