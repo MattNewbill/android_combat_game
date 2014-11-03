@@ -5,6 +5,7 @@ import combatgame.util.Util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
 import android.content.res.AssetManager;
 
@@ -46,6 +47,13 @@ public class GameplayAssets {
 	public static Bitmap bushSprite;
 	public static Bitmap player1BaseSprite;
 	public static Bitmap player2BaseSprite;
+	
+	//shaded map tiles
+	public static Bitmap dirtSpriteShaded;
+	public static Bitmap hedgehogSpriteShaded;
+	public static Bitmap bushSpriteShaded;
+	public static Bitmap player1BaseSpriteShaded;
+	public static Bitmap player2BaseSpriteShaded;
 	
 	private GameplayAssets(){}
 	
@@ -89,9 +97,21 @@ public class GameplayAssets {
 			player1BaseSprite = BitmapFactory.decodeStream(am.open("sprites/player1_base.png"));
 			player2BaseSprite = BitmapFactory.decodeStream(am.open("sprites/player2_base.png"));
 			
+			shadeMapTiles();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void shadeMapTiles() {
+		int fogOfWar = Color.parseColor("#E64A3F3F");
+		
+		dirtSpriteShaded = Util.alphaBlendBitmap(dirtSprite, fogOfWar);
+		hedgehogSpriteShaded = Util.alphaBlendBitmap(hedgehogSprite, fogOfWar);
+		bushSpriteShaded = Util.alphaBlendBitmap(bushSprite, fogOfWar);
+		player1BaseSpriteShaded = Util.alphaBlendBitmap(player1BaseSprite, fogOfWar);
+		player2BaseSpriteShaded = Util.alphaBlendBitmap(player2BaseSprite, fogOfWar);
 	}
 	
 	private static void resizeHUD() {

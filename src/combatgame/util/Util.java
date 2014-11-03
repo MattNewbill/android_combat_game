@@ -16,6 +16,7 @@ import android.graphics.Matrix;
 public class Util {
 
 	private static Random rand = new Random(System.currentTimeMillis());
+	private static Paint paint = new Paint();
 	
 	private Util() {}
 	
@@ -48,7 +49,7 @@ public class Util {
 		int width = original.getWidth();
 		int height = original.getHeight();
 		
-		Bitmap grayscale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+		Bitmap grayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(grayscale);
 		Paint paint = new Paint();
 		ColorMatrix matrix = new ColorMatrix();
@@ -57,6 +58,16 @@ public class Util {
 		paint.setColorFilter(filter);
 		c.drawBitmap(original, 0, 0, paint);
 		return grayscale;
+	}
+	
+	public static Bitmap alphaBlendBitmap(Bitmap original, int color) {
+		paint.setColor(color);
+		
+		Bitmap blended = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888);
+		Canvas c = new Canvas(blended);
+		c.drawBitmap(original, 0, 0, null);
+		c.drawRect(0, 0, original.getWidth(), original.getHeight(), paint);
+		return blended;
 	}
 	
 	public static Bitmap resizeBitmap(Bitmap original, double scaleX, double scaleY) {

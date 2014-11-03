@@ -230,30 +230,37 @@ public class Map {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
 				//check our map to see which tile we need to draw
 				Bitmap tile = null;
+				Bitmap shadedTile = null;
 				if(getFeatureType(row, col) == MapFeature.TERRAIN) {
 					tile = GameplayAssets.dirtSprite;
+					shadedTile = GameplayAssets.dirtSpriteShaded;
 				}
 				else if(getFeatureType(row, col) == MapFeature.HEDGEHOG) {
 					tile = GameplayAssets.hedgehogSprite;
+					shadedTile = GameplayAssets.hedgehogSpriteShaded;
 				}
 				else if(getFeatureType(row, col) == MapFeature.TREE) {
 					tile = GameplayAssets.bushSprite;
+					shadedTile = GameplayAssets.bushSpriteShaded;
 				}
 				else if(getFeatureType(row, col) == MapFeature.PLAYER_ONE_BASE) {
 					tile = GameplayAssets.player1BaseSprite;
+					shadedTile = GameplayAssets.player1BaseSpriteShaded;
 				}
 				else if(getFeatureType(row, col) == MapFeature.PLAYER_TWO_BASE) {
 					tile = GameplayAssets.player2BaseSprite;
+					shadedTile = GameplayAssets.player2BaseSpriteShaded;
 				}
 				
 				//if the tile is going to be within our screen's dimensions, whether it's from scaling or not, we need to draw it
-				if(isTileOnScreen(row, col)) {
-					g.drawBitmap(tile, (col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, null);
-					
+				if(isTileOnScreen(row, col)) {					
 					//if we can't see the tile then draw the fog of war on top of the tile
 					if(!lightmap[row][col]) {
-						//paint.setColor(fogOfWarColor);
-						g.drawRect((col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, (col * tileWidthInPx + tileWidthInPx) - mapOffsetX, (row * tileHeightInPx + tileHeightInPx) - mapOffsetY, paint);
+						g.drawBitmap(shadedTile, (col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, null);
+						//g.drawRect((col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, (col * tileWidthInPx + tileWidthInPx) - mapOffsetX, (row * tileHeightInPx + tileHeightInPx) - mapOffsetY, paint);
+					}
+					else {
+						g.drawBitmap(tile, (col * tileWidthInPx) - mapOffsetX, (row * tileHeightInPx) - mapOffsetY, null);
 					}
 				}
 			}

@@ -43,8 +43,10 @@ public class RenderView extends SurfaceView implements Runnable {
 	public void run() {
 		
 		Rect destinationRect = new Rect();
-		long startTime = System.nanoTime();
+		long startTimeFrame = System.nanoTime();
+		long startTimeSleep;
 		long fps = 0;
+		int frames = 0;
 		
 		while(isRunning) {
 			//make sure we have a surface to draw on
@@ -54,8 +56,8 @@ public class RenderView extends SurfaceView implements Runnable {
 			
 			drawingCanvas.drawRGB(0, 0, 0); //clear the screen
 			
-			long delta = (System.nanoTime() - startTime) / 1000000;
-			startTime = System.nanoTime();
+			startTimeSleep = System.nanoTime();
+			long delta = (System.nanoTime() - startTimeSleep) / 1000000;
 			
 			game.getCurrentState().update(delta); //update current state (screen)
 			game.getCurrentState().render(drawingCanvas, delta); //render current state (screen)
@@ -69,8 +71,16 @@ public class RenderView extends SurfaceView implements Runnable {
 				canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null); //TODO: perhaps change this to P_WIDTH, P_HEIGHT....test on larger devices to see for sure
 			holder.unlockCanvasAndPost(canvas);
 
+			//other fps stuff
+			long elapsedTime = (System.nanoTime() - startTimeFrame) / 1000000;
+			frames++;
+			if(elapsedTime > 1000) {
+				fps = frames;
+				frames = 0;
+				startTimeFrame = System.nanoTime();
+			}
+			
 			//sleep if we've rendered faster than our target tick time
-			long elapsedTime = (System.nanoTime() - startTime) / 1000000;
 			if(elapsedTime < targetTime) {
 				try {
 					Thread.sleep(targetTime - elapsedTime);
@@ -78,11 +88,6 @@ public class RenderView extends SurfaceView implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			
-			//other fps stuff
-			elapsedTime = (System.nanoTime() - startTime) / 1000000;
-			fps = 1000/elapsedTime;
-			
 		}
 	}
 	
