@@ -1,4 +1,4 @@
-package combatgame.objects;
+package combatgame.units;
 
 import combatgame.widgets.*;
 import combatgame.graphics.*;

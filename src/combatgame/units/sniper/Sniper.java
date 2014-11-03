@@ -1,4 +1,4 @@
-package combatgame.objects;
+package combatgame.units.sniper;
 
 import combatgame.assets.*;
 import combatgame.objects.Unit;

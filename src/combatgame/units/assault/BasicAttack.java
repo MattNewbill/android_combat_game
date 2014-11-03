@@ -1,7 +1,9 @@
-package combatgame.objects;
+package combatgame.units.assault;
 
 import combatgame.graphics.*;
 import combatgame.input.*;
+import combatgame.units.Ability;
+
 import java.util.List;
 
 public class BasicAttack extends Ability {

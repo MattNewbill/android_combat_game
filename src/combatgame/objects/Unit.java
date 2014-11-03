@@ -1,6 +1,7 @@
 package combatgame.objects;
 
 import combatgame.graphics.*;
+import combatgame.units.Ability;
 import android.graphics.Bitmap;
 
 /**

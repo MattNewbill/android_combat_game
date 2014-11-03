@@ -1,6 +1,7 @@
-package combatgame.objects;
+package combatgame.units.assault;
 
 import combatgame.assets.*;
+import combatgame.objects.Unit;
 import combatgame.util.Util;
 
 /**
