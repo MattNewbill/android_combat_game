@@ -3,6 +3,9 @@ package combatgame.units;
 import combatgame.widgets.*;
 import combatgame.graphics.*;
 import combatgame.input.*;
+import combatgame.objects.Map;
+import combatgame.objects.Unit;
+
 import java.util.List;
 import android.graphics.Point;
 
@@ -17,8 +20,8 @@ public abstract class Ability {
 		this.abilityCost = abilityCost;
 	}
 	
-	public abstract void update(List<TouchEvent> events);
-	public abstract void render(Graphics2D g);
+	public abstract List<GPoint> getTilesAttackable(Unit unit, Map map);
+	public abstract List<Attack> getTilesAffected(GPoint tile);
 	public void renderButton(Graphics2D g, int x, int y) {
 		abilityButton.render(g, x, y);
 	}
@@ -29,5 +32,9 @@ public abstract class Ability {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public Button getButton() {
+		return abilityButton;
 	}
 }

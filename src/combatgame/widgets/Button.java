@@ -80,6 +80,7 @@ public class Button {
 	}
 	
 	public void render(Graphics2D g, int x, int y) {
+		this.x = x; this.y = y;
 		g.drawBitmap(images[state], x, y, null);
 	}
 	

@@ -1,6 +1,7 @@
 package combatgame.main;
 
 import combatgame.graphics.*;
+import combatgame.util.Util;
 import android.content.Context;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
@@ -38,6 +39,7 @@ public class RenderView extends SurfaceView implements Runnable {
 		
 		fpsPaint = new Paint();
 		fpsPaint.setColor(Color.WHITE);
+		fpsPaint.setTextSize(24);
 	}
 
 	public void run() {
@@ -47,6 +49,11 @@ public class RenderView extends SurfaceView implements Runnable {
 		long startTimeSleep;
 		long fps = 0;
 		int frames = 0;
+		
+		//debug
+		long startTimeUpdate;
+		long startTimeRender;
+		long drawTime = 0;
 		
 		while(isRunning) {
 			//make sure we have a surface to draw on
@@ -59,10 +66,18 @@ public class RenderView extends SurfaceView implements Runnable {
 			startTimeSleep = System.nanoTime();
 			long delta = (System.nanoTime() - startTimeSleep) / 1000000;
 			
+			startTimeUpdate = System.currentTimeMillis();
 			game.getCurrentState().update(delta); //update current state (screen)
+			long endTimeUpdate = System.currentTimeMillis() - startTimeUpdate;
+			
+			startTimeRender = System.currentTimeMillis();
 			game.getCurrentState().render(drawingCanvas, delta); //render current state (screen)
 			drawingCanvas.drawText(Long.toString(fps), 30, 30, fpsPaint); //draw fps
+			drawingCanvas.drawText("U: " + endTimeUpdate, 30, 50, fpsPaint);
+			drawingCanvas.drawText("R: " + (System.currentTimeMillis() - startTimeRender), 30, 70, fpsPaint);
+			drawingCanvas.drawText("D: " + drawTime, 30, 90, fpsPaint);
 			
+			long startTimeCleanup = System.currentTimeMillis();
 			Canvas canvas = holder.lockCanvas();
 			canvas.getClipBounds(destinationRect);
 			if(Game.isScaled())
@@ -70,7 +85,8 @@ public class RenderView extends SurfaceView implements Runnable {
 			else
 				canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null); //TODO: perhaps change this to P_WIDTH, P_HEIGHT....test on larger devices to see for sure
 			holder.unlockCanvasAndPost(canvas);
-
+			drawTime = System.currentTimeMillis() - startTimeCleanup;
+			
 			//other fps stuff
 			long elapsedTime = (System.nanoTime() - startTimeFrame) / 1000000;
 			frames++;
@@ -81,6 +97,7 @@ public class RenderView extends SurfaceView implements Runnable {
 			}
 			
 			//sleep if we've rendered faster than our target tick time
+			elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
 			if(elapsedTime < targetTime) {
 				try {
 					Thread.sleep(targetTime - elapsedTime);

@@ -2,7 +2,10 @@ package combatgame.units.sniper;
 
 import combatgame.graphics.*;
 import combatgame.input.*;
+import combatgame.objects.Map;
+import combatgame.objects.Unit;
 import combatgame.units.Ability;
+import combatgame.units.Attack;
 
 import java.util.List;
 
@@ -12,15 +15,17 @@ public class BasicAttack extends Ability {
 		super(cost);
 		this.name = "Shoot";
 	}
-	
+
 	@Override
-	public void update(List<TouchEvent> eventst) {
-		
+	public List<GPoint> getTilesAttackable(Unit unit, Map map) {
+
+		return null;
 	}
-	
+
 	@Override
-	public void render(Graphics2D g) {
-		
+	public List<Attack> getTilesAffected(GPoint tile) {
+
+		return null;
 	}
 	
 }

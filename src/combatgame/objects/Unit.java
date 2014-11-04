@@ -13,7 +13,6 @@ public abstract class Unit {
 	protected int player_id = -1;
 	protected int unit_id = -1;
 	protected GPoint xyCoordinate;
-	protected int shootingCost;
 	protected int movementCost;
 	protected int visionRadius;
 	protected int damage;
@@ -59,9 +58,6 @@ public abstract class Unit {
 	public void setMaxHealth(int maxHealth) {
 		this.maxHealth = maxHealth;
 	}
-
-	public int getShootingCost() {
-		return this.shootingCost;	}
 	
 	public int getMovementCost() {
 		return this.movementCost;	}
