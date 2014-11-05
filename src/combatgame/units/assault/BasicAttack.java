@@ -15,12 +15,13 @@ public class BasicAttack extends Ability {
 	
 	@Override
 	public void update(List<TouchEvent> eventst) {
-		
+		//passed a list of events and check to see if what attack what state what tile
 	}
 	
 	@Override
 	public void render(Graphics2D g) {
-		
+		//render overlay fo red outline
+		//
 	}
 	
 }
