@@ -78,7 +78,7 @@ public class Game extends Activity implements StateManager {
         //create the frame buffer that we draw everything to
         //we create the sprites and do all updates/draws relative to these coordinates
         //upscaling/downscaling happens at the hardware level afterwards
-        Bitmap frameBuffer = Bitmap.createBitmap(G_WIDTH, G_HEIGHT, Config.ARGB_8888);
+        Bitmap frameBuffer = Bitmap.createBitmap(G_WIDTH, G_HEIGHT, Config.RGB_565);
         
         
         //add scaling factor here so we can translate the relative coordinates of our

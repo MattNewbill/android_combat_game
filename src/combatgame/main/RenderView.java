@@ -35,7 +35,8 @@ public class RenderView extends SurfaceView implements Runnable {
 		this.game = game;
 		this.frameBuffer = frameBuffer;
 		holder = getHolder();
-		drawingCanvas = new GraphicsCPU(frameBuffer);
+		//drawingCanvas = new GraphicsCPU(frameBuffer);
+		drawingCanvas = new GraphicsCPU();
 		
 		fpsPaint = new Paint();
 		fpsPaint.setColor(Color.WHITE);
@@ -60,7 +61,9 @@ public class RenderView extends SurfaceView implements Runnable {
 			if(!holder.getSurface().isValid()) {
 				continue;
 			}
-			
+			Canvas canvas = holder.lockCanvas();
+			canvas.getClipBounds(destinationRect);
+			drawingCanvas.setCanvas(canvas);
 			drawingCanvas.drawRGB(0, 0, 0); //clear the screen
 			
 			startTimeSleep = System.nanoTime();
@@ -78,13 +81,13 @@ public class RenderView extends SurfaceView implements Runnable {
 			drawingCanvas.drawText("D: " + drawTime, 30, 90, fpsPaint);
 			
 			long startTimeCleanup = System.currentTimeMillis();
-			Canvas canvas = holder.lockCanvas();
-			canvas.getClipBounds(destinationRect);
-			if(Game.isScaled())
-				canvas.drawBitmap(frameBuffer, null, destinationRect, null); //scales and translate automatically to fit screen
-			else
-				//canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null); //TODO: perhaps change this to P_WIDTH, P_HEIGHT....test on larger devices to see for sure
-				canvas.drawBitmap(frameBuffer, 0, 0, null);
+			//Canvas canvas = holder.lockCanvas();
+			//canvas.getClipBounds(destinationRect);
+			//if(Game.isScaled())
+			//	canvas.drawBitmap(frameBuffer, null, destinationRect, null); //scales and translate automatically to fit screen
+			//else
+			//	canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null); //TODO: perhaps change this to P_WIDTH, P_HEIGHT....test on larger devices to see for sure
+			//	canvas.drawBitmap(frameBuffer, 0, 0, null);
 			holder.unlockCanvasAndPost(canvas);
 			drawTime = System.currentTimeMillis() - startTimeCleanup;
 			

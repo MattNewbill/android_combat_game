@@ -1,5 +1,6 @@
 package combatgame.graphics;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Bitmap;
 
@@ -9,7 +10,7 @@ import android.graphics.Bitmap;
 
 public interface Graphics2D {
 
-	
+	public void setCanvas(Canvas canvas);
 	public void drawRGB(int r, int g, int b);
 	public void drawRect(float left, float top, float right, float bottom, Paint paint);
 	public void drawBitmap(Bitmap bitmap, float left, float top, Paint paint);
