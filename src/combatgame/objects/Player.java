@@ -737,6 +737,10 @@ public class Player {
 		}
 	}
 	
+	public Unit[] getUnits() {
+		return units;
+	}
+	
 	public int getId() {
 		return playerId;
 	}

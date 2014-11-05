@@ -14,11 +14,13 @@ import android.content.res.AssetManager;
  * **HAPPY**
  */
 
-public class HotSeatState extends State {
+public class HotSeatState extends GameState {
 	
 	Map map;
 	
 	Paint paint;
+	
+	boolean isGameOver = false;
 	
 	public HotSeatState(StateManager stateManager) {
 		super(stateManager);
@@ -38,13 +40,20 @@ public class HotSeatState extends State {
 		GameplayAssets.loadGameplayAssets(am);
 		
 		//create map
-		map = new Map (am, "maps/test_map.txt");
+		map = new Map (this, am, "maps/test_map.txt");
 	}
 
 	@Override
 	public void update(float delta) {
-		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
-		map.update(events);
+		if(!isGameOver) {
+			List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
+			map.update(events);
+		}
+		else {
+			//TODO: maybe take us to a game breakdown state which records stats for the match
+			//right now, just take us back to the main menu
+			stateManager.setState(new MainMenuState(stateManager));
+		}
 	}
 
 	@Override
@@ -67,6 +76,11 @@ public class HotSeatState extends State {
 		GameplayAssets.dispose();
 		if(map != null)
 			map.dispose();
+	}
+
+	@Override
+	public void gameover() {
+		isGameOver = true;
 	}
 
 }

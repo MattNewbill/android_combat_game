@@ -5,7 +5,7 @@ import combatgame.main.*;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.Graphics2D;
 
-public class BluetoothGameState extends State {
+public class BluetoothGameState extends GameState {
 
 	public BluetoothGameState(StateManager stateManager) {
 		super(stateManager);
@@ -33,6 +33,11 @@ public class BluetoothGameState extends State {
 	@Override
 	public void resume() {
 
+	}
+	
+	@Override
+	public void gameover() {
+		
 	}
 
 	@Override
