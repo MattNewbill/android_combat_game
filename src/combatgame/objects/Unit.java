@@ -15,7 +15,6 @@ public abstract class Unit {
 	protected GPoint xyCoordinate;
 	protected int movementCost;
 	protected int visionRadius;
-	protected int damage;
 	protected int health;
 	protected boolean isDead;
 	protected int directionFacing;
@@ -65,8 +64,6 @@ public abstract class Unit {
 	public int getVisionRadius() {
 		return this.visionRadius;	}
 	
-	public int getDamage() {
-		return this.damage;	}
 	
 	public int getHealth() {
 		return this.health;	}

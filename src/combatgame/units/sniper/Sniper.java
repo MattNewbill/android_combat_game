@@ -17,7 +17,6 @@ public class Sniper extends Unit {
 		this.unit_id = (int)System.currentTimeMillis() + Util.getRand(); //TODO
 		this.movementCost = 1;
 		this.visionRadius = 5;
-		this.damage = 50;
 		this.health = 100;
 		this.isDead=false;
 		this.sprites = GameplayAssets.sniperIcons;
