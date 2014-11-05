@@ -83,7 +83,8 @@ public class RenderView extends SurfaceView implements Runnable {
 			if(Game.isScaled())
 				canvas.drawBitmap(frameBuffer, null, destinationRect, null); //scales and translate automatically to fit screen
 			else
-				canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null); //TODO: perhaps change this to P_WIDTH, P_HEIGHT....test on larger devices to see for sure
+				//canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null); //TODO: perhaps change this to P_WIDTH, P_HEIGHT....test on larger devices to see for sure
+				canvas.drawBitmap(frameBuffer, 0, 0, null);
 			holder.unlockCanvasAndPost(canvas);
 			drawTime = System.currentTimeMillis() - startTimeCleanup;
 			

@@ -128,6 +128,7 @@ public class Player {
 		spawnUnitButton = new Button(GameplayAssets.spawnUnitIcon, null, spawnUnitButtonX, spawnUnitButtonY);
 		
 		disableButtons();
+		endTurnButton.disable();
 	}
 	
 	public void update(List<TouchEvent> events) {
@@ -157,6 +158,7 @@ public class Player {
 		events = spawnUnitButton.update(events);
 		events = deselectButton.update(events);
 		if(spawnUnitIndex == units.length) {
+			endTurnButton.enable();
 			events = endTurnButton.update(events);
 			if(endTurnButton.state == Button.ACTIVATED) {
 				endTurnButton.disarm();
