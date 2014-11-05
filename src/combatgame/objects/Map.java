@@ -4,6 +4,8 @@ import combatgame.assets.GameplayAssets;
 import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
+import combatgame.state.GameState;
+
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -25,12 +27,27 @@ import android.util.Log;
 
 public class Map {
 	
+	//gamestate that created us
+	GameState gamestate;
+	
 	//players
 	Player player1, player2;
 	Player thisPlayersTurn;
 	
 	//gamertag font
 	Paint gamertagFont;
+	
+	//game over
+	protected boolean isGameOver = false;
+	protected Player winningPlayer = null;
+	protected String gameoverString = null;
+	protected Paint gameoverFont;
+	protected Paint fadePaint;
+	protected int fadePaintAlpha = 0;
+	protected final int TIME_TILL_FADE = 6000;
+	protected long startTime = 0;
+	protected boolean isWaitingToFade = true;
+	protected boolean isFading = false;
 	
 	//map data
 	protected int tileWidthInPx = 96;
@@ -62,7 +79,9 @@ public class Map {
 	//private ColorFilter filter = new PorterDuffColorFilter(fogOfWarColor, Mode.OVERLAY);
 	//private int fogOfWarColor = Color.parseColor("#4A3F3F");
 	
-	public Map (AssetManager am, String filePath) {
+	public Map (GameState gamestate, AssetManager am, String filePath) {
+		this.gamestate = gamestate;
+		
 		//create players
 		player1 = new Player("Player 1", true, this, 3);
 		player2 = new Player("Player 2", false, this, 3);
@@ -93,6 +112,14 @@ public class Map {
 			
 			//create lightmap object
 			lightmap = new boolean[num_vertical_tiles][num_horizontal_tiles];
+			
+			gameoverFont = new Paint();
+			gameoverFont.setColor(Color.WHITE);
+			gameoverFont.setTextSize(60); //TODO: scale text for larger devices
+			
+			fadePaint = new Paint();
+			fadePaint.setColor(Color.BLACK);
+			fadePaint.setAlpha(0);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -109,15 +136,40 @@ public class Map {
 	}
 	
 	public void update(List<TouchEvent> events) {
-		//update current player's turn
-		thisPlayersTurn.update(events);
-		
-		//update map scroll
-		updateMap(events);
-		
-		//get new lightmap
-		clearLightMap();
-		lightmap = thisPlayersTurn.constructLightMap(lightmap);
+		if(isGameOver) {
+			if(startTime == 0)
+				startTime = System.currentTimeMillis();
+			if(isWaitingToFade) {
+				if(System.currentTimeMillis() - startTime > TIME_TILL_FADE) {
+					isWaitingToFade = false;
+					isFading = true;
+					startTime = System.currentTimeMillis();
+				}
+			}
+			else if(isFading) {
+				if(fadePaintAlpha >= 255) {
+					gamestate.gameover();
+				}
+				else {
+					fadePaintAlpha += 20;
+					fadePaint.setAlpha(fadePaintAlpha);
+				}
+			}
+		}
+		else {
+			//update current player's turn
+			thisPlayersTurn.update(events);
+			
+			//check to see if someone has won yet
+			checkWinConditions();
+			
+			//update map scroll
+			updateMap(events);
+			
+			//get new lightmap
+			clearLightMap();
+			lightmap = thisPlayersTurn.constructLightMap(lightmap);
+		}
 	}
 	
 	private void clearLightMap() {
@@ -125,6 +177,37 @@ public class Map {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
 				lightmap[row][col] = false;
 			}
+		}
+	}
+	
+	private void checkWinConditions() {
+		//TODO: if we have different gamemodes then the victory conditions will be dependent on the gamemode
+		//just using standard deathmatch victory condition
+		Unit[] player1Units = player1.getUnits();
+		Unit[] player2Units = player2.getUnits();
+		boolean isPlayer1Destroyed = true;
+		boolean isPlayer2Destroyed = true;
+		for(int i = 0; i < player1Units.length; i++) {
+			if(!player1Units[i].isDead())
+				isPlayer1Destroyed = false;
+		}
+		for(int i = 0; i < player2Units.length; i++) {
+			if(!player2Units[i].isDead())
+				isPlayer2Destroyed = false;
+		}
+		//both teams wiped out, stalemate
+		if(isPlayer1Destroyed && isPlayer2Destroyed) {
+			isGameOver = true;
+		}
+		//player 1 wins
+		else if(isPlayer1Destroyed && !isPlayer2Destroyed) {
+			isGameOver = true;
+			winningPlayer = player1;
+		}
+		//player 2 wins
+		else if(!isPlayer1Destroyed && isPlayer2Destroyed) {
+			isGameOver = true;
+			winningPlayer = player2;
 		}
 	}
 	
@@ -283,6 +366,24 @@ public class Map {
 		else {
 			g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
 			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 20, gamertagFont);
+		}
+		
+		//draw the game over text
+		if(isGameOver) {
+			if(gameoverString == null) {
+				if(winningPlayer == null)
+					gameoverString = "Stalemate";
+				else
+					gameoverString = winningPlayer.getGamertag() + "wins!";
+			}
+			if(Game.isScaled()) {
+				g.drawText(gameoverString, Game.G_WIDTH / 2, Game.G_HEIGHT / 2, gameoverFont);
+				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, fadePaint);
+			}
+			else {
+				g.drawText(gameoverString, Game.P_WIDTH / 2, Game.P_HEIGHT / 2, gameoverFont);
+				g.drawRect(0, 0, Game.P_WIDTH, Game.P_HEIGHT, fadePaint);
+			}
 		}
 	}
 	

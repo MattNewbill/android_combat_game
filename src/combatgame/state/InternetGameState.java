@@ -5,7 +5,7 @@ import combatgame.main.*;
 import combatgame.assets.*;
 import android.content.res.AssetManager;
 
-public class InternetGameState extends State {
+public class InternetGameState extends GameState {
 
 	public InternetGameState(StateManager stateManager) {
 		super(stateManager);
@@ -33,6 +33,11 @@ public class InternetGameState extends State {
 	@Override
 	public void resume() {
 
+	}
+	
+	@Override
+	public void gameover() {
+		
 	}
 
 	@Override
