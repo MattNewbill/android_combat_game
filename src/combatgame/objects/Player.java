@@ -8,6 +8,7 @@ import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.units.Ability;
+import combatgame.units.Attack;
 import combatgame.units.assault.Assault;
 import combatgame.units.sniper.Sniper;
 import combatgame.util.*;
@@ -42,6 +43,9 @@ public class Player {
 	
 	//gameplay state
 	private boolean isSetupPhase = true;
+	
+	//if the player has selected an ability to use, this is the one he is using
+	private Ability currentAbility;
 	
 	//gameplay objects
 	private Unit[] units;
@@ -124,6 +128,7 @@ public class Player {
 		spawnUnitButton = new Button(GameplayAssets.spawnUnitIcon, null, spawnUnitButtonX, spawnUnitButtonY);
 		
 		disableButtons();
+		endTurnButton.disable();
 	}
 	
 	public void update(List<TouchEvent> events) {
@@ -153,6 +158,7 @@ public class Player {
 		events = spawnUnitButton.update(events);
 		events = deselectButton.update(events);
 		if(spawnUnitIndex == units.length) {
+			endTurnButton.enable();
 			events = endTurnButton.update(events);
 			if(endTurnButton.state == Button.ACTIVATED) {
 				endTurnButton.disarm();
@@ -267,10 +273,10 @@ public class Player {
 		//TODO if a unit is selected this needs to pull up the "drop-up" menu to show the last of abilities
 		if(abilityButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "ability button activated");
-			if(currentAction == CHOOSE_ABILITY)
-				currentAction = SELECTION;
-			else
-				currentAction = CHOOSE_ABILITY;
+			//if(currentAction == CHOOSE_ABILITY)
+			//	currentAction = SELECTION;
+			//else
+			//	currentAction = CHOOSE_ABILITY;
 			abilityButton.disarm();
 		}
 		//deselected the current unit
@@ -314,8 +320,7 @@ public class Player {
 				if(events.get(i).type == TouchEvent.TOUCH_UP &&
 				   previousEvent.type == TouchEvent.TOUCH_DOWN ||
 				   (previousTouchDownTile != null && events.get(i).type == TouchEvent.TOUCH_UP &&
-				   map.getTileTouched(events.get(i)).col == previousTouchDownTile.col &&
-				   map.getTileTouched(events.get(i)).row == previousTouchDownTile.row)) {
+				   map.getTileTouched(events.get(i)).equals(previousTouchDownTile))) {
 					//call the map to get the exact tile that was touched
 					pointTouched = map.getTileTouched(events.get(i));
 					isUsed = true; //we used this touch event
@@ -386,7 +391,7 @@ public class Player {
 			boolean isUnitSelected = false;
 			for(int i = 0; i < units.length; i++) { //loop through our units to see if we touched one
 				tile = units[i].getXYCoordinate();
-				if(tile != null && tile.col == tileTouched.col && tile.row == tileTouched.row) { //if we did touch it, set that unit as the currently selected unit
+				if(tile != null && tile.equals(tileTouched)) { //if we did touch it, set that unit as the currently selected unit
 					movementPoints = null;
 					selectedUnitIndex = i;
 					isUnitSelected = true;
@@ -416,7 +421,7 @@ public class Player {
 			//check to see if we selected a movement tile
 			for(int row = 1; row < movementPoints.length; row++) {
 				for(int col = 0; col < movementPoints[row].length; col++) {
-					if(tileTouched.col == movementPoints[row][col].col && tileTouched.row == movementPoints[row][col].row) {
+					if(tileTouched.equals(movementPoints[row][col])) {
 						units[selectedUnitIndex].setXYCoordinate(tileTouched, map);
 						units[selectedUnitIndex].usePoints(row * units[selectedUnitIndex].getMovementCost());
 						return;
@@ -430,7 +435,7 @@ public class Player {
 				if(i == selectedUnitIndex)
 					continue;
 				unitTile = units[i].getXYCoordinate();
-				if(tileTouched.row == unitTile.row && tileTouched.col == unitTile.col) {
+				if(tileTouched.equals(unitTile)) {
 					selectedUnitIndex = i;
 					return;
 				}
@@ -513,18 +518,42 @@ public class Player {
 	////PLAYER IS SELECTING A UNIT'S ABILITY TO USE
 	////////////////////////////////////////////
 	private void chooseAbilities(List<TouchEvent> events) {
-		//TODO: get the list of abilities for the selected unit and check to see if we chose any of them
-		//Ability[] abilities = units[selectedUnitIndex].getAbilities();
-		//for(int i = 0; i < abilities.length; i++) {
-		//	abilities[i].update(events);
-		//}
+		Ability[] abilities = units[selectedUnitIndex].getAbilities();
+		for(int i = 0; i < abilities.length; i++) {
+			Button ability = abilities[i].getButton();
+			ability.update(events);
+			if(ability.state == Button.ACTIVATED) {
+				ability.disarm();
+				//if the unit can't afford this ability then go back to the selection state
+				if(units[selectedUnitIndex].getPointsLeft() < abilities[i].getCost()) {
+					currentAction = SELECTION;
+				}
+				else {
+					currentAbility = abilities[i];
+				}
+			}
+		}
 	}
 	
 	////////////////////////////////////////////
 	////PLAYER IS USING A UNIT'S ABILITY
 	////////////////////////////////////////////
 	private void useAbility(List<TouchEvent> events) {
-		//TODO: check to see what the user did with the action selected
+		//get the tiles that can be attacked
+		List<GPoint> attackableTiles = currentAbility.getTilesAttackable(units[selectedUnitIndex], map);
+		
+		GPoint tileTouched = getTileTouched(events);
+		if(tileTouched != null) {
+			//loop through events to see if we pressed one of the attackable tiles
+			for(int i = 0; i < attackableTiles.size(); i++) {
+				if(tileTouched.equals(attackableTiles.get(i))) {
+					//get the tiles that were affected by the attack
+					List<Attack> tilesAffected = currentAbility.getTilesAffected(tileTouched);
+					//TODO:  reduce health of units in affected tiles
+				}
+			}
+			currentAction = SELECTION;
+		}
 	}
 	
 	public void render(Graphics2D g) {

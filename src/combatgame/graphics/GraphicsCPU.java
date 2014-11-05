@@ -16,6 +16,13 @@ public class GraphicsCPU implements Graphics2D {
 		drawingCanvas = new Canvas(buffer);
 	}
 	
+	//public GraphicsCPU() {
+	//}
+	
+	public void setCanvas(Canvas canvas) {
+		drawingCanvas = canvas;
+	}
+	
 	@Override
 	public void drawRGB(int r, int g, int b) {
 		drawingCanvas.drawRGB(r, g, b);

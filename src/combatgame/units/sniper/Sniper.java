@@ -2,6 +2,7 @@ package combatgame.units.sniper;
 
 import combatgame.assets.*;
 import combatgame.objects.Unit;
+import combatgame.units.Ability;
 import combatgame.util.Util;
 
 /**
@@ -14,7 +15,6 @@ public class Sniper extends Unit {
 		this.name = "Sniper";
 		this.player_id = player_id;
 		this.unit_id = (int)System.currentTimeMillis() + Util.getRand(); //TODO
-		this.shootingCost = 3;
 		this.movementCost = 1;
 		this.visionRadius = 5;
 		this.damage = 50;
@@ -24,6 +24,8 @@ public class Sniper extends Unit {
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
 		this.rotationCost = 1;
+		this.abilities = new Ability[1];
+		abilities[0] = new BasicAttack(3);
 	}
 	
 }
