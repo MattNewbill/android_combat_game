@@ -549,7 +549,16 @@ public class Player {
 				if(tileTouched.equals(attackableTiles.get(i))) {
 					//get the tiles that were affected by the attack
 					List<AttackedTile> tilesAffected = currentAbility.getTilesAffected(tileTouched);
-					//TODO:  reduce health of units in affected tiles
+					for(int j = 0; j < tilesAffected.size(); j++) {
+						MapTile tile = map.getTile(tilesAffected.get(j).tile);
+						if(tile.hasUnit()){//there is a unit on the tile
+							int unitId = tile.getUnit_id();
+							Unit unit = map.getUnit(unitId);
+							//reduce unit health by attack dmg
+							if(unit != null)
+								unit.takeDamage(tilesAffected.get(j).damageTaken);
+						}
+					}
 				}
 			}
 			currentAction = SELECTION;
@@ -762,5 +771,12 @@ public class Player {
 		moveButton.enable();
 		abilityButton.enable();
 		deselectButton.enable();
+	}
+
+	public Unit getUnit(int unitId) {
+		for ( int i = 0; i < units.length; i++)
+			if(units[i].getUnit_id() == unitId)
+				return units[i];
+		return null;
 	}
 }

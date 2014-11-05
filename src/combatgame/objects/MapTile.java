@@ -12,11 +12,12 @@ public class MapTile {
 	private boolean hasUnit;
 	private int player_id;
 	private int unit_id;
+	public static final int NO_UNIT = -1;
 	
 	public MapTile (int mapFeature_int ) {
 		feature = new MapFeature (mapFeature_int);
 		player_id = -1;
-		unit_id = -1;
+		unit_id = NO_UNIT;
 		hasUnit = false;
 	}
 	

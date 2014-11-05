@@ -485,5 +485,15 @@ public class Map {
 	public MapTile getTile(int row, int col) {
 		return board[row][col];
 	}
+	
+	public Unit getUnit(int unitId) {
+		Unit p1Unit = player1.getUnit(unitId);
+		Unit p2Unit = player2.getUnit(unitId);
+		if(p1Unit != null)
+			return p1Unit;
+		else if(p2Unit != null)
+			return p2Unit;
+		return null;
+	}
 
 }
