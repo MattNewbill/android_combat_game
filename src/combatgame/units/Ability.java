@@ -12,6 +12,7 @@ import android.graphics.Point;
 public abstract class Ability {
 
 	protected int abilityCost;
+	protected int damage;
 	protected String name;
 	
 	protected Button abilityButton;
@@ -21,7 +22,7 @@ public abstract class Ability {
 	}
 	
 	public abstract List<GPoint> getTilesAttackable(Unit unit, Map map);
-	public abstract List<Attack> getTilesAffected(GPoint tile);
+	public abstract List<AttackedTile> getTilesAffected(GPoint tile);
 	public void renderButton(Graphics2D g, int x, int y) {
 		abilityButton.render(g, x, y);
 	}
@@ -36,5 +37,9 @@ public abstract class Ability {
 	
 	public Button getButton() {
 		return abilityButton;
+	}
+	
+	public int getDamage() {
+		return damage;
 	}
 }

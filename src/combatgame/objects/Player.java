@@ -8,7 +8,7 @@ import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.units.Ability;
-import combatgame.units.Attack;
+import combatgame.units.AttackedTile;
 import combatgame.units.assault.Assault;
 import combatgame.units.sniper.Sniper;
 import combatgame.util.*;
@@ -548,7 +548,7 @@ public class Player {
 			for(int i = 0; i < attackableTiles.size(); i++) {
 				if(tileTouched.equals(attackableTiles.get(i))) {
 					//get the tiles that were affected by the attack
-					List<Attack> tilesAffected = currentAbility.getTilesAffected(tileTouched);
+					List<AttackedTile> tilesAffected = currentAbility.getTilesAffected(tileTouched);
 					//TODO:  reduce health of units in affected tiles
 				}
 			}
