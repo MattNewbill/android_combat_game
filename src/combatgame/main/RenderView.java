@@ -25,8 +25,10 @@ public class RenderView extends SurfaceView implements Runnable {
 	Graphics2D drawingCanvas;
 	volatile boolean isRunning = false;
 	
-	final int TARGET_FPS = 90;
-	int targetTime = 1000 / TARGET_FPS;
+	final int TARGET_FPS = 30;
+	final int TARGET_UPDATES = 30;
+	int targetFPSTime = 1000 / TARGET_FPS;
+	int targetUpdateTime = 1000 / TARGET_UPDATES;
 	
 	Paint fpsPaint;
 	
@@ -35,8 +37,8 @@ public class RenderView extends SurfaceView implements Runnable {
 		this.game = game;
 		this.frameBuffer = frameBuffer;
 		holder = getHolder();
-		//drawingCanvas = new GraphicsCPU(frameBuffer);
-		drawingCanvas = new GraphicsCPU();
+		drawingCanvas = new GraphicsCPU(frameBuffer);
+		//drawingCanvas = new GraphicsCPU();
 		
 		fpsPaint = new Paint();
 		fpsPaint.setColor(Color.WHITE);
@@ -46,6 +48,7 @@ public class RenderView extends SurfaceView implements Runnable {
 	public void run() {
 		
 		Rect destinationRect = new Rect();
+		long accumulator = 0;
 		long startTimeFrame = System.nanoTime();
 		long startTimeSleep;
 		long fps = 0;
@@ -57,37 +60,42 @@ public class RenderView extends SurfaceView implements Runnable {
 		long drawTime = 0;
 		
 		while(isRunning) {
+			//long startTime = System.currentTimeMillis();
+			
 			//make sure we have a surface to draw on
 			if(!holder.getSurface().isValid()) {
 				continue;
 			}
-			Canvas canvas = holder.lockCanvas();
-			canvas.getClipBounds(destinationRect);
-			drawingCanvas.setCanvas(canvas);
+			
 			drawingCanvas.drawRGB(0, 0, 0); //clear the screen
 			
 			startTimeSleep = System.nanoTime();
-			long delta = (System.nanoTime() - startTimeSleep) / 1000000;
+			long delta = System.currentTimeMillis() - startTimeSleep;
 			
+			//update
 			startTimeUpdate = System.currentTimeMillis();
-			game.getCurrentState().update(delta); //update current state (screen)
+			//while(accumulator >= targetUpdateTime) {
+				game.getCurrentState().update(delta);
+				accumulator -= targetUpdateTime;
+			//}
 			long endTimeUpdate = System.currentTimeMillis() - startTimeUpdate;
 			
+			//render
 			startTimeRender = System.currentTimeMillis();
-			game.getCurrentState().render(drawingCanvas, delta); //render current state (screen)
+			game.getCurrentState().render(drawingCanvas, delta);
 			drawingCanvas.drawText(Long.toString(fps), 30, 30, fpsPaint); //draw fps
-			drawingCanvas.drawText("U: " + endTimeUpdate, 30, 50, fpsPaint);
-			drawingCanvas.drawText("R: " + (System.currentTimeMillis() - startTimeRender), 30, 70, fpsPaint);
-			drawingCanvas.drawText("D: " + drawTime, 30, 90, fpsPaint);
+			drawingCanvas.drawText("U: " + endTimeUpdate, 30, 50, fpsPaint); //draw time to update
+			drawingCanvas.drawText("R: " + (System.currentTimeMillis() - startTimeRender), 30, 70, fpsPaint); //draw time to render
+			drawingCanvas.drawText("D: " + drawTime, 30, 90, fpsPaint); //draw time to post to screen
 			
 			long startTimeCleanup = System.currentTimeMillis();
-			//Canvas canvas = holder.lockCanvas();
-			//canvas.getClipBounds(destinationRect);
-			//if(Game.isScaled())
-			//	canvas.drawBitmap(frameBuffer, null, destinationRect, null); //scales and translate automatically to fit screen
-			//else
+			Canvas canvas = holder.lockCanvas();
+			canvas.getClipBounds(destinationRect);
+			if(Game.isScaled())
+				canvas.drawBitmap(frameBuffer, null, destinationRect, new Paint(Paint.LINEAR_TEXT_FLAG)); //scales and translate automatically to fit screen
+			else
 			//	canvas.drawBitmap(frameBuffer, null, new Rect(0, 0, Game.G_WIDTH, Game.G_HEIGHT), null); //TODO: perhaps change this to P_WIDTH, P_HEIGHT....test on larger devices to see for sure
-			//	canvas.drawBitmap(frameBuffer, 0, 0, null);
+				canvas.drawBitmap(frameBuffer, 0, 0, null);
 			holder.unlockCanvasAndPost(canvas);
 			drawTime = System.currentTimeMillis() - startTimeCleanup;
 			
@@ -100,15 +108,20 @@ public class RenderView extends SurfaceView implements Runnable {
 				startTimeFrame = System.nanoTime();
 			}
 			
+			//accumulator += System.currentTimeMillis() - startTime;
+			
+			
 			//sleep if we've rendered faster than our target tick time
 			elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
-			if(elapsedTime < targetTime) {
+			if(elapsedTime < targetFPSTime) {
+				Log.i("combatgame", "TTS: " + (targetFPSTime - elapsedTime));
 				try {
-					Thread.sleep(targetTime - elapsedTime);
+					Thread.sleep(targetFPSTime - elapsedTime);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
 			}
+			
 		}
 	}
 	

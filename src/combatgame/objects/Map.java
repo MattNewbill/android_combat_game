@@ -46,7 +46,7 @@ public class Map {
 	//scrolling data
 	TouchEvent previousEvent; //used to calculate which direction we are scrolling
 	public static final int MAX_OUT_OF_BOUNDS = 125; //max distance you can scroll past the edge of the map
-	public static final int SCROLL_DISTANCE = 10; //how far we scroll due to a single touch event
+	public static final int SCROLL_DISTANCE = 10;
 	public static final int FLING_DISTANCE = 70; //how far we scroll due to a single "fling" event
 	public static final int FLING_THRESHOLD = 17; //the distance apart to scroll events have to be to determine a "fling"
 	int mapOffsetX = 0, mapOffsetY = 0;
@@ -55,7 +55,7 @@ public class Map {
 	protected boolean isAutoScrolling = false;
 	protected GPoint tileToScrollTo;
 	public static final int LEEWAY = 30;
-	public static final int FAST_SCROLL_DISTANCE = 20;
+	public static final int FAST_SCROLL_DISTANCE = 15;
 	
 	//shaded portions of the map that we can't see
 	private int fogOfWarColor = Color.parseColor("#E64A3F3F");
@@ -205,14 +205,14 @@ public class Map {
 		if(mapOffsetX < -MAX_OUT_OF_BOUNDS) {
 			mapOffsetX = -MAX_OUT_OF_BOUNDS;
 		}
-		else if(mapOffsetX > ((getNum_horizontal_tiles() * getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.P_WIDTH) {
-			mapOffsetX = ((getNum_horizontal_tiles() * getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.P_WIDTH;
+		else if(mapOffsetX > ((getNum_horizontal_tiles() * getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_WIDTH) {
+			mapOffsetX = ((getNum_horizontal_tiles() * getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_WIDTH;
 		}
 		if(mapOffsetY < -MAX_OUT_OF_BOUNDS) {
 			mapOffsetY = -MAX_OUT_OF_BOUNDS;
 		}
-		else if(mapOffsetY > ((getNum_vertical_tiles() * getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.P_HEIGHT) {
-			mapOffsetY = ((getNum_vertical_tiles() * getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.P_HEIGHT;
+		else if(mapOffsetY > ((getNum_vertical_tiles() * getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_HEIGHT) {
+			mapOffsetY = ((getNum_vertical_tiles() * getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_HEIGHT;
 		}
 	}
 	

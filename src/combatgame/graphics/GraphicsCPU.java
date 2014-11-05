@@ -12,12 +12,12 @@ public class GraphicsCPU implements Graphics2D {
 
 	Canvas drawingCanvas;
 	
-	//public GraphicsCPU(Bitmap buffer) {
-	//	drawingCanvas = new Canvas(buffer);
-	//}
-	
-	public GraphicsCPU() {
+	public GraphicsCPU(Bitmap buffer) {
+		drawingCanvas = new Canvas(buffer);
 	}
+	
+	//public GraphicsCPU() {
+	//}
 	
 	public void setCanvas(Canvas canvas) {
 		drawingCanvas = canvas;
