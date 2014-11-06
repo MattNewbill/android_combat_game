@@ -21,6 +21,7 @@ public class ConnectionState extends State {
 	Button internetButton;
 	Button bluetoothButton;
 	Button hotSeatButton;
+	Button backButton;
 	
 	public ConnectionState(StateManager sm) {
 		super(sm);
@@ -35,6 +36,8 @@ public class ConnectionState extends State {
 			Bitmap bluetoothBitmapArmed = BitmapFactory.decodeStream(am.open("images/connection_menu/bluetooth_original_armed.png"));
 			Bitmap hotSeatBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/connection_menu/solo_original.png"));
 			Bitmap hotSeatBitmapArmed = BitmapFactory.decodeStream(am.open("images/connection_menu/solo_original_armed.png"));
+			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button_original.png"));
+			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button_original_armed.png"));
 			
 			int internetButtonX = (Game.G_WIDTH / 2) - internetBitmapDisarmed.getWidth() / 2;
 			int internetButtonY = (int) (Game.G_HEIGHT / 2 - (internetBitmapDisarmed.getHeight() * 1.5));
@@ -42,10 +45,13 @@ public class ConnectionState extends State {
 			int bluetoothButtonY = (int) (Game.G_HEIGHT / 2 - (bluetoothBitmapDisarmed.getHeight() * 1.5) + V_BUTTON_MARGIN + internetBitmapDisarmed.getHeight());
 			int hotSeatButtonX = (Game.G_WIDTH / 2) - hotSeatBitmapDisarmed.getWidth() / 2;
 			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (hotSeatBitmapDisarmed.getHeight() * 1.5) + (V_BUTTON_MARGIN * 2) + internetBitmapDisarmed.getHeight() + bluetoothBitmapDisarmed.getHeight());
+			int backButtonX = 0;
+			int backButtonY = Game.G_HEIGHT - backUnarmed.getHeight();
 			
 			internetButton = new Button(internetBitmapDisarmed, internetBitmapArmed, internetButtonX, internetButtonY);
 			bluetoothButton = new Button(bluetoothBitmapDisarmed, bluetoothBitmapArmed, bluetoothButtonX, bluetoothButtonY);
 			hotSeatButton = new Button(hotSeatBitmapDisarmed, hotSeatBitmapArmed, hotSeatButtonX, hotSeatButtonY);
+			backButton = new Button(backUnarmed, backArmed, backButtonX, backButtonY);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -57,18 +63,25 @@ public class ConnectionState extends State {
 		events = internetButton.update(events);
 		events = bluetoothButton.update(events);
 		events = hotSeatButton.update(events);
+		events = backButton.update(events);
 		
 		if(internetButton.state == Button.ACTIVATED) {
 			//new game over the internet
-			stateManager.setState(new InternetGameState(stateManager));
+			internetButton.disarm();
+			//stateManager.setState(new InternetGameState(stateManager));
 		}
 		else if(bluetoothButton.state == Button.ACTIVATED){
 			//new game over bluetooth
-			stateManager.setState(new BluetoothGameState(stateManager));
+			bluetoothButton.disarm();
+			//stateManager.setState(new BluetoothGameState(stateManager));
 		}
 		else if(hotSeatButton.state == Button.ACTIVATED) {
 			//new game with two players on one phone
 			stateManager.setState(new HotSeatState(stateManager));
+		}
+		else if(backButton.state == Button.ACTIVATED) {
+			//take us back to the main menu
+			stateManager.setState(new MainMenuState(stateManager));
 		}
 		
 	}
@@ -83,6 +96,9 @@ public class ConnectionState extends State {
 		
 		//draw one phone, two player button
 		hotSeatButton.render(g);
+		
+		//draw back button
+		backButton.render(g);
 	}
 
 	@Override
@@ -103,6 +119,8 @@ public class ConnectionState extends State {
 			bluetoothButton.recycle();
 		if(hotSeatButton != null)
 			hotSeatButton.recycle();
+		if(backButton != null)
+			backButton.recycle();
 	}
 	
 }

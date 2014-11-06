@@ -114,7 +114,7 @@ public class RenderView extends SurfaceView implements Runnable {
 			//sleep if we've rendered faster than our target tick time
 			elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
 			if(elapsedTime < targetFPSTime) {
-				Log.i("combatgame", "TTS: " + (targetFPSTime - elapsedTime));
+				//Log.i("combatgame", "TTS: " + (targetFPSTime - elapsedTime));
 				try {
 					Thread.sleep(targetFPSTime - elapsedTime);
 				} catch(Exception e) {

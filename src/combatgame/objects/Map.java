@@ -44,7 +44,8 @@ public class Map {
 	protected Paint gameoverFont;
 	protected Paint fadePaint;
 	protected int fadePaintAlpha = 0;
-	protected final int TIME_TILL_FADE = 6000;
+	protected final int TIME_TILL_FADE = 5000;
+	protected final int ALPHA_STEP = 3;
 	protected long startTime = 0;
 	protected boolean isWaitingToFade = true;
 	protected boolean isFading = false;
@@ -92,6 +93,14 @@ public class Map {
 		gamertagFont.setTextSize(20);
 		gamertagFont.setTextAlign(Align.CENTER);
 		
+		gameoverFont = new Paint();
+		gameoverFont.setColor(Color.WHITE);
+		gameoverFont.setTextSize(60); //TODO: scale text for larger devices
+		gameoverFont.setTextAlign(Align.CENTER);
+		
+		fadePaint = new Paint();
+		fadePaint.setColor(Color.BLACK);
+		fadePaint.setAlpha(0);
 		try {
 			//read in map
 			BufferedReader reader = new BufferedReader(new InputStreamReader((am.open("maps/test_map.txt"))));
@@ -113,13 +122,6 @@ public class Map {
 			//create lightmap object
 			lightmap = new boolean[num_vertical_tiles][num_horizontal_tiles];
 			
-			gameoverFont = new Paint();
-			gameoverFont.setColor(Color.WHITE);
-			gameoverFont.setTextSize(60); //TODO: scale text for larger devices
-			
-			fadePaint = new Paint();
-			fadePaint.setColor(Color.BLACK);
-			fadePaint.setAlpha(0);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -151,7 +153,9 @@ public class Map {
 					gamestate.gameover();
 				}
 				else {
-					fadePaintAlpha += 20;
+					fadePaintAlpha += ALPHA_STEP;
+					if(fadePaintAlpha > 255)
+						fadePaintAlpha = 255;
 					fadePaint.setAlpha(fadePaintAlpha);
 				}
 			}
@@ -199,15 +203,15 @@ public class Map {
 		if(isPlayer1Destroyed && isPlayer2Destroyed) {
 			isGameOver = true;
 		}
-		//player 1 wins
+		//player 2 wins
 		else if(isPlayer1Destroyed && !isPlayer2Destroyed) {
 			isGameOver = true;
-			winningPlayer = player1;
+			winningPlayer = player2;
 		}
-		//player 2 wins
+		//player 1 wins
 		else if(!isPlayer1Destroyed && isPlayer2Destroyed) {
 			isGameOver = true;
-			winningPlayer = player2;
+			winningPlayer = player1;
 		}
 	}
 	
@@ -374,7 +378,7 @@ public class Map {
 				if(winningPlayer == null)
 					gameoverString = "Stalemate";
 				else
-					gameoverString = winningPlayer.getGamertag() + "wins!";
+					gameoverString = winningPlayer.getGamertag() + " wins!";
 			}
 			if(Game.isScaled()) {
 				g.drawText(gameoverString, Game.G_WIDTH / 2, Game.G_HEIGHT / 2, gameoverFont);

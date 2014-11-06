@@ -40,6 +40,7 @@ public class Player {
 	
 	//movement state
 	private GPoint[][] movementPoints;
+	private List<GPoint> attackableTiles;
 	
 	//gameplay state
 	private boolean isSetupPhase = true;
@@ -273,10 +274,10 @@ public class Player {
 		//TODO if a unit is selected this needs to pull up the "drop-up" menu to show the last of abilities
 		if(abilityButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "ability button activated");
-			//if(currentAction == CHOOSE_ABILITY)
-			//	currentAction = SELECTION;
-			//else
-			//	currentAction = CHOOSE_ABILITY;
+			if(currentAction == CHOOSE_ABILITY)
+				currentAction = SELECTION;
+			else
+				currentAction = CHOOSE_ABILITY;
 			abilityButton.disarm();
 		}
 		//deselected the current unit
@@ -521,7 +522,7 @@ public class Player {
 		Ability[] abilities = units[selectedUnitIndex].getAbilities();
 		for(int i = 0; i < abilities.length; i++) {
 			Button ability = abilities[i].getButton();
-			ability.update(events);
+			events = ability.update(events);
 			if(ability.state == Button.ACTIVATED) {
 				ability.disarm();
 				//if the unit can't afford this ability then go back to the selection state
@@ -530,7 +531,15 @@ public class Player {
 				}
 				else {
 					currentAbility = abilities[i];
+					currentAction = USE_ABILITY;
 				}
+			}
+		}
+		//if we touch something other than the movement buttons then exit out of the movement state
+		for(int i = 0; i < events.size(); i++) {
+			GPoint tileTouched = getTileTouched(events);
+			if(tileTouched != null) {
+				currentAction = SELECTION;
 			}
 		}
 	}
@@ -540,13 +549,15 @@ public class Player {
 	////////////////////////////////////////////
 	private void useAbility(List<TouchEvent> events) {
 		//get the tiles that can be attacked
-		List<GPoint> attackableTiles = currentAbility.getTilesAttackable(units[selectedUnitIndex], map);
+		attackableTiles = currentAbility.getTilesAttackable(units[selectedUnitIndex], map);
 		
 		GPoint tileTouched = getTileTouched(events);
 		if(tileTouched != null) {
 			//loop through events to see if we pressed one of the attackable tiles
 			for(int i = 0; i < attackableTiles.size(); i++) {
 				if(tileTouched.equals(attackableTiles.get(i))) {
+					//decrement action points
+					units[selectedUnitIndex].usePoints(currentAbility.getCost());
 					//get the tiles that were affected by the attack
 					List<AttackedTile> tilesAffected = currentAbility.getTilesAffected(tileTouched);
 					for(int j = 0; j < tilesAffected.size(); j++) {
@@ -556,7 +567,7 @@ public class Player {
 							Unit unit = map.getUnit(unitId);
 							//reduce unit health by attack dmg
 							if(unit != null)
-								unit.takeDamage(tilesAffected.get(j).damageTaken);
+								unit.takeDamage(tilesAffected.get(j).damageTaken, map);
 						}
 					}
 				}
@@ -613,8 +624,11 @@ public class Player {
 		//---------------------------------------
 		//--Render ability overlays if the user is trying to use one
 		//---------------------------------------
-		if(currentAction == USE_ABILITY) {
-			//TODO: render the action overlays
+		if(currentAction == USE_ABILITY && attackableTiles != null) {
+			for(int i = 0; i < attackableTiles.size(); i++) {
+				GPoint tile = attackableTiles.get(i);
+				g.drawBitmap(GameplayAssets.attackOverlay, tile.col * map.getTileWidthInPx() - map.getMapOffsetX(), tile.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
+			}
 		}
 		
 		//---------------------------------------
@@ -661,11 +675,15 @@ public class Player {
 		//---------------------------------------
 		if(currentAction == CHOOSE_ABILITY) {
 			//TODO: render ability buttons for the player to choose
-			//Ability[] abilities = units[selectedUnitIndex].getAbilities();
-			//for(int i = 0; i < abilities.length; i++) {
-				//abilities.render(g, 50, Game.P_HEIGHT - abilityButton.getHeight() - (abilities.length * GameplayAssets.basicAttack.getHeight()));
-			//}
+			Ability[] abilities = units[selectedUnitIndex].getAbilities();
+			for(int i = 0; i < abilities.length; i++) {
+				abilities[i].renderButton(g, abilityButton.getX(), abilityButton.getY() - (abilities.length * GameplayAssets.basicAttackIcon.getHeight()));
+			}
 		}
+		
+		//reset overlays
+		movementPoints = null;
+		attackableTiles = null;
 	}
 	
 	////////////////////////////////////////////
@@ -674,7 +692,7 @@ public class Player {
 	public void renderVisibleUnits(Graphics2D g, boolean[][] lightmap) {
 		for(int i = 0; i < units.length; i++) {
 			GPoint coordinate = units[i].getXYCoordinate();
-			if(coordinate != null && lightmap[coordinate.row][coordinate.col])
+			if(!units[i].isDead() && coordinate != null && lightmap[coordinate.row][coordinate.col])
 				g.drawBitmap(units[i].getSprite(), coordinate.col * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 		}
 	}
@@ -695,7 +713,7 @@ public class Player {
 		}
 		//get the lightmaps for all of our units
 		for(int i = 0; i < units.length; i++) {
-			if(units[i].getXYCoordinate() != null) {
+			if(!units[i].isDead() && units[i].getXYCoordinate() != null) {
 				List<GPoint> lightPoints = Vision.getSprintVision(map, units[i]);
 				for(int k = 0; k < lightPoints.size(); k++) {
 					lightmap[lightPoints.get(k).row][lightPoints.get(k).col] = true;

@@ -84,6 +84,14 @@ public class Button {
 		g.drawBitmap(images[state], x, y, null);
 	}
 	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
 	public int getWidth() {
 		return images[state].getWidth();
 	}

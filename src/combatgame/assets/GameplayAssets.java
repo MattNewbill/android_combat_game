@@ -27,12 +27,16 @@ public class GameplayAssets {
 	public static Bitmap deselectIcon;
 	public static Bitmap endTurnIcon;
 	
-	//movement buttons list
+	//movement button icons
 	public static Bitmap movementIcon;
 	public static Bitmap leftRotateIcon;
 	public static Bitmap rightRotateIcon;
 	
+	//ability button icons
+	public static Bitmap basicAttackIcon;
+	
 	//selection overlays
+	public static Bitmap attackOverlay;
 	public static Bitmap selectionOverlay;
 	public static Bitmap[] numberOverlays;
 	
@@ -82,6 +86,9 @@ public class GameplayAssets {
 			leftRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/left_rotate_icon.png"), null, options);
 			rightRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/right_rotate_icon.png"), null, options);
 			
+			basicAttackIcon = BitmapFactory.decodeStream(am.open("sprites/hud/action_buttons/standard_attack_icon.png"), null, options);
+			
+			attackOverlay = BitmapFactory.decodeStream(am.open("sprites/attack_overlay.png"), null, options);
 			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/selection_overlay.png"), null, options);
 			
 			numberOverlays = new Bitmap[10];
