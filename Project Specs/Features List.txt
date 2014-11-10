@@ -1,0 +1,8 @@
+1. Need to display how much it costs to rotate/attack
+2. Show team colors.
+3. Armor Rating of some time (team buff or individual unit)
+4. Make unit info card bigger
+5. make player 2's units face down on placement
+6. allow player to re-place a unit 
+7. pressing power button to lock phone or the back button resets game
+8. for local battle create intermediate phase (so that place doesn't see other players units)
