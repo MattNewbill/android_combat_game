@@ -3,7 +3,10 @@ package combatgame.objects;
 import java.util.LinkedList;
 import java.util.List;
 import android.util.Log;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.Paint.Align;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
@@ -65,6 +68,7 @@ public class Player {
 	private Button spawnUnitButton;
 	
 	//damage indicators
+	private Paint indicatorPaint;
 	private List<HealthIndicator> indicators = new LinkedList<HealthIndicator>();
 	
 	//movement hud icons
@@ -88,6 +92,12 @@ public class Player {
 		units[0] = new Assault(playerId);
 		units[1] = new Assault(playerId);
 		units[2] = new Sniper(playerId);
+		
+		//indicator font
+		indicatorPaint = new Paint();
+		indicatorPaint.setTextSize(40);
+		indicatorPaint.setTextAlign(Align.CENTER);
+		indicatorPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		
 		//coordinates of each hud button
 		int width, height;
@@ -274,7 +284,7 @@ public class Player {
 		//check if hud icons were pressed
 		if(unitInfoButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "unit info activated");
-			map.scrollToTile(units[selectedUnitIndex].getXYCoordinate());
+			map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
 			unitInfoButton.disarm();
 		}
 		if(moveButton.state == Button.ACTIVATED) {
@@ -583,7 +593,7 @@ public class Player {
 							//reduce unit health by attack dmg
 							if(unit != null) {
 								int damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
-								indicators.add(new HealthIndicator(map, new GPoint(tileTouched.row, tileTouched.col), damageDone));
+								indicators.add(new HealthIndicator(map, new GPoint(tileTouched.row, tileTouched.col), damageDone, indicatorPaint, Color.RED));
 							}
 						}
 					}
@@ -755,14 +765,14 @@ public class Player {
 				for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
 					if(isPlayerOne) {
 						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_ONE_BASE) {
-							map.scrollToTile(new GPoint(row, col));
+							map.moveToTile(new GPoint(row, col));
 							return;
 						}
 					}
 					else
 						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE) {
 							Log.i("combatgame", "row: " + row + ", col: " + col);
-							map.scrollToTile(new GPoint(row, col));
+							map.moveToTile(new GPoint(row, col));
 							return;
 						}
 				}
@@ -775,14 +785,14 @@ public class Player {
 			
 			currentAction = SELECTION;
 			if(selectedUnitIndex != -1 && !units[selectedUnitIndex].isDead()) {
-				map.scrollToTile(units[selectedUnitIndex].getXYCoordinate());
+				map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
 			}
 			else {
 				for(int i = 0; i < units.length; i++) {
 					if(!units[i].isDead()) {
 						enableButtons();
 						selectedUnitIndex = i;
-						map.scrollToTile(units[selectedUnitIndex].getXYCoordinate());
+						map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
 					}
 				}
 			}

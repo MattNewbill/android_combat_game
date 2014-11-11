@@ -60,7 +60,6 @@ public class HotSeatState extends GameState {
 	public void update(float delta) {
 		if(!isGameOver) {
 			List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
-			switchTurns = map.isSwitchingTurns();
 			if(switchTurns) {
 				events = switchTurnsOKButton.update(events);
 				events.clear();
@@ -82,6 +81,7 @@ public class HotSeatState extends GameState {
 	@Override
 	public void render(Graphics2D g, float delta) {
 		map.render(g, paint);
+		switchTurns = map.isSwitchingTurns();
 		if(switchTurns) {
 			if(Game.isScaled()) {
 				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, switchTurnsFill);

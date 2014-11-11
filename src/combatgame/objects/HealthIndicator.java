@@ -20,26 +20,20 @@ public class HealthIndicator {
 	private String text;
 	
 	private Paint font;
+	private int color;
 	
 	private boolean isFinished = false;
 	
-	public HealthIndicator(Map map, GPoint tile, int damageDone) {
+	public HealthIndicator(Map map, GPoint tile, int damageDone, Paint paint, int color) {
 		this.map = map;
 		this.tile = tile;
+		this.font = paint;
+		this.color = color;
 		
-		font = new Paint();
-		font.setTextSize(40);
-		font.setTextAlign(Align.CENTER);
-		font.setAlpha(alpha);
-		font.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-		if(damageDone < 0) {
-			font.setColor(Color.RED);
+		if(damageDone < 0)
 			text = "" + damageDone;
-		}
-		else {
-			font.setColor(Color.GREEN);
+		else
 			text = "+" + damageDone;
-		}
 	}
 	
 	public void update() {
@@ -49,10 +43,11 @@ public class HealthIndicator {
 			alpha = 0;
 			isFinished = true;
 		}
-		font.setAlpha(alpha);
 	}
 	
 	public void render(Graphics2D g) {
+		font.setColor(color);
+		font.setAlpha(alpha);
 		g.drawText(text, tile.col * map.getTileWidthInPx() - map.getMapOffsetX() + (map.getTileWidthInPx() / 2), tile.row * map.getTileHeightInPx() - map.getMapOffsetY() - yOffset + (map.getTileHeightInPx() / 2), font);
 	}
 	

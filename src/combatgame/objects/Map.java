@@ -72,16 +72,8 @@ public class Map {
 	public static final int FLING_THRESHOLD = 17; //the distance apart to scroll events have to be to determine a "fling"
 	int mapOffsetX = 0, mapOffsetY = 0;
 	
-	//auto scrolling data
-	protected boolean isAutoScrolling = false;
-	protected GPoint tileToScrollTo;
-	public static final int LEEWAY = 30;
-	public static final int FAST_SCROLL_DISTANCE = 15;
-	
 	//shaded portions of the map that we can't see
 	private int fogOfWarColor = Color.parseColor("#E64A3F3F");
-	//private ColorFilter filter = new PorterDuffColorFilter(fogOfWarColor, Mode.OVERLAY);
-	//private int fogOfWarColor = Color.parseColor("#4A3F3F");
 	
 	public Map (GameState gamestate, AssetManager am, String filePath) {
 		this.gamestate = gamestate;
@@ -227,10 +219,6 @@ public class Map {
 	private void updateMap(List<TouchEvent> events) {
 		//update scroll data
 		for(int i = 0; i < events.size(); i++) {
-			//stop auto scrolling if the user presses down
-			if(events.get(i).type == TouchEvent.TOUCH_DOWN)
-				isAutoScrolling = false;
-			
 			if(events.get(i).type == TouchEvent.TOUCH_DRAGGED) {
 				//check for map scrolling
 				if(previousEvent.type == TouchEvent.TOUCH_DRAGGED) {
@@ -278,34 +266,8 @@ public class Map {
 			previousEvent.copy(events.get(i));
 		}
 		
-		//update our auto scrolling
-		if(isAutoScrolling) {
-			if(mapOffsetX < (tileToScrollTo.col * tileWidthInPx) - (Game.P_WIDTH / 2) - LEEWAY)
-				mapOffsetX += FAST_SCROLL_DISTANCE;
-			else if(mapOffsetX > (tileToScrollTo.col * tileWidthInPx) - (Game.P_WIDTH / 2) + LEEWAY) {
-				mapOffsetX -= FAST_SCROLL_DISTANCE;
-			}
-			
-			if(mapOffsetY < (tileToScrollTo.row * tileHeightInPx) - (Game.P_HEIGHT / 2) - LEEWAY)
-				mapOffsetY += FAST_SCROLL_DISTANCE;
-			else if(mapOffsetY > (tileToScrollTo.row * tileHeightInPx) - (Game.P_HEIGHT / 2) + LEEWAY)
-				mapOffsetY -= FAST_SCROLL_DISTANCE;
-			
-		}
-		
 		//make sure we don't scroll too far past the edge of the map
-		if(mapOffsetX < -MAX_OUT_OF_BOUNDS) {
-			mapOffsetX = -MAX_OUT_OF_BOUNDS;
-		}
-		else if(mapOffsetX > ((getNum_horizontal_tiles() * getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_WIDTH) {
-			mapOffsetX = ((getNum_horizontal_tiles() * getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_WIDTH;
-		}
-		if(mapOffsetY < -MAX_OUT_OF_BOUNDS) {
-			mapOffsetY = -MAX_OUT_OF_BOUNDS;
-		}
-		else if(mapOffsetY > ((getNum_vertical_tiles() * getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_HEIGHT) {
-			mapOffsetY = ((getNum_vertical_tiles() * getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_HEIGHT;
-		}
+		checkOffsetBounds();
 	}
 	
 	/**
@@ -438,9 +400,26 @@ public class Map {
 		return board[tile.row][tile.col];
 	}
 	
-	public void scrollToTile(GPoint tile) {
-		tileToScrollTo = tile;
-		isAutoScrolling = true;
+	public void moveToTile(GPoint tile) { //TODO:  check whether this needs to be G_WIDTH or P_WIDTH depending on whether things are scaled or not
+		mapOffsetX = (tile.col * tileWidthInPx) - (Game.P_WIDTH / 2);
+		mapOffsetY = (tile.row * tileHeightInPx) - (Game.P_HEIGHT / 2);
+		
+		checkOffsetBounds();
+	}
+	
+	private void checkOffsetBounds() { //TODO: see if we need to change this to P_WIDTH depending on whether things are scaled or not
+		if(mapOffsetX < -MAX_OUT_OF_BOUNDS) {
+			mapOffsetX = -MAX_OUT_OF_BOUNDS;
+		}
+		else if(mapOffsetX > ((getNum_horizontal_tiles() * getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_WIDTH) {
+			mapOffsetX = ((getNum_horizontal_tiles() * getTileWidthInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_WIDTH;
+		}
+		if(mapOffsetY < -MAX_OUT_OF_BOUNDS) {
+			mapOffsetY = -MAX_OUT_OF_BOUNDS;
+		}
+		else if(mapOffsetY > ((getNum_vertical_tiles() * getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_HEIGHT) {
+			mapOffsetY = ((getNum_vertical_tiles() * getTileHeightInPx()) + MAX_OUT_OF_BOUNDS) - Game.G_HEIGHT;
+		}
 	}
 	
 	public int getTileWidthInPx() {
