@@ -3,10 +3,14 @@ package combatgame.state;
 import combatgame.main.*;
 import combatgame.assets.*;
 import combatgame.objects.*;
+import combatgame.widgets.Button;
 import combatgame.graphics.*;
 import combatgame.input.*;
 import java.util.List;
+
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.util.Log;
 import android.content.res.AssetManager;
 
@@ -22,6 +26,11 @@ public class HotSeatState extends GameState {
 	
 	boolean isGameOver = false;
 	
+	boolean switchTurns = false;
+	Paint switchTurnsFill;
+	Paint switchTurnsFont;
+	Button switchTurnsOKButton;
+	
 	public HotSeatState(StateManager stateManager) {
 		super(stateManager);
 		
@@ -33,6 +42,8 @@ public class HotSeatState extends GameState {
 			Game.shouldScale(false);
 		
 		paint = new Paint();
+		switchTurnsFill = new Paint(); switchTurnsFill.setColor(Color.BLACK);
+		switchTurnsFont = new Paint(); switchTurnsFont.setColor(Color.WHITE); switchTurnsFont.setTextAlign(Align.CENTER); switchTurnsFont.setTextSize(60); //TODO: scale this font size
 		
 		AssetManager am = this.stateManager.getAssetManager();
 		
@@ -41,13 +52,25 @@ public class HotSeatState extends GameState {
 		
 		//create map
 		map = new Map (this, am, "maps/test_map.txt");
+		
+		switchTurnsOKButton = new Button(GameplayAssets.endTurnIcon, null, Game.G_WIDTH / 2, Game.G_HEIGHT / 2 + 30); //TODO: scale placement of button
 	}
 
 	@Override
 	public void update(float delta) {
 		if(!isGameOver) {
 			List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
-			map.update(events);
+			switchTurns = map.isSwitchingTurns();
+			if(switchTurns) {
+				events = switchTurnsOKButton.update(events);
+				events.clear();
+				if(switchTurnsOKButton.state == Button.ACTIVATED) {
+					switchTurnsOKButton.disarm();
+					switchTurns = false;
+					map.doneSwitchingTurns();
+				}
+			}
+				map.update(events);
 		}
 		else {
 			//TODO: maybe take us to a game breakdown state which records stats for the match
@@ -59,6 +82,17 @@ public class HotSeatState extends GameState {
 	@Override
 	public void render(Graphics2D g, float delta) {
 		map.render(g, paint);
+		if(switchTurns) {
+			if(Game.isScaled()) {
+				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, switchTurnsFill);
+				g.drawText("Are you ready " + map.getCurrentPlayersTurn().getGamertag() + "?", Game.G_WIDTH / 2, Game.G_HEIGHT / 2, switchTurnsFont);
+			}
+			else {
+				g.drawRect(0, 0, Game.P_WIDTH, Game.P_HEIGHT, switchTurnsFill);
+				g.drawText("Are you ready " + map.getCurrentPlayersTurn().getGamertag() + "?", Game.P_WIDTH / 2, Game.P_HEIGHT / 2, switchTurnsFont);
+			}
+			switchTurnsOKButton.render(g);
+		}
 	}
 
 	@Override

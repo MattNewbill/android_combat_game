@@ -50,6 +50,9 @@ public class Game extends Activity implements StateManager {
 	public static double scaleX;
 	public static double scaleY;
 	
+	//was the back button pressed
+	private static boolean isBackPressed = false;
+	
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
@@ -113,6 +116,7 @@ public class Game extends Activity implements StateManager {
 		if(state == null) {
 			throw new IllegalArgumentException("The freakin screen is null, idiot");
 		}
+		isBackPressed = false;
 		this.currentState.pause();
 		this.currentState.dispose();
 		state.resume();
@@ -133,11 +137,18 @@ public class Game extends Activity implements StateManager {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		isBackPressed = true;
+	}
+	
+	@Override
+	public boolean isBackPressed() {
+		return isBackPressed;
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+		isBackPressed = false;
 		wakeLock.acquire();
 		currentState.resume();
 		renderView.resume();

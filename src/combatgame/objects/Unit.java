@@ -71,13 +71,14 @@ public abstract class Unit {
 	public boolean isDead() {
 		return this.isDead;	}
 	
-	public void takeDamage(int d, Map map) {
+	public int takeDamage(int d, Map map) {
 		this.health -= d;
 		
 		if(health<=0) {
 			this.isDead=true;
 			map.getTile(this.xyCoordinate).clearUnit();
 		}
+		return -d;
 	}
 	
 	public void heal(int h) {

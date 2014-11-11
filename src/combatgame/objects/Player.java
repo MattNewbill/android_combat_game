@@ -1,5 +1,6 @@
 package combatgame.objects;
 
+import java.util.LinkedList;
 import java.util.List;
 import android.util.Log;
 import android.graphics.Paint;
@@ -62,6 +63,9 @@ public class Player {
 	private Button endTurnButton;
 	
 	private Button spawnUnitButton;
+	
+	//damage indicators
+	private List<HealthIndicator> indicators = new LinkedList<HealthIndicator>();
 	
 	//movement hud icons
 	private Button movementButton;
@@ -222,6 +226,17 @@ public class Player {
 		events = abilityButton.update(events);
 		events = deselectButton.update(events);
 		events = endTurnButton.update(events);
+		
+		//----------------------------------------
+		//--UPDATE INDICATORS--
+		//----------------------------------------
+		for(int i = 0; i < indicators.size(); i++) {
+			indicators.get(i).update();
+			if(indicators.get(i).isFinished()) {
+				indicators.remove(i);
+				i--;
+			}
+		}
 		
 		//----------------------------------------
 		//--TURN BASED GAME LOGIC--
@@ -566,8 +581,10 @@ public class Player {
 							int unitId = tile.getUnit_id();
 							Unit unit = map.getUnit(unitId);
 							//reduce unit health by attack dmg
-							if(unit != null)
-								unit.takeDamage(tilesAffected.get(j).damageTaken, map);
+							if(unit != null) {
+								int damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
+								indicators.add(new HealthIndicator(map, new GPoint(tileTouched.row, tileTouched.col), damageDone));
+							}
 						}
 					}
 				}
@@ -629,6 +646,13 @@ public class Player {
 				GPoint tile = attackableTiles.get(i);
 				g.drawBitmap(GameplayAssets.attackOverlay, tile.col * map.getTileWidthInPx() - map.getMapOffsetX(), tile.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 			}
+		}
+		
+		//---------------------------------------
+		//--Render any indicators that may be active
+		//---------------------------------------
+		for(int i = 0; i < indicators.size(); i++) {
+			indicators.get(i).render(g);
 		}
 		
 		//---------------------------------------
@@ -745,6 +769,7 @@ public class Player {
 			}
 		//otherwise scroll to the selected unit (if there is no selected unit, pick a new unit to be selected and scroll to him), reset action points
 		else {
+			indicators.clear(); //remove any indicators if we had any
 			for(int i = 0; i < units.length; i++)
 				units[i].resetPoints();
 			

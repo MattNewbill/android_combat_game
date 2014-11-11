@@ -58,6 +58,9 @@ public class Map {
 	protected MapTile[][] board;
 	protected int mapId;
 	
+	//are we just now switching turns
+	protected boolean isSwitchingTurns = false;
+	
 	//lightmap
 	protected boolean[][] lightmap;
 	
@@ -134,6 +137,8 @@ public class Map {
 			thisPlayersTurn = player2;
 		else
 			thisPlayersTurn = player1;
+		
+		isSwitchingTurns = true;
 		thisPlayersTurn.newTurn();
 	}
 	
@@ -488,6 +493,18 @@ public class Map {
 	
 	public MapTile getTile(int row, int col) {
 		return board[row][col];
+	}
+	
+	public boolean isSwitchingTurns() {
+		return isSwitchingTurns;
+	}
+	
+	public void doneSwitchingTurns() {
+		isSwitchingTurns = false;
+	}
+	
+	public Player getCurrentPlayersTurn() {
+		return thisPlayersTurn;
 	}
 	
 	public Unit getUnit(int unitId) {

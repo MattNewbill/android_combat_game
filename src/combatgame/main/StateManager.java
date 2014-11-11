@@ -15,5 +15,6 @@ public interface StateManager {
 	public State getInitialState();
 	public android.content.res.AssetManager getAssetManager();
 	public TouchHandler getTouchHandler();
+	public boolean isBackPressed();
 	
 }
