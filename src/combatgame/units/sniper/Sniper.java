@@ -3,6 +3,7 @@ package combatgame.units.sniper;
 import combatgame.assets.*;
 import combatgame.objects.Unit;
 import combatgame.units.Ability;
+import combatgame.units.GrenadeAttack;
 import combatgame.util.Util;
 
 /**
@@ -23,8 +24,10 @@ public class Sniper extends Unit {
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
 		this.rotationCost = 1;
-		this.abilities = new Ability[1];
+		this.abilities = new Ability[2];
 		abilities[0] = new BasicAttack(3);
+		abilities[1] = new GrenadeAttack(3);
+		
 	}
 	
 }

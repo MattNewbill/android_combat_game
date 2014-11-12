@@ -136,7 +136,7 @@ public class Game extends Activity implements StateManager {
 	
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		//super.onBackPressed();
 		isBackPressed = true;
 	}
 	

@@ -34,6 +34,7 @@ public class GameplayAssets {
 	
 	//ability button icons
 	public static Bitmap basicAttackIcon;
+	public static Bitmap throwGrenadeIcon;
 	
 	//selection overlays
 	public static Bitmap attackOverlay;
@@ -87,6 +88,7 @@ public class GameplayAssets {
 			rightRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/right_rotate_icon.png"), null, options);
 			
 			basicAttackIcon = BitmapFactory.decodeStream(am.open("sprites/hud/action_buttons/standard_attack_icon.png"), null, options);
+			throwGrenadeIcon = BitmapFactory.decodeStream(am.open("sprites/hud/action_buttons/throw_grenade_icon.png"), null, options);
 			
 			attackOverlay = BitmapFactory.decodeStream(am.open("sprites/attack_overlay.png"), null, options);
 			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/selection_overlay.png"), null, options);
@@ -195,5 +197,10 @@ public class GameplayAssets {
 		
 		if(player2BaseSprite != null)
 			player2BaseSprite.recycle();
+		
+		if(basicAttackIcon != null)
+			basicAttackIcon.recycle();
+		if(throwGrenadeIcon != null)
+			throwGrenadeIcon.recycle();
 	}
 }

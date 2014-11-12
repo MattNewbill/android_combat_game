@@ -42,7 +42,7 @@ public class BasicAttack extends Ability {
 	}
 
 	@Override
-	public List<AttackedTile> getTilesAffected(GPoint tile) {
+	public List<AttackedTile> getTilesAffected(GPoint tile, Map map) {
 		attackedTiles.clear();
 		AttackedTile at = pool.newObject();
 		at.tile = tile; at.damageTaken = damage;

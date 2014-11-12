@@ -7,6 +7,7 @@ import combatgame.input.Pool.PoolObjectFactory;
 import combatgame.objects.Map;
 import combatgame.objects.Unit;
 
+import java.util.ArrayList;
 import java.util.List;
 import android.graphics.Point;
 
@@ -14,7 +15,13 @@ public abstract class Ability {
 
 	protected int abilityCost;
 	protected int damage;
+	/** Distance the splash will go in each direction from the attack point */
+	protected int splash;
+	/**Distance the attack can reach */
+	protected int distance;
 	protected String name;
+	protected List<GPoint> tilesAttackable = new ArrayList<GPoint>();
+	protected List<AttackedTile> attackedTiles = new ArrayList<AttackedTile>();
 	
 	protected Button abilityButton;
 	
@@ -35,9 +42,12 @@ public abstract class Ability {
 	public Ability(int abilityCost) {
 		this.abilityCost = abilityCost;
 	}
+	public Ability(){
+		
+	}
 	
 	public abstract List<GPoint> getTilesAttackable(Unit unit, Map map);
-	public abstract List<AttackedTile> getTilesAffected(GPoint tile);
+	public abstract List<AttackedTile> getTilesAffected(GPoint tile, Map map);
 	public void renderButton(Graphics2D g, int x, int y) {
 		abilityButton.render(g, x, y);
 	}

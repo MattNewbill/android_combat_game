@@ -584,7 +584,7 @@ public class Player {
 					//decrement action points
 					units[selectedUnitIndex].usePoints(currentAbility.getCost());
 					//get the tiles that were affected by the attack
-					List<AttackedTile> tilesAffected = currentAbility.getTilesAffected(tileTouched);
+					List<AttackedTile> tilesAffected = currentAbility.getTilesAffected(tileTouched, map);
 					for(int j = 0; j < tilesAffected.size(); j++) {
 						MapTile tile = map.getTile(tilesAffected.get(j).tile);
 						if(tile.hasUnit()){//there is a unit on the tile
@@ -711,7 +711,7 @@ public class Player {
 			//TODO: render ability buttons for the player to choose
 			Ability[] abilities = units[selectedUnitIndex].getAbilities();
 			for(int i = 0; i < abilities.length; i++) {
-				abilities[i].renderButton(g, abilityButton.getX(), abilityButton.getY() - (abilities.length * GameplayAssets.basicAttackIcon.getHeight()));
+				abilities[i].renderButton(g, abilityButton.getX(), abilityButton.getY() - ((abilities.length-i) * GameplayAssets.basicAttackIcon.getHeight()));
 			}
 		}
 		
