@@ -63,7 +63,7 @@ public class TouchHandler implements OnTouchListener {
 					isTouched = false;
 					break;
 			}
-			if(game.isScaled()) {
+			if(Game.isScaled()) {
 				touchEvent.x = touchX = (int)(event.getX() * scaleX);
 				touchEvent.y = touchY = (int)(event.getY() * scaleY);
 			}

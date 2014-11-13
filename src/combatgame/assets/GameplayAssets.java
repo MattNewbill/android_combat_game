@@ -61,6 +61,14 @@ public class GameplayAssets {
 	public static Bitmap player1BaseSpriteShaded;
 	public static Bitmap player2BaseSpriteShaded;
 	
+	//interface buttons
+	public static Bitmap okIcon;
+	public static Bitmap okArmedIcon;
+	public static Bitmap yesIcon;
+	public static Bitmap yesArmedIcon;
+	public static Bitmap noIcon;
+	public static Bitmap noArmedIcon;
+	
 	private GameplayAssets(){}
 	
 	public static void loadGameplayAssets(AssetManager am) {
@@ -77,7 +85,7 @@ public class GameplayAssets {
 			assaultIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_down.png"), null, options);
 			assaultIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_left.png"), null, options);
 			
-			unitInfoIcon = BitmapFactory.decodeStream(am.open("sprites/hud/test.png"), null, options);
+			unitInfoIcon = BitmapFactory.decodeStream(am.open("sprites/hud/unit_info_icon.png"), null, options);
 			moveIcon = BitmapFactory.decodeStream(am.open("sprites/hud/move_icon.png"), null, options);
 			abilityIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_icon.png"), null, options);
 			deselectIcon = BitmapFactory.decodeStream(am.open("sprites/hud/deselect_icon.png"), null, options);
@@ -90,11 +98,11 @@ public class GameplayAssets {
 			basicAttackIcon = BitmapFactory.decodeStream(am.open("sprites/hud/action_buttons/standard_attack_icon.png"), null, options);
 			throwGrenadeIcon = BitmapFactory.decodeStream(am.open("sprites/hud/action_buttons/throw_grenade_icon.png"), null, options);
 			
-			attackOverlay = BitmapFactory.decodeStream(am.open("sprites/attack_overlay.png"), null, options);
-			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/selection_overlay.png"), null, options);
+			attackOverlay = BitmapFactory.decodeStream(am.open("sprites/tiles/attack_overlay.png"), null, options);
+			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/tiles/selection_overlay.png"), null, options);
 			
 			numberOverlays = new Bitmap[10];
-			Bitmap temp = BitmapFactory.decodeStream(am.open("sprites/number_overlays.png"), null, options);
+			Bitmap temp = BitmapFactory.decodeStream(am.open("sprites/tiles/number_overlays.png"), null, options);
 			for(int row = 0; row < 2; row++)
 				for(int col = 0; col < 5; col++)
 					numberOverlays[row * 5 + col] = Bitmap.createBitmap(temp, col * 70, row * 70, 70, 70);
@@ -102,13 +110,20 @@ public class GameplayAssets {
 			
 			spawnUnitIcon = BitmapFactory.decodeStream(am.open("sprites/hud/spawn_unit_icon.png"), null, options);
 			
-			playerBanner = BitmapFactory.decodeStream(am.open("sprites/player_banner.png"), null, options);
+			playerBanner = BitmapFactory.decodeStream(am.open("sprites/hud/player_banner.png"), null, options);
 			
-			dirtSprite = BitmapFactory.decodeStream(am.open("sprites/dirt.png"), null, options);
-			hedgehogSprite = BitmapFactory.decodeStream(am.open("sprites/hedgehog.png"), null, options);
-			bushSprite = BitmapFactory.decodeStream(am.open("sprites/bush.png"), null, options);
-			player1BaseSprite = BitmapFactory.decodeStream(am.open("sprites/player1_base.png"), null, options);
-			player2BaseSprite = BitmapFactory.decodeStream(am.open("sprites/player2_base.png"), null, options);
+			dirtSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/dirt.png"), null, options);
+			hedgehogSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/hedgehog.png"), null, options);
+			bushSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/bush.png"), null, options);
+			player1BaseSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/player1_base.png"), null, options);
+			player2BaseSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/player2_base.png"), null, options);
+			
+			okIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"), null, options);
+			okArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"), null, options);
+			yesIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/yes_button.png"), null, options);
+			yesArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/yes_button_armed.png"), null, options);
+			noIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button.png"), null, options);
+			noArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button_armed.png"), null, options);
 			
 			shadeMapTiles();
 			

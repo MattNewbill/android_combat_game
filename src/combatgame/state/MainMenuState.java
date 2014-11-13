@@ -32,13 +32,13 @@ public class MainMenuState extends State {
 		
 		try {
 			//load images
-			Bitmap startButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/start_button_original.png"));
-			Bitmap aboutButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/about_button_original.png"));
-			Bitmap exitButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/exit_button_original.png"));
+			Bitmap startButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/start_button.png"));
+			Bitmap aboutButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/about_button.png"));
+			Bitmap exitButtonDisarmed = BitmapFactory.decodeStream(am.open("images/main_menu/exit_button.png"));
 			
-			Bitmap startButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/start_button_original_armed.png"));
-			Bitmap aboutButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/about_button_original_armed.png"));
-			Bitmap exitButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/exit_button_original_armed.png"));
+			Bitmap startButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/start_button_armed.png"));
+			Bitmap aboutButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/about_button_armed.png"));
+			Bitmap exitButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/exit_button_armed.png"));
 			
 			//determine button coordinates
 			int startButtonX = (Game.G_WIDTH / 2) - startButtonDisarmed.getWidth() / 2;

@@ -30,14 +30,14 @@ public class ConnectionState extends State {
 		AssetManager am = this.stateManager.getAssetManager();
 		
 		try {
-			Bitmap internetBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/connection_menu/online_original.png"));
-			Bitmap internetBitmapArmed = BitmapFactory.decodeStream(am.open("images/connection_menu/online_original_armed.png"));
-			Bitmap bluetoothBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/connection_menu/bluetooth_original.png"));
-			Bitmap bluetoothBitmapArmed = BitmapFactory.decodeStream(am.open("images/connection_menu/bluetooth_original_armed.png"));
-			Bitmap hotSeatBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/connection_menu/solo_original.png"));
-			Bitmap hotSeatBitmapArmed = BitmapFactory.decodeStream(am.open("images/connection_menu/solo_original_armed.png"));
-			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button_original.png"));
-			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button_original_armed.png"));
+			Bitmap internetBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/connection_menu/online.png"));
+			Bitmap internetBitmapArmed = BitmapFactory.decodeStream(am.open("images/connection_menu/online_armed.png"));
+			Bitmap bluetoothBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/connection_menu/bluetooth.png"));
+			Bitmap bluetoothBitmapArmed = BitmapFactory.decodeStream(am.open("images/connection_menu/bluetooth_armed.png"));
+			Bitmap hotSeatBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/connection_menu/solo.png"));
+			Bitmap hotSeatBitmapArmed = BitmapFactory.decodeStream(am.open("images/connection_menu/solo_armed.png"));
+			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button.png"));
+			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button_armed.png"));
 			
 			int internetButtonX = (Game.G_WIDTH / 2) - internetBitmapDisarmed.getWidth() / 2;
 			int internetButtonY = (int) (Game.G_HEIGHT / 2 - (internetBitmapDisarmed.getHeight() * 1.5));

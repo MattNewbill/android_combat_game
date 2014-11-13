@@ -24,8 +24,8 @@ public class UnitInfoDrawableButton extends Button {
 	public void render(Graphics2D g) {
 		super.render(g);
 		g.drawText(unit_type, x + 10, y + 30, paint);
-		g.drawText(hp, x + 10, y + 60, paint);
-		g.drawText(ability_points, x + 10, y + 90, paint);
+		g.drawText(hp, x + 10, y + 65, paint);
+		g.drawText(ability_points, x + 10, y + 100, paint);
 		
 	}
 

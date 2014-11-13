@@ -53,7 +53,7 @@ public class HotSeatState extends GameState {
 		//create map
 		map = new Map (this, am, "maps/test_map.txt");
 		
-		switchTurnsOKButton = new Button(GameplayAssets.endTurnIcon, null, Game.G_WIDTH / 2, Game.G_HEIGHT / 2 + 30); //TODO: scale placement of button
+		switchTurnsOKButton = new Button(GameplayAssets.okIcon, GameplayAssets.okArmedIcon, Game.G_WIDTH / 2 - (GameplayAssets.okIcon.getWidth() / 2), Game.G_HEIGHT / 2 + 30); //TODO: scale placement of button
 	}
 
 	@Override

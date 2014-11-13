@@ -3,6 +3,7 @@ package combatgame.units;
 import combatgame.widgets.*;
 import combatgame.graphics.*;
 import combatgame.input.*;
+import combatgame.input.LazyPool.LazyPoolObjectFactory;
 import combatgame.input.Pool.PoolObjectFactory;
 import combatgame.objects.Map;
 import combatgame.objects.Unit;
@@ -25,17 +26,17 @@ public abstract class Ability {
 	
 	protected Button abilityButton;
 	
-	protected static Pool<AttackedTile> pool;
-	public static final int MAX_POOL_SIZE = 25;
+	protected static LazyPool<AttackedTile> pool;
+	public static final int MAX_POOL_SIZE = 50;
 	
 	static {
-		PoolObjectFactory<AttackedTile> factory = new PoolObjectFactory<AttackedTile>() {
+		LazyPoolObjectFactory<AttackedTile> factory = new LazyPoolObjectFactory<AttackedTile>() {
 			@Override
 			public AttackedTile createObject() {
 				return new AttackedTile(null, -1);
 			}
 		};
-		pool = new Pool<AttackedTile>(factory, MAX_POOL_SIZE);
+		pool = new LazyPool<AttackedTile>(factory, MAX_POOL_SIZE);
 	}
 
 	

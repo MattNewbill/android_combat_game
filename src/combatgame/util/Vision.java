@@ -5,6 +5,8 @@ package combatgame.util;
 import java.util.*;
 
 import combatgame.graphics.GPoint;
+import combatgame.input.LazyPool;
+import combatgame.input.LazyPool.LazyPoolObjectFactory;
 import combatgame.input.Pool;
 import combatgame.input.TouchEvent;
 import combatgame.input.Pool.PoolObjectFactory;
@@ -38,17 +40,17 @@ public class Vision
 	
 
 	private static GPoint point;
-	private static Pool<GPoint> pool;
+	private static LazyPool<GPoint> pool;
 	public static final int MAX_POOL_SIZE = 120;
 	
 	static {
-		PoolObjectFactory<GPoint> factory = new PoolObjectFactory<GPoint>() {
+		LazyPoolObjectFactory<GPoint> factory = new LazyPoolObjectFactory<GPoint>() {
 			@Override
 			public GPoint createObject() {
 				return new GPoint(-1, -1);
 			}
 		};
-		pool = new Pool<GPoint>(factory, MAX_POOL_SIZE);
+		pool = new LazyPool<GPoint>(factory, MAX_POOL_SIZE);
 	}
 
 	
@@ -107,7 +109,7 @@ public class Vision
 			for(int b=0; b<notUsed[a].length; b++)
 				notUsed[a][b]=true;
 		
-		ans.clear();	
+		ans.clear();
 		ans.add(loc);
 		
 		direction = Unit.FACING_LEFT;

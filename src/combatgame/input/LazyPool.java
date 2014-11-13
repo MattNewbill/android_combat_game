@@ -7,17 +7,17 @@ import java.util.ArrayList;
  * **HAPPY**
  */
 
-public class Pool<T> {
+public class LazyPool<T> {
 	
-	public interface PoolObjectFactory<T> {
+	public interface LazyPoolObjectFactory<T> {
 		public T createObject();
 	}
 	
 	private final List<T> freeObjects;
-	private final PoolObjectFactory<T> factory;
+	private final LazyPoolObjectFactory<T> factory;
 	private final int maxSize;
 	
-	public Pool(PoolObjectFactory<T> factory, int maxSize) {
+	public LazyPool(LazyPoolObjectFactory<T> factory, int maxSize) {
 		this.factory = factory;
 		this.maxSize = maxSize;
 		this.freeObjects = new ArrayList<T>(maxSize);
@@ -25,8 +25,11 @@ public class Pool<T> {
 	
 	public T newObject() {
 		T object = null;
-		if(freeObjects.isEmpty())
-			return object = factory.createObject();
+		if(freeObjects.size() != maxSize) {
+			object = factory.createObject();
+			freeObjects.add(object);
+			return object;
+		}
 		else
 			object = freeObjects.remove(0);
 		

@@ -1,6 +1,9 @@
 package combatgame.units;
 
+import java.util.Arrays;
 import java.util.List;
+
+import android.util.Log;
 
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.GPoint;
@@ -27,7 +30,9 @@ public class GrenadeAttack extends Ability {
 		if(unit.getUnit_id() == -1)//checks to make sure the space has a valid unit
 			return null;
 		tilesAttackable.clear();
-		List<GPoint> tilesAttackable = Vision.getLaunchVision(map, unit, distance ); 
+		List<GPoint> tiles = Vision.getLaunchVision(map, unit, distance );
+		for(int i = 0; i < tiles.size(); i++)
+			tilesAttackable.add(tiles.get(i));
 		//check player id of units
 		return tilesAttackable;
 	}
@@ -35,47 +40,71 @@ public class GrenadeAttack extends Ability {
 	@Override
 	public List<AttackedTile> getTilesAffected(GPoint tile, Map map) {
 		attackedTiles.clear();
-		AttackedTile centerTile = new AttackedTile(tile, damage);
+		AttackedTile centerTile = pool.newObject();
+		centerTile.tile = tile; centerTile.damageTaken = damage;
 		attackedTiles.add(centerTile);
 		
-		GPoint topLeftTile = new GPoint(tile.row - 1, tile.col - 1);
-		AttackedTile topLeftTileAttacked = new AttackedTile(topLeftTile, (int) (damage * .5));
-		addTile(topLeftTileAttacked, map);
+		if(isValidTile(tile.row - 1, tile.col - 1, map)) {
+			GPoint topLeftTile = new GPoint(tile.row - 1, tile.col - 1);
+			AttackedTile topLeftTileAttacked = pool.newObject();
+			topLeftTileAttacked.tile = topLeftTile; topLeftTileAttacked.damageTaken = (int) (damage * .25);
+			attackedTiles.add(topLeftTileAttacked);
+		}
+		if(isValidTile(tile.row - 1, tile.col, map)) {
+			GPoint topCenterTile = new GPoint(tile.row - 1, tile.col);
+			AttackedTile topCenterTileAttacked = pool.newObject();
+			topCenterTileAttacked.tile = topCenterTile; topCenterTileAttacked.damageTaken = (int) (damage * .5);
+			attackedTiles.add(topCenterTileAttacked);
+		}
 		
-		GPoint topCenterTile = new GPoint(tile.row - 1, tile.col);
-		AttackedTile topCenterTileAttacked = new AttackedTile(topCenterTile, (int) (damage * .5));
-		addTile(topCenterTileAttacked, map);
+		if(isValidTile(tile.row - 1, tile.col + 1, map)) {
+			GPoint topRightTile = new GPoint(tile.row - 1, tile.col + 1);
+			AttackedTile topRightTileAttacked = pool.newObject();
+			topRightTileAttacked.tile = topRightTile; topRightTileAttacked.damageTaken = (int) (damage * .25);
+			attackedTiles.add(topRightTileAttacked);
+		}
+			
+		if(isValidTile(tile.row, tile.col - 1, map)) {
+			GPoint leftTile = new GPoint(tile.row, tile.col - 1);
+			AttackedTile leftTileAttacked = pool.newObject();
+			leftTileAttacked.tile = leftTile; leftTileAttacked.damageTaken = (int) (damage * .5);
+			attackedTiles.add(leftTileAttacked);
+		}
 		
-		GPoint topRightTile = new GPoint(tile.row - 1, tile.col + 1);
-		AttackedTile topRightTileAttacked = new AttackedTile(topRightTile, (int) (damage * .5));
-		addTile(topRightTileAttacked, map);
+		if(isValidTile(tile.row, tile.col + 1, map)) {
+			GPoint rightTile = new GPoint(tile.row, tile.col + 1);
+			AttackedTile rightTileAttacked = pool.newObject();
+			rightTileAttacked.tile = rightTile; rightTileAttacked.damageTaken = (int) (damage * .5);
+			attackedTiles.add(rightTileAttacked);
+		}
 		
-		GPoint leftTile = new GPoint(tile.row, tile.col - 1);
-		AttackedTile leftTileAttacked = new AttackedTile(leftTile, (int) (damage * .5));
-		addTile(leftTileAttacked, map);
+		if(isValidTile(tile.row + 1, tile.col - 1, map)) {
+			GPoint bottomLeftTile = new GPoint(tile.row + 1, tile.col - 1);
+			AttackedTile bottomLeftTileAttacked = pool.newObject();
+			bottomLeftTileAttacked.tile = bottomLeftTile; bottomLeftTileAttacked.damageTaken = (int) (damage * .25);
+			attackedTiles.add(bottomLeftTileAttacked);
+		}
 		
-		GPoint rightTile = new GPoint(tile.row, tile.col + 1);
-		AttackedTile rightTileAttacked = new AttackedTile(rightTile, (int) (damage * .5));
-		addTile(rightTileAttacked, map);
+		if(isValidTile(tile.row + 1, tile.col, map)) {
+			GPoint bottomCenterTile = new GPoint(tile.row + 1, tile.col);
+			AttackedTile bottomCenterTileAttacked = pool.newObject();
+			bottomCenterTileAttacked.tile = bottomCenterTile; bottomCenterTileAttacked.damageTaken = (int) (damage * .5);
+			attackedTiles.add(bottomCenterTileAttacked);
+		}
 		
-		GPoint bottomLeftTile = new GPoint(tile.row + 1, tile.col - 1);
-		AttackedTile bottomLeftTileAttacked = new AttackedTile(bottomLeftTile, (int) (damage * .5));
-		addTile(bottomLeftTileAttacked, map);
-		
-		GPoint bottomCenterTile = new GPoint(tile.row + 1, tile.col);
-		AttackedTile bottomCenterTileAttacked = new AttackedTile(bottomCenterTile, (int) (damage * .5));
-		addTile(bottomCenterTileAttacked, map);
-		
-		GPoint bottomRightTile = new GPoint(tile.row + 1, tile.col + 1);
-		AttackedTile bottomRightTileAttacked = new AttackedTile(bottomRightTile, (int) (damage * .5));
-		addTile(bottomRightTileAttacked, map);
+		if(isValidTile(tile.row + 1, tile.col + 1, map)) {
+			GPoint bottomRightTile = new GPoint(tile.row + 1, tile.col + 1);
+			AttackedTile bottomRightTileAttacked = pool.newObject();
+			bottomRightTileAttacked.tile = bottomRightTile; bottomRightTileAttacked.damageTaken = (int) (damage * .25);
+			attackedTiles.add(bottomRightTileAttacked);
+		}
 		
 		return attackedTiles;
 	}
 	
-	private void addTile(AttackedTile attackedTile, Map map) {
-		MapTile mapTile = map.getTile(attackedTile.tile);
-		if(attackedTile.tile.row >= 0 && attackedTile.tile.col <= map.getNum_horizontal_tiles() && mapTile.hasUnit() )
-			attackedTiles.add(attackedTile);
+	private boolean isValidTile(int row, int col, Map map) {
+		if(row >= 0 && row < map.getNum_vertical_tiles() && col >= 0&& col < map.getNum_horizontal_tiles() && map.getTile(row, col).hasUnit() )
+			return true;
+		return false;
 	}
 }

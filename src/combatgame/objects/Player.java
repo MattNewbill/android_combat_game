@@ -108,15 +108,15 @@ public class Player {
 			width = Game.P_WIDTH; height = Game.P_HEIGHT;
 		}
 		
-		int unitInfoButtonX = (width / 2) - (2 * GameplayAssets.unitInfoIcon.getWidth()) - GameplayAssets.unitInfoIcon.getWidth() / 2;
+		int unitInfoButtonX = (width / 2) - (GameplayAssets.unitInfoIcon.getWidth()) - GameplayAssets.unitInfoIcon.getWidth() / 2;
 		int unitInfoButtonY = height - GameplayAssets.unitInfoIcon.getHeight();
-		int moveButtonX = (width / 2) - GameplayAssets.moveIcon.getWidth() - GameplayAssets.moveIcon.getWidth() / 2;
+		int moveButtonX = (width / 2) - GameplayAssets.moveIcon.getWidth();
 		int moveButtonY = height - GameplayAssets.moveIcon.getHeight();
-		int abilityButtonX = (width / 2) - (GameplayAssets.abilityIcon.getWidth() / 2);
+		int abilityButtonX = width / 2;
 		int abilityButtonY = height - GameplayAssets.abilityIcon.getHeight();
-		int deselectButtonX = (width / 2) + (GameplayAssets.deselectIcon.getWidth() / 2);
+		int deselectButtonX = (width / 2) + GameplayAssets.deselectIcon.getWidth();
 		int deselectButtonY = height - GameplayAssets.deselectIcon.getHeight();
-		int endTurnButtonX = (width / 2) + (GameplayAssets.endTurnIcon.getWidth() / 2) + GameplayAssets.endTurnIcon.getWidth();
+		int endTurnButtonX = (width / 2) + GameplayAssets.endTurnIcon.getWidth() + GameplayAssets.endTurnIcon.getWidth();
 		int endTurnButtonY = height - GameplayAssets.endTurnIcon.getHeight();
 		
 		int rightRotateButtonX = moveButtonX;
@@ -126,11 +126,15 @@ public class Player {
 		int movementButtonX = moveButtonX;
 		int movementButtonY = leftRotateButtonY - GameplayAssets.movementIcon.getHeight();
 		
-		int spawnUnitButtonX = (width / 2) - (GameplayAssets.abilityIcon.getWidth() / 2);
+		int spawnUnitButtonX = width / 2;
 		int spawnUnitButtonY = height - GameplayAssets.abilityIcon.getHeight();
 		
+		Paint unitInfoPaint = new Paint();
+		unitInfoPaint.setColor(Color.BLACK);
+		unitInfoPaint.setTextSize(30); //TODO: scale according to device size
+		
 		//create buttons
-		unitInfoButton = new UnitInfoDrawableButton(new Paint(), GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
+		unitInfoButton = new UnitInfoDrawableButton(unitInfoPaint, GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
 		moveButton = new Button(GameplayAssets.moveIcon, null, moveButtonX, moveButtonY);
 		abilityButton = new Button(GameplayAssets.abilityIcon, null, abilityButtonX, abilityButtonY);
 		deselectButton = new Button(GameplayAssets.deselectIcon, null, deselectButtonX, deselectButtonY);
@@ -593,7 +597,7 @@ public class Player {
 							//reduce unit health by attack dmg
 							if(unit != null) {
 								int damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
-								indicators.add(new HealthIndicator(map, new GPoint(tileTouched.row, tileTouched.col), damageDone, indicatorPaint, Color.RED));
+								indicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), damageDone, indicatorPaint, Color.RED));
 							}
 						}
 					}
