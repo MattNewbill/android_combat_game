@@ -16,10 +16,6 @@ public abstract class Ability {
 
 	protected int abilityCost;
 	protected int damage;
-	/** Distance the splash will go in each direction from the attack point */
-	protected int splash;
-	/**Distance the attack can reach */
-	protected int distance;
 	protected String name;
 	protected List<GPoint> tilesAttackable = new ArrayList<GPoint>();
 	protected List<AttackedTile> attackedTiles = new ArrayList<AttackedTile>();

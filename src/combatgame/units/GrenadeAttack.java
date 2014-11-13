@@ -15,6 +15,9 @@ import combatgame.widgets.Button;
 
 public class GrenadeAttack extends Ability {
 
+	int distance;
+	int splash;
+	
 	public GrenadeAttack(int cost) {
 		super(cost);
 		this.name = "Shoot";
