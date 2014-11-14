@@ -32,6 +32,7 @@ public class HotSeatState extends GameState {
 	Button switchTurnsOKButton;
 	
 	boolean isExitDialogShowing = false;
+	Paint exitDialogPaint;
 	Button yesButton;
 	Button noButton;
 	
@@ -61,6 +62,9 @@ public class HotSeatState extends GameState {
 		
 		yesButton = new Button(GameplayAssets.yesIcon, GameplayAssets.yesArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.yesIcon.getWidth() - 10, Game.G_HEIGHT / 2 + GameplayAssets.yesIcon.getHeight() / 2 + 30);
 		noButton = new Button(GameplayAssets.noIcon, GameplayAssets.noArmedIcon, Game.G_WIDTH / 2 + 10, Game.G_HEIGHT / 2 + GameplayAssets.noIcon.getHeight() / 2 + 30);
+		exitDialogPaint = new Paint();
+		exitDialogPaint.setColor(Color.BLACK);
+		exitDialogPaint.setAlpha(125);
 	}
 
 	@Override
@@ -118,6 +122,7 @@ public class HotSeatState extends GameState {
 		}
 		
 		if(isExitDialogShowing) {
+			g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, exitDialogPaint);
 			g.drawBitmap(GameplayAssets.exitDialogIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null); //TODO: scale for larger devices
 			yesButton.render(g);
 			noButton.render(g);
