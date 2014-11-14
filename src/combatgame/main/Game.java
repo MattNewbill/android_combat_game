@@ -142,7 +142,9 @@ public class Game extends Activity implements StateManager {
 	
 	@Override
 	public boolean isBackPressed() {
-		return isBackPressed;
+		boolean temp = isBackPressed;
+		isBackPressed = false;
+		return temp;
 	}
 	
 	@Override

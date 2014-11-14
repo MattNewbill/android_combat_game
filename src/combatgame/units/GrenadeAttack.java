@@ -1,14 +1,10 @@
 package combatgame.units;
 
-import java.util.Arrays;
 import java.util.List;
-
-import android.util.Log;
 
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.GPoint;
 import combatgame.objects.Map;
-import combatgame.objects.MapTile;
 import combatgame.objects.Unit;
 import combatgame.util.Vision;
 import combatgame.widgets.Button;

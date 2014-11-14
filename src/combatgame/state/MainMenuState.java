@@ -74,8 +74,8 @@ public class MainMenuState extends State {
 			//spash screen shamelessly promoting the hard work we've all put in
 			stateManager.setState(new AboutState(stateManager));
 		}
-		else if(exitButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "exit button pressed");
+		else if(exitButton.state == Button.ACTIVATED || stateManager.isBackPressed()) {
+			Log.i("combatgame", "exiting game");
 			//exit the app
 			//not sure if this is considered bad form or not....guess we'll find out
 			System.exit(0);

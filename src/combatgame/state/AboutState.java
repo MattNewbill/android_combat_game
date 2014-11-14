@@ -49,7 +49,7 @@ public class AboutState extends State {
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
 		events = backButton.update(events);
 		
-		if(backButton.state == Button.ACTIVATED)
+		if(backButton.state == Button.ACTIVATED || stateManager.isBackPressed())
 			stateManager.setState(new MainMenuState(stateManager));
 	}
 

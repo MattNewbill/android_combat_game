@@ -1,5 +1,7 @@
 package combatgame.main;
 
+import java.text.DecimalFormat;
+
 import combatgame.graphics.*;
 import combatgame.util.Util;
 import android.content.Context;
@@ -10,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
+import android.os.Debug;
 import android.util.Log;
 
 /**
@@ -99,6 +102,21 @@ public class RenderView extends SurfaceView implements Runnable {
 			holder.unlockCanvasAndPost(canvas);
 			drawTime = System.currentTimeMillis() - startTimeCleanup;
 			
+			Double allocated = new Double(Debug.getNativeHeapAllocatedSize())/new Double((1048576));
+	        Double available = new Double(Debug.getNativeHeapSize())/1048576.0;
+	        Double free = new Double(Debug.getNativeHeapFreeSize())/1048576.0;
+	        DecimalFormat df = new DecimalFormat();
+	        df.setMaximumFractionDigits(2);
+	        df.setMinimumFractionDigits(2);
+	        double heapSize = Runtime.getRuntime().maxMemory() / 1048576.0;
+	        Runtime rt = Runtime.getRuntime();
+	        double maxMemory = rt.maxMemory() / 1048576.0;
+	       // Log.i("combatgame", ""+heapSize);
+	        //Log.i("combatgame", ""+maxMemory);
+	        //Log.i("combatgame", "debug. =================================");
+	        //Log.i("combatgame", "debug.heap native: allocated " + df.format(allocated) + "MB of " + df.format(available) + "MB (" + df.format(free) + "MB free)");
+	        //Log.i("combatgame", "debug.memory: allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory()/1048576)) + "MB of " + df.format(new Double(Runtime.getRuntime().maxMemory()/1048576))+ "MB (" + df.format(new Double(Runtime.getRuntime().freeMemory()/1048576)) +"MB free)");
+		
 			//other fps stuff
 			long elapsedTime = (System.nanoTime() - startTimeFrame) / 1000000;
 			frames++;

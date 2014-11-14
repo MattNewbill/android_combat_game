@@ -68,6 +68,7 @@ public class GameplayAssets {
 	public static Bitmap yesArmedIcon;
 	public static Bitmap noIcon;
 	public static Bitmap noArmedIcon;
+	public static Bitmap exitDialogIcon;
 	
 	private GameplayAssets(){}
 	
@@ -124,6 +125,7 @@ public class GameplayAssets {
 			yesArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/yes_button_armed.png"), null, options);
 			noIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button.png"), null, options);
 			noArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button_armed.png"), null, options);
+			exitDialogIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/confirm_exit_popup.png"), null, options);
 			
 			shadeMapTiles();
 			
@@ -217,5 +219,20 @@ public class GameplayAssets {
 			basicAttackIcon.recycle();
 		if(throwGrenadeIcon != null)
 			throwGrenadeIcon.recycle();
+		
+		if(yesIcon != null)
+			yesIcon.recycle();
+		if(yesArmedIcon != null)
+			yesArmedIcon.recycle();
+		if(noIcon != null)
+			noIcon.recycle();
+		if(noArmedIcon != null)
+			noArmedIcon.recycle();
+		if(okIcon != null)
+			okIcon.recycle();
+		if(okArmedIcon != null)
+			okArmedIcon.recycle();
+		if(exitDialogIcon != null)
+			exitDialogIcon.recycle();
 	}
 }

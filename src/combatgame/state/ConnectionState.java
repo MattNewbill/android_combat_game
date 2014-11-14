@@ -79,7 +79,7 @@ public class ConnectionState extends State {
 			//new game with two players on one phone
 			stateManager.setState(new HotSeatState(stateManager));
 		}
-		else if(backButton.state == Button.ACTIVATED) {
+		else if(backButton.state == Button.ACTIVATED || stateManager.isBackPressed()) {
 			//take us back to the main menu
 			stateManager.setState(new MainMenuState(stateManager));
 		}

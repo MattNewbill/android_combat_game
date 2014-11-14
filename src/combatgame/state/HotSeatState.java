@@ -31,6 +31,10 @@ public class HotSeatState extends GameState {
 	Paint switchTurnsFont;
 	Button switchTurnsOKButton;
 	
+	boolean isExitDialogShowing = false;
+	Button yesButton;
+	Button noButton;
+	
 	public HotSeatState(StateManager stateManager) {
 		super(stateManager);
 		
@@ -54,22 +58,41 @@ public class HotSeatState extends GameState {
 		map = new Map (this, am, "maps/test_map.txt");
 		
 		switchTurnsOKButton = new Button(GameplayAssets.okIcon, GameplayAssets.okArmedIcon, Game.G_WIDTH / 2 - (GameplayAssets.okIcon.getWidth() / 2), Game.G_HEIGHT / 2 + 30); //TODO: scale placement of button
+		
+		yesButton = new Button(GameplayAssets.yesIcon, GameplayAssets.yesArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.yesIcon.getWidth() - 10, Game.G_HEIGHT / 2 + GameplayAssets.yesIcon.getHeight() / 2 + 30);
+		noButton = new Button(GameplayAssets.noIcon, GameplayAssets.noArmedIcon, Game.G_WIDTH / 2 + 10, Game.G_HEIGHT / 2 + GameplayAssets.noIcon.getHeight() / 2 + 30);
 	}
 
 	@Override
 	public void update(float delta) {
 		if(!isGameOver) {
 			List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
-			if(switchTurns) {
-				events = switchTurnsOKButton.update(events);
-				events.clear();
-				if(switchTurnsOKButton.state == Button.ACTIVATED) {
-					switchTurnsOKButton.disarm();
-					switchTurns = false;
-					map.doneSwitchingTurns();
+			if(!isExitDialogShowing)
+				isExitDialogShowing = stateManager.isBackPressed();
+			if(isExitDialogShowing) {
+				events = yesButton.update(events);
+				events = noButton.update(events);
+				if(yesButton.state == Button.ACTIVATED) {
+					yesButton.disarm();
+					stateManager.setState(new MainMenuState(stateManager));
+				}
+				if(noButton.state == Button.ACTIVATED) {
+					noButton.disarm();
+					isExitDialogShowing = false;
 				}
 			}
+			else {
+				if(switchTurns) {
+					events = switchTurnsOKButton.update(events);
+					events.clear();
+					if(switchTurnsOKButton.state == Button.ACTIVATED) {
+						switchTurnsOKButton.disarm();
+						switchTurns = false;
+						map.doneSwitchingTurns();
+					}
+				}
 				map.update(events);
+			}
 		}
 		else {
 			//TODO: maybe take us to a game breakdown state which records stats for the match
@@ -92,6 +115,12 @@ public class HotSeatState extends GameState {
 				g.drawText("Are you ready " + map.getCurrentPlayersTurn().getGamertag() + "?", Game.P_WIDTH / 2, Game.P_HEIGHT / 2, switchTurnsFont);
 			}
 			switchTurnsOKButton.render(g);
+		}
+		
+		if(isExitDialogShowing) {
+			g.drawBitmap(GameplayAssets.exitDialogIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null); //TODO: scale for larger devices
+			yesButton.render(g);
+			noButton.render(g);
 		}
 	}
 
