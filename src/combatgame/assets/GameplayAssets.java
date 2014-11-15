@@ -43,6 +43,7 @@ public class GameplayAssets {
 	
 	//spawn unit
 	public static Bitmap spawnUnitIcon;
+	public static Bitmap respawnUnitIcon;
 	
 	//player banner
 	public static Bitmap playerBanner;
@@ -116,6 +117,7 @@ public class GameplayAssets {
 			temp.recycle();
 			
 			spawnUnitIcon = BitmapFactory.decodeStream(am.open("sprites/hud/spawn_unit_icon.png"), null, options);
+			respawnUnitIcon = BitmapFactory.decodeStream(am.open("sprites/hud/re-spawn_unit_icon.png"), null, options);
 			
 			playerBanner = BitmapFactory.decodeStream(am.open("sprites/hud/player_banner.png"), null, options);
 			
@@ -207,6 +209,8 @@ public class GameplayAssets {
 		
 		if(spawnUnitIcon != null)
 			spawnUnitIcon.recycle();
+		if(respawnUnitIcon != null)
+			respawnUnitIcon.recycle();
 		
 		if(playerBanner != null)
 			playerBanner.recycle();
