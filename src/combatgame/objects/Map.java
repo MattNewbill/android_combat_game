@@ -486,6 +486,26 @@ public class Map {
 		return thisPlayersTurn;
 	}
 	
+	public void sendHitIndicator(HitIndicator indicator, Unit unit) {
+		Player player = getPlayerByID(unit.getPlayer_id());
+		if(player == null) //invalid player, oops
+			return;
+		
+		player.addHitIndicator(indicator);
+	}
+	
+	public Player getPlayerByID(int playerID) {
+		int player1ID = player1.getId();
+		int player2ID = player2.getId();
+		
+		if(playerID == player1ID)
+			return player1;
+		else if(playerID == player2ID)
+			return player2;
+		else
+			return null;
+	}
+	
 	public Unit getUnit(int unitId) {
 		Unit p1Unit = player1.getUnit(unitId);
 		Unit p2Unit = player2.getUnit(unitId);
@@ -493,7 +513,8 @@ public class Map {
 			return p1Unit;
 		else if(p2Unit != null)
 			return p2Unit;
-		return null;
+		else
+			return null;
 	}
 
 }

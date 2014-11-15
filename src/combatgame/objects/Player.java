@@ -1,5 +1,6 @@
 package combatgame.objects;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import android.util.Log;
@@ -69,7 +70,8 @@ public class Player {
 	
 	//damage indicators
 	private Paint indicatorPaint;
-	private List<HealthIndicator> indicators = new LinkedList<HealthIndicator>();
+	private List<HealthIndicator> healthIndicators = new LinkedList<HealthIndicator>();
+	private List<HitIndicator> hitIndicators = new ArrayList<HitIndicator>();
 	
 	//movement hud icons
 	private Button movementButton;
@@ -244,10 +246,10 @@ public class Player {
 		//----------------------------------------
 		//--UPDATE INDICATORS--
 		//----------------------------------------
-		for(int i = 0; i < indicators.size(); i++) {
-			indicators.get(i).update();
-			if(indicators.get(i).isFinished()) {
-				indicators.remove(i);
+		for(int i = 0; i < healthIndicators.size(); i++) {
+			healthIndicators.get(i).update();
+			if(healthIndicators.get(i).isFinished()) {
+				healthIndicators.remove(i);
 				i--;
 			}
 		}
@@ -321,6 +323,7 @@ public class Player {
 		//TODO add a check to see if all units have used up all their action points, if they aren't used up then give a warning to the player
 		if(endTurnButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "end turn activated");
+			hitIndicators.clear(); //remove any hit indicators
 			endTurnButton.disarm();
 			map.switchTurn();
 		}
@@ -597,7 +600,9 @@ public class Player {
 							//reduce unit health by attack dmg
 							if(unit != null) {
 								int damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
-								indicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), damageDone, indicatorPaint, Color.RED));
+								healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), damageDone, indicatorPaint, Color.RED));
+								if(units[selectedUnitIndex] != unit)
+									map.sendHitIndicator(new HitIndicator(units[selectedUnitIndex], unit, tilesAffected.get(j).tile, map), unit);
 							}
 						}
 					}
@@ -665,8 +670,11 @@ public class Player {
 		//---------------------------------------
 		//--Render any indicators that may be active
 		//---------------------------------------
-		for(int i = 0; i < indicators.size(); i++) {
-			indicators.get(i).render(g);
+		for(int i = 0; i < hitIndicators.size(); i++) {
+			hitIndicators.get(i).render(g);
+		}
+		for(int i = 0; i < healthIndicators.size(); i++) {
+			healthIndicators.get(i).render(g);
 		}
 		
 		//---------------------------------------
@@ -783,7 +791,8 @@ public class Player {
 			}
 		//otherwise scroll to the selected unit (if there is no selected unit, pick a new unit to be selected and scroll to him), reset action points
 		else {
-			indicators.clear(); //remove any indicators if we had any
+			healthIndicators.clear(); //remove any indicators if we had any
+			
 			for(int i = 0; i < units.length; i++)
 				units[i].resetPoints();
 			
@@ -801,6 +810,10 @@ public class Player {
 				}
 			}
 		}
+	}
+	
+	public void addHitIndicator(HitIndicator indicator) {
+		hitIndicators.add(indicator);
 	}
 	
 	public Unit[] getUnits() {

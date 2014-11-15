@@ -20,4 +20,8 @@ public class GPoint {
 		return this.row == point.row && this.col == point.col;
 	}
 	
+	public GPoint clone() {
+		return new GPoint(row, col);
+	}
+	
 }

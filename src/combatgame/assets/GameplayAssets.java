@@ -70,6 +70,12 @@ public class GameplayAssets {
 	public static Bitmap noArmedIcon;
 	public static Bitmap exitDialogIcon;
 	
+	//hit indicators
+	public static Bitmap hitIndicatorUpIcon;
+	public static Bitmap hitIndicatorRightIcon;
+	public static Bitmap hitIndicatorDownIcon;
+	public static Bitmap hitIndicatorLeftIcon;
+	
 	private GameplayAssets(){}
 	
 	public static void loadGameplayAssets(AssetManager am) {
@@ -126,6 +132,11 @@ public class GameplayAssets {
 			noIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button.png"), null, options);
 			noArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button_armed.png"), null, options);
 			exitDialogIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/confirm_exit_popup.png"), null, options);
+			
+			hitIndicatorUpIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_up.png"), null, options);
+			hitIndicatorRightIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_right.png"), null, options);
+			hitIndicatorDownIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_down.png"), null, options);
+			hitIndicatorLeftIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_left.png"), null, options);
 			
 			shadeMapTiles();
 			
@@ -234,5 +245,15 @@ public class GameplayAssets {
 			okArmedIcon.recycle();
 		if(exitDialogIcon != null)
 			exitDialogIcon.recycle();
+		
+		if(hitIndicatorUpIcon != null)
+			hitIndicatorUpIcon.recycle();
+		if(hitIndicatorRightIcon != null)
+			hitIndicatorRightIcon.recycle();
+		if(hitIndicatorDownIcon != null)
+			hitIndicatorDownIcon.recycle();
+		if(hitIndicatorLeftIcon != null)
+			hitIndicatorLeftIcon.recycle();
+		
 	}
 }
