@@ -24,7 +24,7 @@ public abstract class Unit {
 	protected Ability[] abilities;
 	protected int rotationCost;
 	
-	public static final int POINTS_PER_TURN = 5;
+	public static final int POINTS_PER_TURN = 9;
 	
 	public static final int FACING_UP = 0;
 	public static final int FACING_RIGHT = 1;

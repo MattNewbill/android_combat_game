@@ -1,6 +1,5 @@
-package combatgame.units.assault;
+package combatgame.units.recon;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import combatgame.assets.GameplayAssets;
@@ -16,8 +15,8 @@ public class BasicAttack extends Ability {
 
 	public BasicAttack() {
 		this.name = "Shoot";
-		this.damage = 25;
-		this.abilityCost = 4;
+		this.damage = 15;
+		this.abilityCost = 3;
 		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0);
 	}
 

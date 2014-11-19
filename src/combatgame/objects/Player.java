@@ -15,6 +15,7 @@ import combatgame.main.Game;
 import combatgame.units.Ability;
 import combatgame.units.AttackedTile;
 import combatgame.units.assault.Assault;
+import combatgame.units.recon.Recon;
 import combatgame.units.sniper.Sniper;
 import combatgame.util.*;
 import combatgame.widgets.Button;
@@ -93,9 +94,10 @@ public class Player {
 		this.map = map;
 		
 		//just adding stock units for test purposes
-		units[0] = new Assault(playerId);
-		units[1] = new Assault(playerId);
-		units[2] = new Sniper(playerId);
+		units[0] = new Assault(playerId, "Assault Alpha");
+		units[1] = new Assault(playerId, "Assault Beta");
+		units[2] = new Recon(playerId, "Recon Alpha");
+		units[3] = new Sniper(playerId, "Sniper Alpha");
 		
 		//indicator font
 		indicatorPaint = new Paint();
@@ -137,7 +139,7 @@ public class Player {
 		
 		Paint unitInfoPaint = new Paint();
 		unitInfoPaint.setColor(Color.BLACK);
-		unitInfoPaint.setTextSize(30); //TODO: scale according to device size
+		unitInfoPaint.setTextSize(28); //TODO: scale according to device size
 		
 		//create buttons
 		unitInfoButton = new UnitInfoDrawableButton(unitInfoPaint, GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
@@ -180,11 +182,12 @@ public class Player {
 		//----------------------------------------
 		//--UPDATE BUTTON STATES--
 		//----------------------------------------
-		if(spawnUnitIndex == -1 || selectedUnitIndex == -1)
+		if((spawnUnitIndex == -1 || selectedUnitIndex == -1) || currentAction == SPAWN_UNIT)
 			respawnUnitButton.disable();
 		else
 			respawnUnitButton.enable();
 		
+		events = unitInfoButton.update(events);
 		events = moveButton.update(events);
 		events = spawnUnitButton.update(events);
 		events = respawnUnitButton.update(events);
@@ -217,6 +220,12 @@ public class Player {
 				throw new IllegalArgumentException("no such action");
 		}
 		
+		if(unitInfoButton.state == Button.ACTIVATED) {
+			Log.i("combatgame", "unit info activated");
+			map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
+			unitInfoButton.disarm();
+		}
+		
 		if(moveButton.state == Button.ACTIVATED) {
 			moveButton.disarm();
 			if(selectedUnitIndex != -1) {
@@ -229,10 +238,13 @@ public class Player {
 		
 		if(spawnUnitButton.state == Button.ACTIVATED) {
 			spawnUnitButton.disarm();
-			if(currentAction == SPAWN_UNIT)
+			if(currentAction == SPAWN_UNIT) {
 				currentAction = SELECTION;
-			else
+				selectedUnitIndex = -1;
+			}
+			else {
 				currentAction = SPAWN_UNIT;
+			}
 		}
 		
 		if(respawnUnitButton.state == Button.ACTIVATED) {
@@ -242,6 +254,9 @@ public class Player {
 			else
 				currentAction = RESPAWN_UNIT;
 		}
+		
+		if(selectedUnitIndex != -1)
+			unitInfoButton.updateTextSetupInfo(units[selectedUnitIndex]);
 	}
 	
 	private void updateTurnPhase(List<TouchEvent> events) {
@@ -399,38 +414,46 @@ public class Player {
 	////PLAYER IS ATTEMPTING TO SPAWN A UNIT
 	////////////////////////////////////////////
 	private void spawnUnit(List<TouchEvent> events) {
-		selectedUnitIndex = -1;
 		disableButtons();
+		selectedUnitIndex = spawnUnitIndex;
+		
 		GPoint tile = getTileTouched(events);
-		//only let player one spawn in player one's base
-		if(isPlayerOne) {
-			if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_ONE_BASE && !map.getTile(tile).hasUnit()) {
-				units[spawnUnitIndex].setXYCoordinate(tile, map);
-				selectedUnitIndex = spawnUnitIndex;
-				spawnUnitIndex++;
-				currentAction = SELECTION;
-				enableButtons();
+		if(tile != null) {
+			//only let player one spawn in player one's base
+			if(isPlayerOne) {
+				if(map.getTile(tile).getFeatureType() == MapFeature.PLAYER_ONE_BASE && !map.getTile(tile).hasUnit()) {
+					units[spawnUnitIndex].setXYCoordinate(tile, map);
+					selectedUnitIndex = spawnUnitIndex;
+					spawnUnitIndex++;
+					currentAction = SELECTION;
+					enableButtons();
+					if(spawnUnitIndex == units.length)
+						spawnUnitButton.disable();
+					return;
+				}
 			}
-		}
-		//only let player two spawn in player two's base
-		else {
-			if(tile != null && map.getTile(tile).getFeatureType() == MapFeature.PLAYER_TWO_BASE && !map.getTile(tile).hasUnit()) {
-				units[spawnUnitIndex].setXYCoordinate(tile, map);
-				selectedUnitIndex = spawnUnitIndex;
-				spawnUnitIndex++;
-				currentAction = SELECTION;
-				enableButtons();
+			//only let player two spawn in player two's base
+			else {
+				if(map.getTile(tile).getFeatureType() == MapFeature.PLAYER_TWO_BASE && !map.getTile(tile).hasUnit()) {
+					units[spawnUnitIndex].setXYCoordinate(tile, map);
+					selectedUnitIndex = spawnUnitIndex;
+					spawnUnitIndex++;
+					currentAction = SELECTION;
+					enableButtons();
+					if(spawnUnitIndex == units.length)
+						spawnUnitButton.disable();
+					return;
+				}
 			}
+			currentAction = SELECTION;
+			selectedUnitIndex = -1;
 		}
-		if(spawnUnitIndex == units.length)
-			spawnUnitButton.disable();
 	}
 	
 	////////////////////////////////////////////
 	////PLAYER IS ATTEMPTING TO RE-SPAWN A UNIT
 	////////////////////////////////////////////
 	private void respawnUnit(List<TouchEvent> events) {
-		disableButtons();
 		GPoint tile = getTileTouched(events);
 		//only let player one spawn in player one's base
 		if(isPlayerOne) {

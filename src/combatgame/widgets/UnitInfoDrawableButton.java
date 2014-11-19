@@ -15,6 +15,12 @@ public class UnitInfoDrawableButton extends Button {
 	private String hp = "";
 	private String unit_type = "";
 	
+	public UnitInfoDrawableButton(Paint paint, Bitmap disarmedImage, Bitmap armedImage, int x, int y) {
+		super(disarmedImage, armedImage, x, y);
+		this.paint = paint;
+		
+	}
+	
 	@Override
 	public List<TouchEvent> update(List<TouchEvent> events) {
 		return super.update(events);
@@ -42,15 +48,13 @@ public class UnitInfoDrawableButton extends Button {
 		super.enable();
 	}
 
-	public UnitInfoDrawableButton(Paint paint, Bitmap disarmedImage, Bitmap armedImage, int x, int y) {
-		super(disarmedImage, armedImage, x, y);
-		this.paint = paint;
-		
-	}
-
 	public void updateTextInfo(Unit unit) {
-		ability_points = unit.getPointsLeft() + " / " + Unit.POINTS_PER_TURN;
-		hp = unit.getHealth() + " / " + unit.getMaxHealth();
+		ability_points = "AP: " + unit.getPointsLeft() + " / " + Unit.POINTS_PER_TURN;
+		hp = "HP: " + unit.getHealth() + " / " + unit.getMaxHealth();
+		unit_type = unit.getName();
+	}
+	
+	public void updateTextSetupInfo(Unit unit) {
 		unit_type = unit.getName();
 	}
 

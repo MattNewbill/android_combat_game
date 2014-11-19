@@ -19,6 +19,7 @@ public class GameplayAssets {
 	//class icons
 	public static Bitmap[] sniperIcons = new Bitmap[4];
 	public static Bitmap[] assaultIcons = new Bitmap[4];
+	public static Bitmap[] reconIcons = new Bitmap[4];
 	
 	//hud icons
 	public static Bitmap unitInfoIcon;
@@ -92,6 +93,10 @@ public class GameplayAssets {
 			assaultIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_right.png"), null, options);
 			assaultIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_down.png"), null, options);
 			assaultIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_left.png"), null, options);
+			reconIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_up.png"), null, options);
+			reconIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_right.png"), null, options);
+			reconIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_down.png"), null, options);
+			reconIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_left.png"), null, options);
 			
 			unitInfoIcon = BitmapFactory.decodeStream(am.open("sprites/hud/unit_info_icon.png"), null, options);
 			moveIcon = BitmapFactory.decodeStream(am.open("sprites/hud/move_icon.png"), null, options);
@@ -177,10 +182,12 @@ public class GameplayAssets {
 		for(int i = 0; i < sniperIcons.length; i++)
 			if(sniperIcons[i] != null)
 				sniperIcons[i].recycle();
-		
 		for(int i = 0; i < assaultIcons.length; i++)
 			if(assaultIcons[i] != null)
 				assaultIcons[i].recycle();
+		for(int i = 0; i < reconIcons.length; i++)
+			if(reconIcons[i] != null)
+				reconIcons[i].recycle();
 		
 		if(unitInfoIcon != null)
 			unitInfoIcon.recycle();

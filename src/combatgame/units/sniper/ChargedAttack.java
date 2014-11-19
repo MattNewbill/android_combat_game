@@ -1,6 +1,5 @@
-package combatgame.units.assault;
+package combatgame.units.sniper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import combatgame.assets.GameplayAssets;
@@ -12,13 +11,13 @@ import combatgame.units.AttackedTile;
 import combatgame.util.Vision;
 import combatgame.widgets.Button;
 
-public class BasicAttack extends Ability {
-
-	public BasicAttack() {
-		this.name = "Shoot";
-		this.damage = 25;
-		this.abilityCost = 4;
-		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0);
+public class ChargedAttack extends Ability{
+	
+	public ChargedAttack() {
+		this.name = "Charged";
+		this.damage = 80;
+		this.abilityCost = 9;
+		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0); //TODO: change sprite
 	}
 
 	@Override
@@ -46,4 +45,5 @@ public class BasicAttack extends Ability {
 		attackedTiles.add(at);
 		return attackedTiles;
 	}
+	
 }

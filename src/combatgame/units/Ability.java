@@ -34,14 +34,8 @@ public abstract class Ability {
 		};
 		pool = new LazyPool<AttackedTile>(factory, MAX_POOL_SIZE);
 	}
-
 	
-	public Ability(int abilityCost) {
-		this.abilityCost = abilityCost;
-	}
-	public Ability(){
-		
-	}
+	public Ability(){}
 	
 	public abstract List<GPoint> getTilesAttackable(Unit unit, Map map);
 	public abstract List<AttackedTile> getTilesAffected(GPoint tile, Map map);

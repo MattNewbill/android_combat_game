@@ -13,14 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BasicAttack extends Ability {
-	List<GPoint> tilesAttackable = new ArrayList<GPoint>();
-	List<AttackedTile> attackedTiles = new ArrayList<AttackedTile>();	
 	
-	public BasicAttack(int cost) {
-		super(cost);
+	public BasicAttack() {
 		this.name = "Shoot";
 		this.damage = 50;
-		this.abilityCost = 3;
+		this.abilityCost = 6;
 		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0);
 	}
 
