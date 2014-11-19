@@ -15,6 +15,7 @@ import combatgame.main.Game;
 import combatgame.units.Ability;
 import combatgame.units.AttackedTile;
 import combatgame.units.assault.Assault;
+import combatgame.units.cqc.CQC;
 import combatgame.units.recon.Recon;
 import combatgame.units.sniper.Sniper;
 import combatgame.util.*;
@@ -97,7 +98,8 @@ public class Player {
 		units[0] = new Assault(playerId, "Assault Alpha");
 		units[1] = new Assault(playerId, "Assault Beta");
 		units[2] = new Recon(playerId, "Recon Alpha");
-		units[3] = new Sniper(playerId, "Sniper Alpha");
+		units[3] = new CQC(playerId, "CQB Alpha");
+		units[4] = new Sniper(playerId, "Sniper Alpha");
 		
 		//indicator font
 		indicatorPaint = new Paint();

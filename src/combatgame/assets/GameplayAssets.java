@@ -20,6 +20,8 @@ public class GameplayAssets {
 	public static Bitmap[] sniperIcons = new Bitmap[4];
 	public static Bitmap[] assaultIcons = new Bitmap[4];
 	public static Bitmap[] reconIcons = new Bitmap[4];
+	public static Bitmap[] cqbIcons = new Bitmap[4];
+	public static Bitmap[] medicIcons = new Bitmap[4];
 	
 	//hud icons
 	public static Bitmap unitInfoIcon;
@@ -97,6 +99,14 @@ public class GameplayAssets {
 			reconIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_right.png"), null, options);
 			reconIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_down.png"), null, options);
 			reconIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_left.png"), null, options);
+			cqbIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqb_up.png"), null, options);
+			cqbIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqb_right.png"), null, options);
+			cqbIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqb_down.png"), null, options);
+			cqbIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqb_left.png"), null, options);
+			medicIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_up.png"), null, options);
+			medicIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_right.png"), null, options);
+			medicIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_down.png"), null, options);
+			medicIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_left.png"), null, options);
 			
 			unitInfoIcon = BitmapFactory.decodeStream(am.open("sprites/hud/unit_info_icon.png"), null, options);
 			moveIcon = BitmapFactory.decodeStream(am.open("sprites/hud/move_icon.png"), null, options);
@@ -188,6 +198,12 @@ public class GameplayAssets {
 		for(int i = 0; i < reconIcons.length; i++)
 			if(reconIcons[i] != null)
 				reconIcons[i].recycle();
+		for(int i = 0; i < cqbIcons.length; i++)
+			if(cqbIcons[i] != null)
+				cqbIcons[i].recycle();
+		for(int i = 0; i < medicIcons.length; i++)
+			if(medicIcons[i] != null)
+				medicIcons[i].recycle();
 		
 		if(unitInfoIcon != null)
 			unitInfoIcon.recycle();

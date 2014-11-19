@@ -1,6 +1,5 @@
-package combatgame.units.assault;
+package combatgame.units.cqc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import combatgame.assets.GameplayAssets;
@@ -12,15 +11,15 @@ import combatgame.units.AttackedTile;
 import combatgame.util.Vision;
 import combatgame.widgets.Button;
 
-public class BasicAttack extends Ability {
+public class ConcentratedShot extends Ability {
 
-	public BasicAttack() {
-		this.name = "Shoot";
-		this.damage = 25;
-		this.abilityCost = 4;
-		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0);
+	public ConcentratedShot() {
+		this.name = "Concentrated";
+		this.damage = 90;
+		this.abilityCost = 6;
+		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0); //TODO: change sprite
 	}
-
+	
 	@Override
 	public List<GPoint> getTilesAttackable(Unit unit, Map map) {
 		if(unit.getUnit_id() == -1)//checks to make sure the space has a valid unit

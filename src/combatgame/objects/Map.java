@@ -79,8 +79,8 @@ public class Map {
 		this.gamestate = gamestate;
 		
 		//create players
-		player1 = new Player("Player 1", true, this, 4);
-		player2 = new Player("Player 2", false, this, 4);
+		player1 = new Player("Player 1", true, this, 5);
+		player2 = new Player("Player 2", false, this, 5);
 		thisPlayersTurn = player1;
 		
 		gamertagFont = new Paint();

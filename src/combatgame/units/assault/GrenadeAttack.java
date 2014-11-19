@@ -1,4 +1,4 @@
-package combatgame.units;
+package combatgame.units.assault;
 
 import java.util.List;
 
@@ -6,6 +6,8 @@ import combatgame.assets.GameplayAssets;
 import combatgame.graphics.GPoint;
 import combatgame.objects.Map;
 import combatgame.objects.Unit;
+import combatgame.units.Ability;
+import combatgame.units.AttackedTile;
 import combatgame.util.Vision;
 import combatgame.widgets.Button;
 
@@ -17,7 +19,7 @@ public class GrenadeAttack extends Ability {
 	public GrenadeAttack() {
 		this.name = "Shoot";
 		this.damage = 35;
-		this.abilityCost = 3;
+		this.abilityCost = 7;
 		this.distance = 3;
 		this.splash = 1;
 		this.abilityButton = new Button(GameplayAssets.throwGrenadeIcon, null, 0, 0);
