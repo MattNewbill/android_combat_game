@@ -11,14 +11,14 @@ public class MapFeature {
 	private int featureType;
 
 	public final static int TERRAIN = 0;
-	public final static int HEDGEHOG = 1;
-	public final static int TREE = 2;
+	public final static int BARRIER = 1;
+	public final static int COVER = 2;
 	public final static int WATER = 3;
-	public final static int PLAYER_ONE_BASE = 4;
-	public final static int PLAYER_TWO_BASE = 5;
+	public final static int WALL = 4;
+	public final static int PLAYER_ONE_BASE = 5;
+	public final static int PLAYER_TWO_BASE = 6;
 
 	public MapFeature(int mapFeature_int) {
-
 		switch(mapFeature_int) {
 			case TERRAIN:
 				isPassable = true;
@@ -26,23 +26,29 @@ public class MapFeature {
 				isSlowing = false;
 				featureType = TERRAIN;
 				break;
-			case HEDGEHOG:
+			case BARRIER:
 				isPassable = false;
 				isSeethrough = true;
 				isSlowing = false;
-				featureType = HEDGEHOG;
+				featureType = BARRIER;
 				break;
-			case TREE:
+			case COVER:
 				isPassable = true;
 				isSeethrough = false;
 				isSlowing = false;
-				featureType = TREE;
+				featureType = COVER;
 				break;
 			case WATER:
 				isPassable = true;
 				isSeethrough = true;
 				isSlowing = true;
 				featureType = WATER;
+				break;
+			case WALL:
+				isPassable = false;
+				isSeethrough = false;
+				isSlowing = true;
+				featureType = WALL;
 				break;
 			case PLAYER_ONE_BASE:
 				isPassable = true;

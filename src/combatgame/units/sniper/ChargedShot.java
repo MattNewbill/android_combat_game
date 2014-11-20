@@ -14,10 +14,9 @@ import combatgame.widgets.Button;
 public class ChargedShot extends Ability{
 	
 	public ChargedShot() {
-		this.name = "Charged";
 		this.damage = 80;
 		this.abilityCost = 9;
-		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0); //TODO: change sprite
+		this.abilityButton = new Button(GameplayAssets.chargedShotIcon, null, 0, 0); //TODO: change sprite
 	}
 
 	@Override

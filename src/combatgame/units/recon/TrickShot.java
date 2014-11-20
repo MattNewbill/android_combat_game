@@ -13,21 +13,20 @@ import combatgame.widgets.Button;
 public class TrickShot extends Ability {
 
 	public TrickShot() {
-		this.name = "Trick Shot";
 		this.damage = 15;
 		this.abilityCost = 4;
-		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0);
+		this.abilityButton = new Button(GameplayAssets.trickShotIcon, null, 0, 0);
 	}
 	
 	@Override
 	public List<GPoint> getTilesAttackable(Unit unit, Map map) {
-		// TODO Auto-generated method stub
+		tilesAttackable.clear();
 		return null;
 	}
 
 	@Override
 	public List<AttackedTile> getTilesAffected(GPoint tile, Map map) {
-		// TODO Auto-generated method stub
+		attackedTiles.clear();
 		return null;
 	}
 

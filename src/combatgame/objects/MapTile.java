@@ -1,5 +1,7 @@
 package combatgame.objects;
 
+import android.util.Log;
+
 /**
  * **HAPPY**
  */
@@ -12,10 +14,13 @@ public class MapTile {
 	private boolean hasUnit;
 	private int player_id;
 	private int unit_id;
+	private int spriteID;
 	public static final int NO_UNIT = -1;
+	public static final int MOD_SIZE = 10;
 	
 	public MapTile (int mapFeature_int ) {
-		feature = new MapFeature (mapFeature_int);
+		spriteID = mapFeature_int;
+		feature = new MapFeature(Math.abs(mapFeature_int / MOD_SIZE));
 		player_id = -1;
 		unit_id = NO_UNIT;
 		hasUnit = false;
@@ -51,6 +56,10 @@ public class MapTile {
 	
 	public MapFeature getFeature() {
 		return feature;
+	}
+	
+	public int getSpriteID() {
+		return spriteID % MOD_SIZE;
 	}
 	
 

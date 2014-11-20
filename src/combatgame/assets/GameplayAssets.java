@@ -1,5 +1,7 @@
 package combatgame.assets;
 
+import java.io.IOException;
+
 import combatgame.main.Game;
 import combatgame.util.Util;
 
@@ -31,14 +33,28 @@ public class GameplayAssets {
 	public static Bitmap endTurnIcon;
 	
 	//movement button icons
-	public static Bitmap movementIcon;
+	public static Bitmap movementIcons[] = new Bitmap[5];
 	public static Bitmap leftRotateIcon;
 	public static Bitmap rightRotateIcon;
 	
 	//ability button icons
-	public static Bitmap basicAttackIcon;
-	public static Bitmap throwGrenadeIcon;
-	
+	//assault abilities
+		public static Bitmap rifleFireIcon;
+		public static Bitmap throwGrenadeIcon;
+	//cqc abilities
+		public static Bitmap concentratedShotIcon;
+		public static Bitmap wideShotIcon;
+	//medic abilities
+		public static Bitmap areaHealIcon;
+		public static Bitmap singleHealIcon;
+		public static Bitmap pistolShotIcon;
+	//recon abilities
+		public static Bitmap straightShotIcon;
+		public static Bitmap trickShotIcon;
+	//sniper abilities
+		public static Bitmap chargedShotIcon;
+		public static Bitmap quickShotIcon;
+		
 	//selection overlays
 	public static Bitmap attackOverlay;
 	public static Bitmap selectionOverlay;
@@ -52,18 +68,22 @@ public class GameplayAssets {
 	public static Bitmap playerBanner;
 	
 	//map tiles
-	public static Bitmap dirtSprite;
-	public static Bitmap hedgehogSprite;
-	public static Bitmap bushSprite;
-	public static Bitmap player1BaseSprite;
-	public static Bitmap player2BaseSprite;
+	public static Bitmap[] terrainSprites = new Bitmap[10];
+	public static Bitmap[] barrierSprites = new Bitmap[10];
+	public static Bitmap[] coverSprites = new Bitmap[10];
+	public static Bitmap[] waterSprites = new Bitmap[10];
+	public static Bitmap[] wallSprites = new Bitmap[10];
+	public static Bitmap[] player1BaseSprites = new Bitmap[10];
+	public static Bitmap[] player2BaseSprites = new Bitmap[10];
 	
 	//shaded map tiles
-	public static Bitmap dirtSpriteShaded;
-	public static Bitmap hedgehogSpriteShaded;
-	public static Bitmap bushSpriteShaded;
-	public static Bitmap player1BaseSpriteShaded;
-	public static Bitmap player2BaseSpriteShaded;
+	public static Bitmap[] terrainSpritesShaded = new Bitmap[10];
+	public static Bitmap[] barrierSpritesShaded = new Bitmap[10];
+	public static Bitmap[] coverSpritesShaded = new Bitmap[10];
+	public static Bitmap[] waterSpritesShaded = new Bitmap[10];
+	public static Bitmap[] wallSpritesShaded = new Bitmap[10];
+	public static Bitmap[] player1BaseSpritesShaded = new Bitmap[10];
+	public static Bitmap[] player2BaseSpritesShaded = new Bitmap[10];
 	
 	//interface buttons
 	public static Bitmap okIcon;
@@ -82,7 +102,7 @@ public class GameplayAssets {
 	
 	private GameplayAssets(){}
 	
-	public static void loadGameplayAssets(AssetManager am) {
+	public static void loadGameplayAssets(AssetManager am, String mapSetting) {
 		try {
 			Options options = new BitmapFactory.Options();
 		    options.inScaled = false;
@@ -114,12 +134,24 @@ public class GameplayAssets {
 			deselectIcon = BitmapFactory.decodeStream(am.open("sprites/hud/deselect_icon.png"), null, options);
 			endTurnIcon = BitmapFactory.decodeStream(am.open("sprites/hud/end_turn_icon.png"), null, options);
 			
-			movementIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/movement_icon.png"), null, options);
-			leftRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/left_rotate_icon.png"), null, options);
-			rightRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/right_rotate_icon.png"), null, options);
+			movementIcons[1] = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/move_unit_1.png"), null, options);
+			movementIcons[2] = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/move_unit_2.png"), null, options);
+			movementIcons[3] = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/move_unit_3.png"), null, options);
+			movementIcons[4] = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/move_unit_4.png"), null, options);
+			leftRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/rotate_left.png"), null, options);
+			rightRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/rotate_right.png"), null, options);
 			
-			basicAttackIcon = BitmapFactory.decodeStream(am.open("sprites/hud/action_buttons/standard_attack_icon.png"), null, options);
-			throwGrenadeIcon = BitmapFactory.decodeStream(am.open("sprites/hud/action_buttons/throw_grenade_icon.png"), null, options);
+			rifleFireIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Assault/rifle_fire.png"), null, options);
+			throwGrenadeIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Assault/throw_grenade.png"), null, options);
+			concentratedShotIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Tank/concentrated_shot.png"), null, options);
+			wideShotIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Tank/wide_shot.png"), null, options);
+			areaHealIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Medic/area_heal.png"), null, options);
+			singleHealIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Medic/single_heal.png"), null, options);
+			pistolShotIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Medic/pistol_shot.png"), null, options);
+			straightShotIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Recon/direct_fire.png"), null, options);
+			trickShotIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Recon/ventriloquist_shot.png"), null, options);
+			chargedShotIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Sniper/charged_shot.png"), null, options);
+			quickShotIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Sniper/quick_shot.png"), null, options);
 			
 			attackOverlay = BitmapFactory.decodeStream(am.open("sprites/tiles/attack_overlay.png"), null, options);
 			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/tiles/selection_overlay.png"), null, options);
@@ -136,12 +168,6 @@ public class GameplayAssets {
 			
 			playerBanner = BitmapFactory.decodeStream(am.open("sprites/hud/player_banner.png"), null, options);
 			
-			dirtSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/dirt.png"), null, options);
-			hedgehogSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/hedgehog.png"), null, options);
-			bushSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/bush.png"), null, options);
-			player1BaseSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/player1_base.png"), null, options);
-			player2BaseSprite = BitmapFactory.decodeStream(am.open("sprites/tiles/player2_base.png"), null, options);
-			
 			okIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"), null, options);
 			okArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"), null, options);
 			yesIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/yes_button.png"), null, options);
@@ -155,6 +181,8 @@ public class GameplayAssets {
 			hitIndicatorDownIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_down.png"), null, options);
 			hitIndicatorLeftIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_left.png"), null, options);
 			
+			loadMapTiles(am, options, mapSetting);
+			
 			shadeMapTiles();
 			
 		} catch(Exception e) {
@@ -162,17 +190,45 @@ public class GameplayAssets {
 		}
 	}
 	
+	private static void loadMapTiles(AssetManager am, Options options, String mapSetting) {
+		if(mapSetting.equals("woodland_tiles"))
+			loadWoodlandTiles(am, options);
+		shadeMapTiles();
+	}
+	
 	private static void shadeMapTiles() {
 		int fogOfWar = Color.parseColor("#E64A3F3F");
 		
-		dirtSpriteShaded = Util.alphaBlendBitmap(dirtSprite, fogOfWar);
-		hedgehogSpriteShaded = Util.alphaBlendBitmap(hedgehogSprite, fogOfWar);
-		bushSpriteShaded = Util.alphaBlendBitmap(bushSprite, fogOfWar);
-		player1BaseSpriteShaded = Util.alphaBlendBitmap(player1BaseSprite, fogOfWar);
-		player2BaseSpriteShaded = Util.alphaBlendBitmap(player2BaseSprite, fogOfWar);
+		for(int i = 0; i < terrainSprites.length; i++) {
+			if(terrainSprites[i] != null)
+				terrainSpritesShaded[i] = Util.alphaBlendBitmap(terrainSprites[i], fogOfWar);
+			if(barrierSprites[i] != null)
+				barrierSpritesShaded[i] = Util.alphaBlendBitmap(barrierSprites[i], fogOfWar);
+			if(coverSprites[i] != null)
+				coverSpritesShaded[i] = Util.alphaBlendBitmap(coverSprites[i], fogOfWar);
+			if(wallSprites[i] != null)
+				wallSpritesShaded[i] = Util.alphaBlendBitmap(wallSprites[i], fogOfWar);
+			if(player1BaseSprites[i] != null)
+				player1BaseSpritesShaded[i] = Util.alphaBlendBitmap(player1BaseSprites[i], fogOfWar);
+			if(player2BaseSprites[i] != null)
+				player2BaseSpritesShaded[i] = Util.alphaBlendBitmap(player2BaseSprites[i], fogOfWar);
+		}
 	}
 	
-	private static void resizeHUD() {
+	private static void loadWoodlandTiles(AssetManager am, Options options) {
+		try {
+			terrainSprites[0] = BitmapFactory.decodeStream(am.open("sprites/tiles/woodland_tiles/dirt.png"), null, options);
+			barrierSprites[0] = BitmapFactory.decodeStream(am.open("sprites/tiles/woodland_tiles/hedgehog.png"), null, options);
+			coverSprites[0] = BitmapFactory.decodeStream(am.open("sprites/tiles/woodland_tiles/bush.png"), null, options);
+			wallSprites[0] = BitmapFactory.decodeStream(am.open("sprites/tiles/woodland_tiles/rock.png"), null, options);
+			player1BaseSprites[0] = BitmapFactory.decodeStream(am.open("sprites/tiles/player1_base.png"), null, options);
+			player2BaseSprites[0] = BitmapFactory.decodeStream(am.open("sprites/tiles/player2_base.png"), null, options);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*private static void resizeHUD() {
 		unitInfoIcon = Util.resizeBitmap(unitInfoIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
 		moveIcon = Util.resizeBitmap(moveIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
 		abilityIcon = Util.resizeBitmap(abilityIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
@@ -186,24 +242,21 @@ public class GameplayAssets {
 		spawnUnitIcon = Util.resizeBitmap(spawnUnitIcon, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
 		
 		playerBanner = Util.resizeBitmap(playerBanner, (double)(Game.P_WIDTH) / Game.G_WIDTH, (double)(Game.P_HEIGHT) / Game.G_HEIGHT);
-	}
+	}*/
 	
 	public static void dispose() {
-		for(int i = 0; i < sniperIcons.length; i++)
+		for(int i = 0; i < sniperIcons.length; i++) {
 			if(sniperIcons[i] != null)
 				sniperIcons[i].recycle();
-		for(int i = 0; i < assaultIcons.length; i++)
 			if(assaultIcons[i] != null)
 				assaultIcons[i].recycle();
-		for(int i = 0; i < reconIcons.length; i++)
 			if(reconIcons[i] != null)
 				reconIcons[i].recycle();
-		for(int i = 0; i < cqbIcons.length; i++)
 			if(cqbIcons[i] != null)
 				cqbIcons[i].recycle();
-		for(int i = 0; i < medicIcons.length; i++)
 			if(medicIcons[i] != null)
 				medicIcons[i].recycle();
+		}
 		
 		if(unitInfoIcon != null)
 			unitInfoIcon.recycle();
@@ -216,8 +269,9 @@ public class GameplayAssets {
 		if(endTurnIcon != null)
 			endTurnIcon.recycle();
 		
-		if(movementIcon != null)
-			movementIcon.recycle();
+		for(int i = 0; i < movementIcons.length; i++)
+			if(movementIcons[i] != null)
+				movementIcons[i].recycle();
 		if(leftRotateIcon != null)
 			leftRotateIcon.recycle();
 		if(rightRotateIcon != null)
@@ -238,25 +292,45 @@ public class GameplayAssets {
 		if(playerBanner != null)
 			playerBanner.recycle();
 		
-		if(dirtSprite != null)
-			dirtSprite.recycle();
+		for(int i = 0; i < terrainSprites.length; i++) {
+			if(terrainSprites[i] != null)
+				terrainSprites[i].recycle();
+			if(barrierSprites[i] != null)
+				barrierSprites[i].recycle();
+			if(coverSprites[i] != null)
+				coverSprites[i].recycle();
+			if(waterSprites[i] != null)
+				waterSprites[i].recycle();
+			if(wallSprites[i] != null)
+				wallSprites[i].recycle();
+			if(player1BaseSprites[i] != null)
+				player1BaseSprites[i].recycle();
+			if(player2BaseSprites[i] != null)
+				player2BaseSprites[i].recycle();
+		}
 		
-		if(hedgehogSprite != null)
-			hedgehogSprite.recycle();
-		
-		if(bushSprite != null)
-			bushSprite.recycle();
-		
-		if(player1BaseSprite != null)
-			player1BaseSprite.recycle();
-		
-		if(player2BaseSprite != null)
-			player2BaseSprite.recycle();
-		
-		if(basicAttackIcon != null)
-			basicAttackIcon.recycle();
+		if(rifleFireIcon != null)
+			rifleFireIcon.recycle();
 		if(throwGrenadeIcon != null)
 			throwGrenadeIcon.recycle();
+		if(concentratedShotIcon != null)
+			concentratedShotIcon.recycle();
+		if(wideShotIcon != null)
+			wideShotIcon.recycle();
+		if(areaHealIcon != null)
+			areaHealIcon.recycle();
+		if(singleHealIcon != null)
+			singleHealIcon.recycle();
+		if(pistolShotIcon != null)
+			pistolShotIcon.recycle();
+		if(straightShotIcon != null)
+			straightShotIcon.recycle();
+		if(trickShotIcon != null)
+			trickShotIcon.recycle();
+		if(chargedShotIcon != null)
+			chargedShotIcon.recycle();
+		if(quickShotIcon != null)
+			quickShotIcon.recycle();
 		
 		if(yesIcon != null)
 			yesIcon.recycle();

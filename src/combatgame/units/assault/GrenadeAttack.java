@@ -17,7 +17,6 @@ public class GrenadeAttack extends Ability {
 	int splash;
 	
 	public GrenadeAttack() {
-		this.name = "Shoot";
 		this.damage = 35;
 		this.abilityCost = 7;
 		this.distance = 3;

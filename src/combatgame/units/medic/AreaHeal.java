@@ -2,27 +2,32 @@ package combatgame.units.medic;
 
 import java.util.List;
 
+import combatgame.assets.GameplayAssets;
 import combatgame.graphics.GPoint;
 import combatgame.objects.Map;
 import combatgame.objects.Unit;
 import combatgame.units.Ability;
 import combatgame.units.AttackedTile;
+import combatgame.widgets.Button;
 
 public class AreaHeal extends Ability {
 
 	public AreaHeal() {
-		
+		this.damage = -15;
+		this.abilityCost = 5;
+		this.abilityButton = new Button(GameplayAssets.areaHealIcon, null, 0, 0);
 	}
 	
 	@Override
 	public List<GPoint> getTilesAttackable(Unit unit, Map map) {
-		// TODO Auto-generated method stub
-		return null;
+		tilesAttackable.clear();
+		tilesAttackable.add(unit.getXYCoordinate());
+		return tilesAttackable;
 	}
 
 	@Override
 	public List<AttackedTile> getTilesAffected(GPoint tile, Map map) {
-		// TODO Auto-generated method stub
+		attackedTiles.clear();
 		return null;
 	}
 

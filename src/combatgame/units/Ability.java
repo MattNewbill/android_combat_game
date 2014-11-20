@@ -16,7 +16,6 @@ public abstract class Ability {
 
 	protected int abilityCost;
 	protected int damage;
-	protected String name;
 	protected List<GPoint> tilesAttackable = new ArrayList<GPoint>();
 	protected List<AttackedTile> attackedTiles = new ArrayList<AttackedTile>();
 	
@@ -45,10 +44,6 @@ public abstract class Ability {
 	
 	public int getCost() {
 		return abilityCost;
-	}
-	
-	public String getName() {
-		return name;
 	}
 	
 	public Button getButton() {

@@ -9,10 +9,7 @@ import combatgame.util.Vision;
 
 public abstract class BasicAttack extends Ability {
 
-	public BasicAttack() {
-		super();
-		this.name = "Shoot";
-	}
+	public BasicAttack() {}
 	
 	@Override
 	public List<GPoint> getTilesAttackable(Unit unit, Map map) {

@@ -16,6 +16,7 @@ import combatgame.units.Ability;
 import combatgame.units.AttackedTile;
 import combatgame.units.assault.Assault;
 import combatgame.units.cqc.CQC;
+import combatgame.units.medic.Medic;
 import combatgame.units.recon.Recon;
 import combatgame.units.sniper.Sniper;
 import combatgame.util.*;
@@ -100,6 +101,7 @@ public class Player {
 		units[2] = new Recon(playerId, "Recon Alpha");
 		units[3] = new CQC(playerId, "CQB Alpha");
 		units[4] = new Sniper(playerId, "Sniper Alpha");
+		units[5] = new Medic(playerId, "Medic Alpha");
 		
 		//indicator font
 		indicatorPaint = new Paint();
@@ -132,7 +134,7 @@ public class Player {
 		int leftRotateButtonX = moveButtonX;
 		int leftRotateButtonY = rightRotateButtonY - GameplayAssets.leftRotateIcon.getHeight();
 		int movementButtonX = moveButtonX;
-		int movementButtonY = leftRotateButtonY - GameplayAssets.movementIcon.getHeight();
+		int movementButtonY = leftRotateButtonY - GameplayAssets.movementIcons[1].getHeight();
 		
 		int spawnUnitButtonX = width / 2;
 		int spawnUnitButtonY = height - GameplayAssets.abilityIcon.getHeight();
@@ -150,7 +152,7 @@ public class Player {
 		deselectButton = new Button(GameplayAssets.deselectIcon, null, deselectButtonX, deselectButtonY);
 		endTurnButton = new Button(GameplayAssets.endTurnIcon, null, endTurnButtonX, endTurnButtonY);
 		
-		movementButton = new Button(GameplayAssets.movementIcon, null, movementButtonX, movementButtonY);
+		movementButton = new Button(GameplayAssets.movementIcons[1], null, movementButtonX, movementButtonY);
 		leftRotateButton = new Button(GameplayAssets.leftRotateIcon, null, leftRotateButtonX, leftRotateButtonY);
 		rightRotateButton = new Button(GameplayAssets.rightRotateIcon, null, rightRotateButtonX, rightRotateButtonY);
 		
@@ -223,7 +225,6 @@ public class Player {
 		}
 		
 		if(unitInfoButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "unit info activated");
 			map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
 			unitInfoButton.disarm();
 		}
@@ -319,12 +320,10 @@ public class Player {
 		
 		//check if hud icons were pressed
 		if(unitInfoButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "unit info activated");
 			map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
 			unitInfoButton.disarm();
 		}
 		if(moveButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "move button activated");
 			//if the movement button has already been selected, then we deselect it
 			if(currentAction == CHOOSE_MOVEMENT)
 				currentAction = SELECTION;
@@ -334,7 +333,6 @@ public class Player {
 		}
 		//TODO if a unit is selected this needs to pull up the "drop-up" menu to show the last of abilities
 		if(abilityButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "ability button activated");
 			if(currentAction == CHOOSE_ABILITY)
 				currentAction = SELECTION;
 			else
@@ -343,7 +341,6 @@ public class Player {
 		}
 		//deselected the current unit
 		if(deselectButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "deselect button activated");
 			deselectButton.disarm();
 			selectedUnitIndex = -1; //deselect the unit
 			currentAction = SELECTION;
@@ -352,7 +349,6 @@ public class Player {
 		//ends the turn
 		//TODO add a check to see if all units have used up all their action points, if they aren't used up then give a warning to the player
 		if(endTurnButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "end turn activated");
 			hitIndicators.clear(); //remove any hit indicators
 			endTurnButton.disarm();
 			map.switchTurn();
@@ -387,14 +383,14 @@ public class Player {
 					//call the map to get the exact tile that was touched
 					pointTouched = map.getTileTouched(events.get(i));
 					isUsed = true; //we used this touch event
-					if(pointTouched != null) {
-						Log.i("combatgame", "row: " + pointTouched.row);
-						Log.i("combatgame", "col: " + pointTouched.col);
-					}
+					//if(pointTouched != null) {
+					//Log.i("combatgame", "row: " + pointTouched.row);
+					//Log.i("combatgame", "col: " + pointTouched.col);
+					//}
 					//the point is null if the point touched was out of bounds
-					else {
-						Log.i("combatgame", "out of bounds");
-					}
+					//else {
+					//Log.i("combatgame", "out of bounds");
+					//}
 				}
 				//we did not use this particular touch event
 				else {
@@ -554,12 +550,10 @@ public class Player {
 		events = rightRotateButton.update(events);
 		
 		if(leftRotateButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "left rotate button pressed!");
 			units[selectedUnitIndex].rotateLeft();
 			leftRotateButton.disarm();
 		}
 		if(rightRotateButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "right rotate button pressed!");
 			units[selectedUnitIndex].rotateRight();
 			rightRotateButton.disarm();
 		}
@@ -585,7 +579,6 @@ public class Player {
 			movementButton.disarm();
 		}
 		if(leftRotateButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "left rotate button pressed!");
 			if(units[selectedUnitIndex].getPointsLeft() >= units[selectedUnitIndex].getRotationCost()) {
 				units[selectedUnitIndex].rotateLeft();
 				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
@@ -596,7 +589,6 @@ public class Player {
 			leftRotateButton.disarm();
 		}
 		if(rightRotateButton.state == Button.ACTIVATED) {
-			Log.i("combatgame", "right rotate button pressed!");
 			if(units[selectedUnitIndex].getPointsLeft() >= units[selectedUnitIndex].getRotationCost()) {
 				units[selectedUnitIndex].rotateRight();
 				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
@@ -779,7 +771,7 @@ public class Player {
 		//--Render movement buttons if the user has pressed the "move" button during an actual turn
 		//---------------------------------------
 		if(currentAction == CHOOSE_MOVEMENT && !isSetupPhase) {
-			movementButton.render(g);
+			movementButton.render(g, GameplayAssets.movementIcons[units[selectedUnitIndex].getMovementCost()]);
 			leftRotateButton.render(g);
 			rightRotateButton.render(g);
 		}
@@ -791,7 +783,7 @@ public class Player {
 			//TODO: render ability buttons for the player to choose
 			Ability[] abilities = units[selectedUnitIndex].getAbilities();
 			for(int i = 0; i < abilities.length; i++) {
-				abilities[i].renderButton(g, abilityButton.getX(), abilityButton.getY() - ((abilities.length-i) * GameplayAssets.basicAttackIcon.getHeight()));
+				abilities[i].renderButton(g, abilityButton.getX(), abilityButton.getY() - ((abilities.length-i) * GameplayAssets.throwGrenadeIcon.getHeight()));
 			}
 		}
 		
@@ -851,7 +843,6 @@ public class Player {
 					}
 					else
 						if(map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE) {
-							Log.i("combatgame", "row: " + row + ", col: " + col);
 							map.moveToTile(new GPoint(row, col));
 							return;
 						}

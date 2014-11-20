@@ -14,10 +14,9 @@ import combatgame.widgets.Button;
 public class ConcentratedShot extends Ability {
 
 	public ConcentratedShot() {
-		this.name = "Concentrated";
 		this.damage = 90;
 		this.abilityCost = 6;
-		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0); //TODO: change sprite
+		this.abilityButton = new Button(GameplayAssets.concentratedShotIcon, null, 0, 0); //TODO: change sprite
 	}
 	
 	@Override

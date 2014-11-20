@@ -72,20 +72,17 @@ public class Map {
 	public static final int FLING_THRESHOLD = 17; //the distance apart to scroll events have to be to determine a "fling"
 	int mapOffsetX = 0, mapOffsetY = 0;
 	
-	//shaded portions of the map that we can't see
-	private int fogOfWarColor = Color.parseColor("#E64A3F3F");
-	
 	public Map (GameState gamestate, AssetManager am, String filePath) {
 		this.gamestate = gamestate;
 		
 		//create players
-		player1 = new Player("Player 1", true, this, 5);
-		player2 = new Player("Player 2", false, this, 5);
+		player1 = new Player("Player 1", true, this, 6);
+		player2 = new Player("Player 2", false, this, 6);
 		thisPlayersTurn = player1;
 		
 		gamertagFont = new Paint();
 		gamertagFont.setColor(Color.BLACK);
-		gamertagFont.setTextSize(20);
+		gamertagFont.setTextSize(30);
 		gamertagFont.setTextAlign(Align.CENTER);
 		
 		gameoverFont = new Paint();
@@ -276,34 +273,41 @@ public class Map {
 	 * @param paint Paint object to use for colors
 	 */
 	public void render(Graphics2D g, Paint paint) {
-		//set our fog of war color to overlay the tiles we can't see
-		paint.setColor(fogOfWarColor);
-		
 		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
 				//check our map to see which tile we need to draw
 				Bitmap tile = null;
 				Bitmap shadedTile = null;
+				int spriteID = board[row][col].getSpriteID();
+				
 				if(getFeatureType(row, col) == MapFeature.TERRAIN) {
-					tile = GameplayAssets.dirtSprite;
-					shadedTile = GameplayAssets.dirtSpriteShaded;
+					tile = GameplayAssets.terrainSprites[spriteID];
+					shadedTile = GameplayAssets.terrainSpritesShaded[spriteID];
 				}
-				else if(getFeatureType(row, col) == MapFeature.HEDGEHOG) {
-					tile = GameplayAssets.hedgehogSprite;
-					shadedTile = GameplayAssets.hedgehogSpriteShaded;
+				else if(getFeatureType(row, col) == MapFeature.BARRIER) {
+					tile = GameplayAssets.barrierSprites[spriteID];
+					shadedTile = GameplayAssets.barrierSpritesShaded[spriteID];
 				}
-				else if(getFeatureType(row, col) == MapFeature.TREE) {
-					tile = GameplayAssets.bushSprite;
-					shadedTile = GameplayAssets.bushSpriteShaded;
+				else if(getFeatureType(row, col) == MapFeature.COVER) {
+					tile = GameplayAssets.coverSprites[spriteID];
+					shadedTile = GameplayAssets.coverSpritesShaded[spriteID];
+				}
+				else if(getFeatureType(row, col) == MapFeature.WATER) {
+					tile = GameplayAssets.waterSprites[spriteID];
+					shadedTile = GameplayAssets.waterSpritesShaded[spriteID];
+				}
+				else if(getFeatureType(row, col) == MapFeature.WALL) {
+					tile = GameplayAssets.wallSprites[spriteID];
+					shadedTile = GameplayAssets.wallSpritesShaded[spriteID];
 				}
 				else if(getFeatureType(row, col) == MapFeature.PLAYER_ONE_BASE) {
-					tile = GameplayAssets.player1BaseSprite;
-					shadedTile = GameplayAssets.player1BaseSpriteShaded;
+					tile = GameplayAssets.player1BaseSprites[spriteID];
+					shadedTile = GameplayAssets.player1BaseSpritesShaded[spriteID];
 				}
 				else if(getFeatureType(row, col) == MapFeature.PLAYER_TWO_BASE) {
-					tile = GameplayAssets.player2BaseSprite;
-					shadedTile = GameplayAssets.player2BaseSpriteShaded;
+					tile = GameplayAssets.player2BaseSprites[spriteID];
+					shadedTile = GameplayAssets.player2BaseSpritesShaded[spriteID];
 				}
 				
 				//if the tile is going to be within our screen's dimensions, whether it's from scaling or not, we need to draw it
@@ -332,11 +336,11 @@ public class Map {
 		//draw player gamer tag top, center of screen
 		if(Game.isScaled()) { //TODO: scale player font for devices
 			g.drawBitmap(GameplayAssets.playerBanner, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
-			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 20, gamertagFont);
+			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 26, gamertagFont);
 		}
 		else {
 			g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
-			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 20, gamertagFont);
+			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 26, gamertagFont);
 		}
 		
 		//draw the game over text

@@ -79,6 +79,10 @@ public class Button {
 		g.drawBitmap(images[state], x, y, null);
 	}
 	
+	public void render(Graphics2D g, Bitmap image) {
+		g.drawBitmap(image, x, y, null);
+	}
+	
 	public void render(Graphics2D g, int x, int y) {
 		this.x = x; this.y = y;
 		g.drawBitmap(images[state], x, y, null);

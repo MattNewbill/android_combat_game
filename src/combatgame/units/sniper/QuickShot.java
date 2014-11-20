@@ -19,6 +19,6 @@ public class QuickShot extends BasicAttack {
 		super();
 		this.damage = 50;
 		this.abilityCost = 6;
-		this.abilityButton = new Button(GameplayAssets.basicAttackIcon, null, 0, 0);
+		this.abilityButton = new Button(GameplayAssets.quickShotIcon, null, 0, 0);
 	}	
 }

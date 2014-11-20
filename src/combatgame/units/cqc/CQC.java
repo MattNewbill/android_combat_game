@@ -3,7 +3,6 @@ package combatgame.units.cqc;
 import combatgame.assets.GameplayAssets;
 import combatgame.objects.Unit;
 import combatgame.units.Ability;
-import combatgame.units.assault.GrenadeAttack;
 import combatgame.util.Util;
 
 public class CQC extends Unit {
@@ -20,8 +19,8 @@ public class CQC extends Unit {
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
 		this.rotationCost = 1;
-		this.abilities = new Ability[2];
-		abilities[0] = new WideShot();
-		abilities[1] = new ConcentratedShot();
+		this.abilities = new Ability[0];
+		//abilities[0] = new WideShot();
+		//abilities[1] = new ConcentratedShot();
 	}
 }

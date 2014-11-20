@@ -12,7 +12,7 @@ public class BluetoothGameState extends GameState {
 		
 		AssetManager am = this.stateManager.getAssetManager();
 		
-		GameplayAssets.loadGameplayAssets(am);
+		//GameplayAssets.loadGameplayAssets(am);
 	}
 
 	@Override

@@ -52,8 +52,8 @@ public class HotSeatState extends GameState {
 		
 		AssetManager am = this.stateManager.getAssetManager();
 		
-		//load all gameplay assets
-		GameplayAssets.loadGameplayAssets(am);
+		//load gameplay assets and only the specific tiles for the map that the user chose
+		GameplayAssets.loadGameplayAssets(am, "woodland_tiles");
 		
 		//create map
 		map = new Map (this, am, "maps/test_map.txt");

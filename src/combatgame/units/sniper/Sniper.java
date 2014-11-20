@@ -26,7 +26,7 @@ public class Sniper extends Unit {
 		this.rotationCost = 1;
 		this.abilities = new Ability[2];
 		abilities[0] = new QuickShot();
-		abilities[2] = new ChargedShot();
+		abilities[1] = new ChargedShot();
 		
 	}
 	
