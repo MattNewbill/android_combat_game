@@ -68,8 +68,10 @@ public class Button {
 					unusedEvents.add(events.get(i));
 				}
 			}
-			else {
-				unusedEvents.add(events.get(i));
+			else if(events.get(i).type == TouchEvent.TOUCH_DRAGGED) {
+				if(!Util.isInBounds(events.get(i), x, y, images[DISARMED].getWidth(), images[DISARMED].getHeight())) {
+					unusedEvents.add(events.get(i));
+				}
 			}
 		}
 		return unusedEvents;

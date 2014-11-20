@@ -36,6 +36,8 @@ public class GameplayAssets {
 	public static Bitmap movementIcons[] = new Bitmap[5];
 	public static Bitmap leftRotateIcon;
 	public static Bitmap rightRotateIcon;
+	public static Bitmap leftRotateSetupIcon;
+	public static Bitmap rightRotateSetupIcon;
 	
 	//ability button icons
 	//assault abilities
@@ -140,6 +142,8 @@ public class GameplayAssets {
 			movementIcons[4] = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/move_unit_4.png"), null, options);
 			leftRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/rotate_left.png"), null, options);
 			rightRotateIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/rotate_right.png"), null, options);
+			leftRotateSetupIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/rotate_left_setup.png"), null, options);
+			rightRotateSetupIcon = BitmapFactory.decodeStream(am.open("sprites/hud/movement_buttons/rotate_right_setup.png"), null, options);
 			
 			rifleFireIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Assault/rifle_fire.png"), null, options);
 			throwGrenadeIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Assault/throw_grenade.png"), null, options);
@@ -276,6 +280,10 @@ public class GameplayAssets {
 			leftRotateIcon.recycle();
 		if(rightRotateIcon != null)
 			rightRotateIcon.recycle();
+		if(leftRotateSetupIcon != null)
+			leftRotateSetupIcon.recycle();
+		if(rightRotateSetupIcon != null)
+			rightRotateSetupIcon.recycle();
 		
 		if(selectionOverlay != null)
 			selectionOverlay.recycle();

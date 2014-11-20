@@ -82,6 +82,8 @@ public class Player {
 	private Button movementButton;
 	private Button leftRotateButton;
 	private Button rightRotateButton;
+	private Button leftRotateSetupButton;
+	private Button rightRotateSetupButton;
 	
 	//determine presses vs scrolls
 	private TouchEvent previousEvent;
@@ -97,11 +99,10 @@ public class Player {
 		
 		//just adding stock units for test purposes
 		units[0] = new Assault(playerId, "Assault Alpha");
-		units[1] = new Assault(playerId, "Assault Beta");
-		units[2] = new Recon(playerId, "Recon Alpha");
-		units[3] = new CQC(playerId, "CQB Alpha");
-		units[4] = new Sniper(playerId, "Sniper Alpha");
-		units[5] = new Medic(playerId, "Medic Alpha");
+		units[1] = new Recon(playerId, "Recon Alpha");
+		units[2] = new CQC(playerId, "CQB Alpha");
+		units[3] = new Sniper(playerId, "Sniper Alpha");
+		units[4] = new Medic(playerId, "Medic Alpha");
 		
 		//indicator font
 		indicatorPaint = new Paint();
@@ -155,6 +156,8 @@ public class Player {
 		movementButton = new Button(GameplayAssets.movementIcons[1], null, movementButtonX, movementButtonY);
 		leftRotateButton = new Button(GameplayAssets.leftRotateIcon, null, leftRotateButtonX, leftRotateButtonY);
 		rightRotateButton = new Button(GameplayAssets.rightRotateIcon, null, rightRotateButtonX, rightRotateButtonY);
+		leftRotateSetupButton = new Button(GameplayAssets.leftRotateSetupIcon, null, leftRotateButtonX, leftRotateButtonY);
+		rightRotateSetupButton = new Button(GameplayAssets.rightRotateSetupIcon, null, rightRotateButtonX, rightRotateButtonY);
 		
 		spawnUnitButton = new Button(GameplayAssets.spawnUnitIcon, null, spawnUnitButtonX, spawnUnitButtonY);
 		respawnUnitButton = new Button(GameplayAssets.respawnUnitIcon, null, respawnUnitButtonX, respawnUnitButtonY);
@@ -163,25 +166,27 @@ public class Player {
 		endTurnButton.disable();
 	}
 	
-	public void update(List<TouchEvent> events) {
+	public List<TouchEvent> update(List<TouchEvent> events) {
 		
 		//----------------------------------------
 		//--SET UP PHASE--
 		//----------------------------------------
 		if(isSetupPhase) {
-			updateSetupPhase(events);
+			events = updateSetupPhase(events);
 		}
 		//----------------------------------------
 		//--TURN PHASE--
 		//----------------------------------------
 		else {
-			updateTurnPhase(events);
+			events = updateTurnPhase(events);
 		}
+		
+		return events;
 	}
 	
 	//only runs during the setup phase
 	//setup phase consists of unit placement
-	private void updateSetupPhase(List<TouchEvent> events) {
+	private List<TouchEvent> updateSetupPhase(List<TouchEvent> events) {
 		
 		//----------------------------------------
 		//--UPDATE BUTTON STATES--
@@ -260,9 +265,10 @@ public class Player {
 		
 		if(selectedUnitIndex != -1)
 			unitInfoButton.updateTextSetupInfo(units[selectedUnitIndex]);
+		return events;
 	}
 	
-	private void updateTurnPhase(List<TouchEvent> events) {
+	private List<TouchEvent> updateTurnPhase(List<TouchEvent> events) {
 		//----------------------------------------
 		//--UPDATE BUTTON STATES--
 		//----------------------------------------
@@ -353,6 +359,7 @@ public class Player {
 			endTurnButton.disarm();
 			map.switchTurn();
 		}
+		return events;
 	}
 	
 	/**
@@ -546,16 +553,15 @@ public class Player {
 	////PLAYER IS ALLOWED TO ROTATE A SPAWNED UNIT DURING SETUP
 	////////////////////////////////////////////
 	private void chooseMovementSetup(List<TouchEvent> events) {
-		events = leftRotateButton.update(events);
-		events = rightRotateButton.update(events);
-		
-		if(leftRotateButton.state == Button.ACTIVATED) {
+		events = leftRotateSetupButton.update(events);
+		events = rightRotateSetupButton.update(events);
+		if(leftRotateSetupButton.state == Button.ACTIVATED) {
 			units[selectedUnitIndex].rotateLeft();
-			leftRotateButton.disarm();
+			leftRotateSetupButton.disarm();
 		}
-		if(rightRotateButton.state == Button.ACTIVATED) {
+		if(rightRotateSetupButton.state == Button.ACTIVATED) {
 			units[selectedUnitIndex].rotateRight();
-			rightRotateButton.disarm();
+			rightRotateSetupButton.disarm();
 		}
 		//if we touch something other than the movement buttons then exit out of the movement state
 		for(int i = 0; i < events.size(); i++) {
@@ -762,9 +768,9 @@ public class Player {
 		//---------------------------------------
 		//--Render rotate buttons if the user has pressed the "move" button during setup phase
 		//---------------------------------------
-		if(currentAction == CHOOSE_MOVEMENT) {
-			leftRotateButton.render(g);
-			rightRotateButton.render(g);
+		if(currentAction == CHOOSE_MOVEMENT && isSetupPhase) {
+			leftRotateSetupButton.render(g);
+			rightRotateSetupButton.render(g);
 		}
 		
 		//---------------------------------------

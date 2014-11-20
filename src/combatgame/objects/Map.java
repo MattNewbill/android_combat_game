@@ -76,8 +76,8 @@ public class Map {
 		this.gamestate = gamestate;
 		
 		//create players
-		player1 = new Player("Player 1", true, this, 6);
-		player2 = new Player("Player 2", false, this, 6);
+		player1 = new Player("Player 1", true, this, 5);
+		player2 = new Player("Player 2", false, this, 5);
 		thisPlayersTurn = player1;
 		
 		gamertagFont = new Paint();
@@ -237,7 +237,7 @@ public class Map {
 						}
 					}
 					//scroll on the y axis
-					else {
+					else if(Math.abs(events.get(i).x - previousEvent.x) < Math.abs(events.get(i).y - previousEvent.y)){
 						//fling scrolling, y axis
 						if(Math.abs(events.get(i).y - previousEvent.y) > FLING_THRESHOLD) {
 							if(events.get(i).y < previousEvent.y)
