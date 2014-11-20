@@ -100,7 +100,7 @@ public class Player {
 		//just adding stock units for test purposes
 		units[0] = new Assault(playerId, "Assault Alpha");
 		units[1] = new Recon(playerId, "Recon Alpha");
-		units[2] = new CQC(playerId, "CQB Alpha");
+		units[2] = new CQC(playerId, "CQC Alpha");
 		units[3] = new Sniper(playerId, "Sniper Alpha");
 		units[4] = new Medic(playerId, "Medic Alpha");
 		
