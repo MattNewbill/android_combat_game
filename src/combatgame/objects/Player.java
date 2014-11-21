@@ -541,6 +541,7 @@ public class Player {
 				unitTile = units[i].getXYCoordinate();
 				if(tileTouched.equals(unitTile)) {
 					selectedUnitIndex = i;
+					movementPoints = null;
 					return;
 				}
 			}
