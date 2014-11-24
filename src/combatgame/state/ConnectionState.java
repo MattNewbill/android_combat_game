@@ -77,7 +77,8 @@ public class ConnectionState extends State {
 		}
 		else if(hotSeatButton.state == Button.ACTIVATED) {
 			//new game with two players on one phone
-			stateManager.setState(new HotSeatState(stateManager));
+			//stateManager.setState(new HotSeatState(stateManager, "maps/geometry/test_map.txt", "woodland", null));
+			stateManager.setState(new MapSelectionState(stateManager));
 		}
 		else if(backButton.state == Button.ACTIVATED || stateManager.isBackPressed()) {
 			//take us back to the main menu

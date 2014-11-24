@@ -1,6 +1,7 @@
 package combatgame.objects;
 
 import combatgame.assets.GameplayAssets;
+import combatgame.gamemode.GameMode;
 import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
@@ -29,6 +30,9 @@ public class Map {
 	
 	//gamestate that created us
 	GameState gamestate;
+	
+	//game mode
+	GameMode gamemode;
 	
 	//players
 	Player player1, player2;
@@ -72,9 +76,9 @@ public class Map {
 	public static final int FLING_THRESHOLD = 17; //the distance apart to scroll events have to be to determine a "fling"
 	int mapOffsetX = 0, mapOffsetY = 0;
 	
-	public Map (GameState gamestate, AssetManager am, String filePath) {
+	public Map (GameState gamestate, AssetManager am, String filePath, GameMode gm) {
 		this.gamestate = gamestate;
-		
+		this.gamemode = gm;
 		//create players
 		player1 = new Player("Player 1", true, this, 5);
 		player2 = new Player("Player 2", false, this, 5);
@@ -95,7 +99,7 @@ public class Map {
 		fadePaint.setAlpha(0);
 		try {
 			//read in map
-			BufferedReader reader = new BufferedReader(new InputStreamReader((am.open("maps/test_map.txt"))));
+			BufferedReader reader = new BufferedReader(new InputStreamReader((am.open(filePath))));
 			
 			//first line contains dimensions for map
 			String[] dimensions = reader.readLine().split(" ");
@@ -110,7 +114,7 @@ public class Map {
 					board[row][col] = new MapTile(Integer.parseInt(tiles[col]));
 				}
 			}
-			
+			reader.close();
 			//create lightmap object
 			lightmap = new boolean[num_vertical_tiles][num_horizontal_tiles];
 			
@@ -159,7 +163,7 @@ public class Map {
 			thisPlayersTurn.update(events);
 			
 			//check to see if someone has won yet
-			checkWinConditions();
+			checkWinConditions(); //TODO: check gamemode for win conditions
 			
 			//update map scroll
 			updateMap(events);

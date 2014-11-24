@@ -6,7 +6,7 @@ package combatgame.input;
 
 public class TouchEvent {
 	
-	public static final int TOUCH_DOWN = 0; //they're usually worth six points.........
+	public static final int TOUCH_DOWN = 0; //six points for the Eagles!!
 	public static final int TOUCH_DRAGGED = 1;
 	public static final int TOUCH_UP = 2;
 	

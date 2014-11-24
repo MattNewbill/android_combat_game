@@ -4,6 +4,7 @@ import combatgame.main.*;
 import combatgame.assets.*;
 import combatgame.objects.*;
 import combatgame.widgets.Button;
+import combatgame.gamemode.GameMode;
 import combatgame.graphics.*;
 import combatgame.input.*;
 import java.util.List;
@@ -36,7 +37,7 @@ public class HotSeatState extends GameState {
 	Button yesButton;
 	Button noButton;
 	
-	public HotSeatState(StateManager stateManager) {
+	public HotSeatState(StateManager stateManager, String mapPath, String tileSet, GameMode gm) {
 		super(stateManager);
 		
 		//if the device's resolution is our target size or lower, then we scale the game to our target size
@@ -53,10 +54,10 @@ public class HotSeatState extends GameState {
 		AssetManager am = this.stateManager.getAssetManager();
 		
 		//load gameplay assets and only the specific tiles for the map that the user chose
-		GameplayAssets.loadGameplayAssets(am, "woodland_tiles");
+		GameplayAssets.loadGameplayAssets(am, tileSet);
 		
 		//create map
-		map = new Map (this, am, "maps/test_map.txt");
+		map = new Map (this, am, mapPath, null);
 		
 		switchTurnsOKButton = new Button(GameplayAssets.okIcon, GameplayAssets.okArmedIcon, Game.G_WIDTH / 2 - (GameplayAssets.okIcon.getWidth() / 2), Game.G_HEIGHT / 2 + 30); //TODO: scale placement of button
 		

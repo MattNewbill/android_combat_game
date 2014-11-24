@@ -101,36 +101,12 @@ public class RenderView extends SurfaceView implements Runnable {
 				canvas.drawBitmap(frameBuffer, 0, 0, null);
 			holder.unlockCanvasAndPost(canvas);
 			drawTime = System.currentTimeMillis() - startTimeCleanup;
-			
-			Double allocated = new Double(Debug.getNativeHeapAllocatedSize())/new Double((1048576));
-	        Double available = new Double(Debug.getNativeHeapSize())/1048576.0;
-	        Double free = new Double(Debug.getNativeHeapFreeSize())/1048576.0;
-	        DecimalFormat df = new DecimalFormat();
-	        df.setMaximumFractionDigits(2);
-	        df.setMinimumFractionDigits(2);
-	        double heapSize = Runtime.getRuntime().maxMemory() / 1048576.0;
-	        Runtime rt = Runtime.getRuntime();
-	        double maxMemory = rt.maxMemory() / 1048576.0;
-	       // Log.i("combatgame", ""+heapSize);
-	        //Log.i("combatgame", ""+maxMemory);
-	        //Log.i("combatgame", "debug. =================================");
-	        //Log.i("combatgame", "debug.heap native: allocated " + df.format(allocated) + "MB of " + df.format(available) + "MB (" + df.format(free) + "MB free)");
-	        //Log.i("combatgame", "debug.memory: allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory()/1048576)) + "MB of " + df.format(new Double(Runtime.getRuntime().maxMemory()/1048576))+ "MB (" + df.format(new Double(Runtime.getRuntime().freeMemory()/1048576)) +"MB free)");
-		
-			//other fps stuff
-			long elapsedTime = (System.nanoTime() - startTimeFrame) / 1000000;
-			frames++;
-			if(elapsedTime > 1000) {
-				fps = frames;
-				frames = 0;
-				startTimeFrame = System.nanoTime();
-			}
-			
+
 			//accumulator += System.currentTimeMillis() - startTime;
 			
 			
 			//sleep if we've rendered faster than our target tick time
-			elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
+			long elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
 			if(elapsedTime < targetFPSTime) {
 				//Log.i("combatgame", "TTS: " + (targetFPSTime - elapsedTime));
 				try {
@@ -138,6 +114,15 @@ public class RenderView extends SurfaceView implements Runnable {
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
+			}
+			
+			//other fps stuff
+			elapsedTime = (System.nanoTime() - startTimeFrame) / 1000000;
+			frames++;
+			if(elapsedTime > 1000) {
+				fps = frames;
+				frames = 0;
+				startTimeFrame = System.nanoTime();
 			}
 			
 		}
