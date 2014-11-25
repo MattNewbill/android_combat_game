@@ -667,7 +667,7 @@ public class Player {
 							//reduce unit health by attack dmg
 							if(unit != null) {
 								int damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
-								healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), damageDone, indicatorPaint, Color.RED));
+								healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), damageDone, indicatorPaint));
 								if(units[selectedUnitIndex] != unit)
 									map.sendHitIndicator(new HitIndicator(units[selectedUnitIndex], unit, tilesAffected.get(j).tile, map), unit);
 							}
