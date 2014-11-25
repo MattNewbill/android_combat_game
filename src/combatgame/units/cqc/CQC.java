@@ -19,7 +19,7 @@ public class CQC extends Unit {
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
 		this.rotationCost = 1;
-		this.abilities = new Ability[1];
+		this.abilities = new Ability[2];
 		abilities[0] = new WideShot();
 		abilities[1] = new ConcentratedShot();
 	}
