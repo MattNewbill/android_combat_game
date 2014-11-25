@@ -53,7 +53,6 @@ public class Vision
 		pool = new LazyPool<GPoint>(factory, MAX_POOL_SIZE);
 	}
 
-	
 //	public static List<GPoint> getSprintVision( int[][] map, GPoint locIn, int viewIn, int widthIn, int heightIn, char directionIn, int distance)
 	public static List<GPoint> getSprintVision( Map iMAP, Unit iUNIT )
 	{
@@ -72,6 +71,25 @@ public class Vision
 		height = MAP.getNum_vertical_tiles();
 		direction = UNIT.getDirectionFacing();
 		
+		return SprintWork();
+	}
+	
+	public static List<GPoint> getSprintVision( Map iMAP, Unit iUNIT, int range )
+	{
+		MAP = iMAP;
+		UNIT = iUNIT;
+		loc = UNIT.getXYCoordinate();
+		view = range;
+		width = MAP.getNum_horizontal_tiles();
+		height = MAP.getNum_vertical_tiles();
+		direction = UNIT.getDirectionFacing();
+		
+		return SprintWork();
+	}
+	
+
+	private static List<GPoint> SprintWork()
+	{
 		LOScheck=true;
 		notUsed = new boolean[height][width];
 		
@@ -102,6 +120,23 @@ public class Vision
 		width = MAP.getNum_horizontal_tiles();
 		height = MAP.getNum_vertical_tiles();
 		
+		return SlowWork();
+	}
+	
+	public static List<GPoint> getSlowVision( Map iMAP, Unit iUNIT, int range )
+	{
+		MAP = iMAP;
+		UNIT = iUNIT;
+		loc = UNIT.getXYCoordinate();
+		view = range;
+		width = MAP.getNum_horizontal_tiles();
+		height = MAP.getNum_vertical_tiles();
+		
+		return SlowWork();
+	}
+	
+	private static List<GPoint> SlowWork()
+	{
 		LOScheck=true;
 		notUsed = new boolean[height][width];
 		
