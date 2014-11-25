@@ -495,7 +495,7 @@ public class Player {
 			boolean isUnitSelected = false;
 			for(int i = 0; i < units.length; i++) { //loop through our units to see if we touched one
 				tile = units[i].getXYCoordinate();
-				if(tile != null && tile.equals(tileTouched)) { //if we did touch it, set that unit as the currently selected unit
+				if(tile != null && tile.equals(tileTouched) && !units[i].isDead()) { //if we did touch it, set that unit as the currently selected unit
 					movementPoints = null;
 					selectedUnitIndex = i;
 					isUnitSelected = true;
