@@ -1,9 +1,8 @@
 package combatgame.units.sniper;
 
-import combatgame.assets.*;
+import combatgame.assets.GameplayAssets;
 import combatgame.objects.Unit;
 import combatgame.units.Ability;
-import combatgame.units.assault.GrenadeAttack;
 import combatgame.util.Util;
 
 /**

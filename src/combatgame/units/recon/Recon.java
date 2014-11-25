@@ -3,7 +3,6 @@ package combatgame.units.recon;
 import combatgame.assets.GameplayAssets;
 import combatgame.objects.Unit;
 import combatgame.units.Ability;
-import combatgame.units.assault.GrenadeAttack;
 import combatgame.util.Util;
 
 public class Recon extends Unit {
@@ -20,8 +19,8 @@ public class Recon extends Unit {
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
 		this.rotationCost = 1;
-		this.abilities = new Ability[1];
+		this.abilities = new Ability[2];
 		abilities[0] = new StraightShot();
-		//abilities[1] = new TrickShot();
+		abilities[1] = new TrickShot();
 	}
 }

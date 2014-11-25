@@ -29,10 +29,10 @@ public abstract class BasicAttack extends Ability {
 	}
 
 	@Override
-	public List<AttackedTile> getTilesAffected(GPoint tile, Map map) {
+	public List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking, GPoint tileTouched, Map map) {
 		attackedTiles.clear();
 		AttackedTile at = pool.newObject();
-		at.tile = tile; at.damageTaken = damage;
+		at.tile = tileTouched; at.damageTaken = damage;
 		attackedTiles.add(at);
 		return attackedTiles;
 	}

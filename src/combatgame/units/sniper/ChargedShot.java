@@ -37,7 +37,7 @@ public class ChargedShot extends Ability{
 	}
 
 	@Override
-	public List<AttackedTile> getTilesAffected(GPoint tile, Map map) {
+	public List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking, GPoint tile, Map map) {
 		attackedTiles.clear();
 		AttackedTile at = pool.newObject();
 		at.tile = tile; at.damageTaken = damage;

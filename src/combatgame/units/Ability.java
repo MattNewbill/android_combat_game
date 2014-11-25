@@ -1,16 +1,15 @@
 package combatgame.units;
 
-import combatgame.widgets.*;
-import combatgame.graphics.*;
-import combatgame.input.*;
-import combatgame.input.LazyPool.LazyPoolObjectFactory;
-import combatgame.input.Pool.PoolObjectFactory;
-import combatgame.objects.Map;
-import combatgame.objects.Unit;
-
 import java.util.ArrayList;
 import java.util.List;
-import android.graphics.Point;
+
+import combatgame.graphics.GPoint;
+import combatgame.graphics.Graphics2D;
+import combatgame.input.LazyPool;
+import combatgame.input.LazyPool.LazyPoolObjectFactory;
+import combatgame.objects.Map;
+import combatgame.objects.Unit;
+import combatgame.widgets.Button;
 
 public abstract class Ability {
 
@@ -37,7 +36,7 @@ public abstract class Ability {
 	public Ability() {}
 	
 	public abstract List<GPoint> getTilesAttackable(Unit unit, Map map);
-	public abstract List<AttackedTile> getTilesAffected(GPoint tile, Map map);
+	public abstract List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking, GPoint tileTouched, Map map);
 	public void renderButton(Graphics2D g, int x, int y) {
 		abilityButton.render(g, x, y);
 	}

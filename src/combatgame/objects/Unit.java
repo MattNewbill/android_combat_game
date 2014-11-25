@@ -78,6 +78,9 @@ public abstract class Unit {
 			this.isDead=true;
 			map.getTile(this.xyCoordinate).clearUnit();
 		}
+		if(health > 100) {
+			this.health = 100;
+		}
 		return -d;
 	}
 	

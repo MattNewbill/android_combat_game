@@ -24,16 +24,19 @@ public class HealthIndicator {
 	
 	private boolean isFinished = false;
 	
-	public HealthIndicator(Map map, GPoint tile, int damageDone, Paint paint, int color) {
+	public HealthIndicator(Map map, GPoint tile, int damageDone, Paint paint) {
 		this.map = map;
 		this.tile = tile;
 		this.font = paint;
-		this.color = color;
 		
-		if(damageDone < 0)
+		if(damageDone < 0) {
 			text = "" + damageDone;
-		else
+			this.color = Color.RED;
+		}
+		else {
 			text = "+" + damageDone;
+			this.color = Color.GREEN;
+		}
 	}
 	
 	public void update() {
