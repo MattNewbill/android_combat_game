@@ -524,5 +524,12 @@ public class Map {
 		else
 			return null;
 	}
+	
+	/*Returns if the tile is within range on the map, leaving the map object as a parameter because there will be different sized maps and therefore may not be static*/
+	public static boolean isValidTile(int row, int col, Map map) {
+		if(row >= 0 && row < map.getNum_vertical_tiles() && col >= 0&& col < map.getNum_horizontal_tiles() && map.getTile(row, col).hasUnit() )
+			return true;
+		return false;
+	}
 
 }

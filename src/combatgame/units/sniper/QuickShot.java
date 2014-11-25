@@ -20,5 +20,12 @@ public class QuickShot extends BasicAttack {
 		this.damage = 50;
 		this.abilityCost = 6;
 		this.abilityButton = new Button(GameplayAssets.quickShotIcon, null, 0, 0);
+	}
+
+	@Override
+	public List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking, 
+			GPoint tileTouched, Map map) {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 }

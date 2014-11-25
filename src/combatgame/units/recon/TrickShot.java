@@ -25,9 +25,8 @@ public class TrickShot extends Ability {
 	}
 
 	@Override
-	public List<AttackedTile> getTilesAffected(GPoint tile, Map map) {
+	public List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking,  GPoint tile, Map map) {
 		attackedTiles.clear();
 		return null;
 	}
-
 }

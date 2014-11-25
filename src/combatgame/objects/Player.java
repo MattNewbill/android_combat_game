@@ -658,7 +658,7 @@ public class Player {
 					//decrement action points
 					units[selectedUnitIndex].usePoints(currentAbility.getCost());
 					//get the tiles that were affected by the attack
-					List<AttackedTile> tilesAffected = currentAbility.getTilesAffected(tileTouched, map);
+					List<AttackedTile> tilesAffected = currentAbility.getTilesAffected(units[selectedUnitIndex],tileTouched, map);
 					for(int j = 0; j < tilesAffected.size(); j++) {
 						MapTile tile = map.getTile(tilesAffected.get(j).tile);
 						if(tile.hasUnit()){//there is a unit on the tile
