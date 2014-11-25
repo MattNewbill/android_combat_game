@@ -19,10 +19,10 @@ public class Medic extends Unit {
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
 		this.rotationCost = 1;
-		this.abilities = new Ability[1];
+		this.abilities = new Ability[3];
 		abilities[0] = new PistolShot();
-		//abilities[1] = new SingleHeal();
-		//abilities[2] = new AreaHeal();
+		abilities[1] = new SingleHeal();
+		abilities[2] = new AreaHeal();
 	}
 	
 }

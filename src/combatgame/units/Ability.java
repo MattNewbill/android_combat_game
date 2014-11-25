@@ -1,16 +1,15 @@
 package combatgame.units;
 
-import combatgame.widgets.*;
-import combatgame.graphics.*;
-import combatgame.input.*;
-import combatgame.input.LazyPool.LazyPoolObjectFactory;
-import combatgame.input.Pool.PoolObjectFactory;
-import combatgame.objects.Map;
-import combatgame.objects.Unit;
-
 import java.util.ArrayList;
 import java.util.List;
-import android.graphics.Point;
+
+import combatgame.graphics.GPoint;
+import combatgame.graphics.Graphics2D;
+import combatgame.input.LazyPool;
+import combatgame.input.LazyPool.LazyPoolObjectFactory;
+import combatgame.objects.Map;
+import combatgame.objects.Unit;
+import combatgame.widgets.Button;
 
 public abstract class Ability {
 
