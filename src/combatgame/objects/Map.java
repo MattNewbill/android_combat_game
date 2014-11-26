@@ -509,6 +509,10 @@ public class Map {
 			return null;
 	}
 	
+	public boolean[][] getLightmap() {
+		return lightmap;
+	}
+	
 	public Unit getUnit(int unitId) {
 		Unit p1Unit = player1.getUnit(unitId);
 		Unit p2Unit = player2.getUnit(unitId);
