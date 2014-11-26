@@ -13,6 +13,7 @@ public class UnitInfoDrawableButton extends Button {
 	
 	private String ability_points = "";
 	private String hp = "";
+	private String armor = "";
 	private String unit_type = "";
 	
 	public UnitInfoDrawableButton(Paint paint, Bitmap disarmedImage, Bitmap armedImage, int x, int y) {
@@ -30,8 +31,9 @@ public class UnitInfoDrawableButton extends Button {
 	public void render(Graphics2D g) {
 		super.render(g);
 		g.drawText(unit_type, x + 10, y + 30, paint);
-		g.drawText(hp, x + 10, y + 65, paint);
-		g.drawText(ability_points, x + 10, y + 100, paint);
+		g.drawText(hp, x + 10, y + 60, paint);
+		g.drawText(armor, x + 10, y + 90, paint);
+		g.drawText(ability_points, x + 10, y + 120, paint);
 		
 	}
 
@@ -40,6 +42,7 @@ public class UnitInfoDrawableButton extends Button {
 		super.disable();
 		ability_points = "";
 		hp = "";
+		armor = "";
 		unit_type = "";
 	}
 
@@ -51,6 +54,14 @@ public class UnitInfoDrawableButton extends Button {
 	public void updateTextInfo(Unit unit) {
 		ability_points = "AP: " + unit.getPointsLeft() + " / " + Unit.POINTS_PER_TURN;
 		hp = "HP: " + unit.getHealth() + " / " + unit.getMaxHealth();
+		armor = "AR: " + unit.getArmor();
+		unit_type = unit.getName();
+	}
+	
+	public void updateEnemyTextInfo(Unit unit) {
+		ability_points = "";
+		hp = "HP: " + unit.getHealth() + " / " + unit.getMaxHealth();
+		armor = "AR: " + unit.getArmor();
 		unit_type = unit.getName();
 	}
 	

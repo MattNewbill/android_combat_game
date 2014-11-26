@@ -19,7 +19,7 @@ public abstract class BasicAttack extends Ability {
 			return null;
 		tilesAttackable.clear();
 		List<GPoint> temp = Vision.getSprintVision(map, unit);
-		for(int i = 0; i < temp.size(); i++) {
+		for(int i = 1; i < temp.size(); i++) {
 			tilesAttackable.add(temp.get(i));
 		}
 		return tilesAttackable;

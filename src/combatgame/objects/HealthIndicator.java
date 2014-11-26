@@ -24,18 +24,22 @@ public class HealthIndicator {
 	
 	private boolean isFinished = false;
 	
-	public HealthIndicator(Map map, GPoint tile, int damageDone, Paint paint) {
+	public HealthIndicator(Map map, GPoint tile, int yOffset, int damageDone, Paint paint, boolean isArmor) {
 		this.map = map;
 		this.tile = tile;
+		this.yOffset = yOffset;
 		this.font = paint;
 		
 		if(damageDone < 0) {
+			if(isArmor)
+				this.color = Color.BLUE;
+			else
+				this.color = Color.RED;
 			text = "" + damageDone;
-			this.color = Color.RED;
 		}
 		else {
-			text = "+" + damageDone;
 			this.color = Color.GREEN;
+			text = "+" + damageDone;
 		}
 	}
 	

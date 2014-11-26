@@ -71,8 +71,22 @@ public abstract class Unit {
 	public boolean isDead() {
 		return this.isDead;	}
 	
-	public int takeDamage(int d, Map map) {
-		this.health -= d;
+	public DamageDealt takeDamage(int d, Map map) {
+		int damageAbsorbedByArmor = 0;
+		int damageToHealth = 0;
+		boolean isAttack = false;
+		if(d > 0) {//we are doing damage, so check our armor
+			isAttack = true;
+			if(armor > 0) {
+				damageAbsorbedByArmor =  (int) (d * (armor / 100.0));
+			}
+			damageToHealth = d - damageAbsorbedByArmor;
+		}
+		else {
+			damageToHealth = d;
+		}
+		this.health -= damageToHealth;
+		this.armor -= damageAbsorbedByArmor;
 		
 		if(health<=0) {
 			this.isDead=true;
@@ -81,7 +95,7 @@ public abstract class Unit {
 		if(health > maxHealth) {
 			this.health = maxHealth;
 		}
-		return -d;
+		return new DamageDealt(-damageToHealth, - damageAbsorbedByArmor, isAttack);
 	}
 	
 	public void heal(int h) {

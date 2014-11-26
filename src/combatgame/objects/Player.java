@@ -55,6 +55,8 @@ public class Player {
 	private Unit[] units;
 	private int selectedUnitIndex = -1;
 	private int spawnUnitIndex = 0; //index of next unit that needs to be spawned in (setup phase)
+	private Unit enemyUnitSelected = null; // enemy unit we currently have selected
+	
 	private Map map;
 	
 	//hud icons
@@ -303,6 +305,8 @@ public class Player {
 		//update the unit info button's text
 		if(selectedUnitIndex != -1)
 			unitInfoButton.updateTextInfo(units[selectedUnitIndex]);
+		if(enemyUnitSelected != null)
+			unitInfoButton.updateEnemyTextInfo(enemyUnitSelected);
 		
 		//what action is the player currently doing
 		switch(currentAction) {
@@ -353,6 +357,7 @@ public class Player {
 		if(deselectButton.state == Button.ACTIVATED) {
 			deselectButton.disarm();
 			selectedUnitIndex = -1; //deselect the unit
+			enemyUnitSelected = null;
 			currentAction = SELECTION;
 			disableButtons(); //disable hud buttons
 		}
@@ -502,13 +507,33 @@ public class Player {
 					movementPoints = null;
 					selectedUnitIndex = i;
 					isUnitSelected = true;
+					enemyUnitSelected = null;
 					enableButtons();
 					break;
+				}
+			}
+			//check to see if we selected an enemy unit that was visible
+			boolean[][] lightmap = map.getLightmap();
+			for(int row = 0; row < lightmap.length; row++) {
+				for(int col = 0; col < lightmap[0].length; col++) {
+					if(lightmap[row][col] && tileTouched.row == row && tileTouched.col == col) {
+						if(map.getTile(row, col).hasUnit() && map.getTile(row, col).getPlayer_id() != playerId) {
+							enemyUnitSelected = map.getUnit(map.getTile(row, col).getUnit_id());
+							unitInfoButton.disable();
+							moveButton.disable();
+							abilityButton.disable();
+							deselectButton.enable();
+							isUnitSelected = true;
+							selectedUnitIndex = -1;
+							break;
+						}
+					}
 				}
 			}
 			//if none of our units were selected then we deselect the currently selected unit
 			if(!isUnitSelected) {
 				selectedUnitIndex = -1;
+				enemyUnitSelected = null;
 				disableButtons();
 			}
 		}
@@ -670,9 +695,12 @@ public class Player {
 								Unit unit = map.getUnit(unitId);
 								//reduce unit health by attack dmg
 								if(unit != null) {
-									int damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
-									healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), damageDone, indicatorPaint));
-									if(units[selectedUnitIndex] != unit && damageDone < 0) //don't send indicator for heals
+									DamageDealt damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
+									healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), 30, damageDone.healthDamage, indicatorPaint, false));
+									if(damageDone.isAttack && damageDone.armorDamage < 0) {
+										healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), 0, damageDone.armorDamage, indicatorPaint, true));
+									}
+									if(units[selectedUnitIndex] != unit && damageDone.isAttack) //don't send indicator for heals
 										map.sendHitIndicator(new HitIndicator(units[selectedUnitIndex], unit, tilesAffected.get(j).tile, map), unit);
 								}
 							}
@@ -729,6 +757,9 @@ public class Player {
 				g.drawBitmap(units[i].getSprite(), coordinate.col * map.getTileWidthInPx() - map.getMapOffsetX(), coordinate.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 			}
 		}
+		
+		if(enemyUnitSelected != null)
+			g.drawBitmap(GameplayAssets.selectionOverlay, enemyUnitSelected.getXYCoordinate().col * map.getTileWidthInPx() - map.getMapOffsetX(), enemyUnitSelected.getXYCoordinate().row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 		
 		//---------------------------------------
 		//--Render ability overlays if the user is trying to use one
