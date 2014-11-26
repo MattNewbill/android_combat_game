@@ -7,7 +7,7 @@ import combatgame.util.Util;
 
 public class Recon extends Unit {
 
-	public Recon(int player_id, String name) {
+	public Recon(int player_id, String name, boolean isPlayerOne) {
 		this.name = name;
 		this.player_id = player_id;
 		this.unit_id = (int)System.currentTimeMillis() + Util.getRand(); //TODO: id system...
@@ -16,10 +16,14 @@ public class Recon extends Unit {
 		this.health = 100;
 		this.armor = 25;
 		this.isDead=false;
-		this.sprites = GameplayAssets.reconIcons;
+		if(isPlayerOne)
+			this.sprites = GameplayAssets.reconIconsP1;
+		else
+			this.sprites = GameplayAssets.reconIconsP2;
 		this.maxHealth = 100;
 		this.pointsLeft = POINTS_PER_TURN;
 		this.rotationCost = 1;
+		this.unit_type = UnitType.RECON;
 		this.abilities = new Ability[2];
 		abilities[0] = new StraightShot();
 		abilities[1] = new TrickShot();

@@ -21,6 +21,15 @@ public abstract class Unit {
 	protected Ability[] abilities;
 	protected int rotationCost;
 	
+	protected UnitType unit_type;
+	public static enum UnitType {
+		ASSAULT,
+		CQC,
+		MEDIC,
+		RECON,
+		SNIPER	
+	};
+	
 	public static final int POINTS_PER_TURN = 9;
 	
 	public static final int FACING_UP = 0;
@@ -51,6 +60,10 @@ public abstract class Unit {
 		return maxHealth;
 	}
 
+	public UnitType getUnitType() {
+		return unit_type;
+	}
+	
 	public void setMaxHealth(int maxHealth) {
 		this.maxHealth = maxHealth;
 	}
@@ -75,16 +88,17 @@ public abstract class Unit {
 		int damageAbsorbedByArmor = 0;
 		int damageToHealth = 0;
 		boolean isAttack = false;
-		if(d > 0) {//we are doing damage, so check our armor
+		if(d > 0) { //we are doing damage, so check our armor
 			isAttack = true;
 			if(armor > 0) {
-				damageAbsorbedByArmor =  (int) (d * (armor / 100.0));
+				damageAbsorbedByArmor =  (int) (d * (armor / 100.0) + 0.5);
 			}
 			damageToHealth = d - damageAbsorbedByArmor;
 		}
-		else {
+		else { //healing "attack"
 			damageToHealth = d;
 		}
+		
 		this.health -= damageToHealth;
 		this.armor -= damageAbsorbedByArmor;
 		
@@ -99,13 +113,6 @@ public abstract class Unit {
 			this.health = maxHealth;
 		}
 		return new DamageDealt(-damageToHealth, - damageAbsorbedByArmor, isAttack);
-	}
-	
-	public void heal(int h) {
-		this.health += h;
-		
-		if(health>maxHealth)
-			this.health=maxHealth;
 	}
 	
 	public int getDirectionFacing() {

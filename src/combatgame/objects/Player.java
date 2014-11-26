@@ -98,11 +98,11 @@ public class Player {
 		this.map = map;
 		
 		//just adding stock units for test purposes
-		units[0] = new Assault(playerId, "Assault Alpha");
-		units[1] = new Recon(playerId, "Recon Alpha");
-		units[2] = new CQC(playerId, "CQC Alpha");
-		units[3] = new Sniper(playerId, "Sniper Alpha");
-		units[4] = new Medic(playerId, "Medic Alpha");
+		units[0] = new Assault(playerId, "Assault Alpha", isPlayerOne);
+		units[1] = new Recon(playerId, "Recon Alpha", isPlayerOne);
+		units[2] = new CQC(playerId, "CQC Alpha", isPlayerOne);
+		units[3] = new Sniper(playerId, "Sniper Alpha", isPlayerOne);
+		units[4] = new Medic(playerId, "Medic Alpha", isPlayerOne);
 		
 		//indicator font
 		indicatorPaint = new Paint();

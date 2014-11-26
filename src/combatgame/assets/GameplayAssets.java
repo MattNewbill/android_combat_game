@@ -15,11 +15,16 @@ import android.content.res.AssetManager;
 public class GameplayAssets {
 
 	//class icons
-	public static Bitmap[] sniperIcons = new Bitmap[4];
-	public static Bitmap[] assaultIcons = new Bitmap[4];
-	public static Bitmap[] reconIcons = new Bitmap[4];
-	public static Bitmap[] cqbIcons = new Bitmap[4];
-	public static Bitmap[] medicIcons = new Bitmap[4];
+	public static Bitmap[] sniperIconsP1 = new Bitmap[4];
+	public static Bitmap[] assaultIconsP1 = new Bitmap[4];
+	public static Bitmap[] reconIconsP1 = new Bitmap[4];
+	public static Bitmap[] cqcIconsP1 = new Bitmap[4];
+	public static Bitmap[] medicIconsP1 = new Bitmap[4];
+	public static Bitmap[] sniperIconsP2 = new Bitmap[4];
+	public static Bitmap[] assaultIconsP2 = new Bitmap[4];
+	public static Bitmap[] reconIconsP2 = new Bitmap[4];
+	public static Bitmap[] cqcIconsP2 = new Bitmap[4];
+	public static Bitmap[] medicIconsP2 = new Bitmap[4];
 	
 	//hud icons
 	public static Bitmap unitInfoIcon;
@@ -106,26 +111,46 @@ public class GameplayAssets {
 			Options options = new BitmapFactory.Options();
 		    options.inScaled = false;
 			
-			sniperIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_up.png"), null, options);
-			sniperIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_right.png"), null, options);
-			sniperIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_down.png"), null, options);
-			sniperIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_left.png"), null, options);
-			assaultIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_up.png"), null, options);
-			assaultIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_right.png"), null, options);
-			assaultIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_down.png"), null, options);
-			assaultIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_left.png"), null, options);
-			reconIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_up.png"), null, options);
-			reconIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_right.png"), null, options);
-			reconIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_down.png"), null, options);
-			reconIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_left.png"), null, options);
-			cqbIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqb_up.png"), null, options);
-			cqbIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqb_right.png"), null, options);
-			cqbIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqb_down.png"), null, options);
-			cqbIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqb_left.png"), null, options);
-			medicIcons[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_up.png"), null, options);
-			medicIcons[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_right.png"), null, options);
-			medicIcons[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_down.png"), null, options);
-			medicIcons[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_left.png"), null, options);
+			sniperIconsP1[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_up_p1.png"), null, options);
+			sniperIconsP1[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_right_p1.png"), null, options);
+			sniperIconsP1[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_down_p1.png"), null, options);
+			sniperIconsP1[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_left_p1.png"), null, options);
+			assaultIconsP1[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_up_p1.png"), null, options);
+			assaultIconsP1[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_right_p1.png"), null, options);
+			assaultIconsP1[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_down_p1.png"), null, options);
+			assaultIconsP1[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_left_p1.png"), null, options);
+			reconIconsP1[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_up_p1.png"), null, options);
+			reconIconsP1[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_right_p1.png"), null, options);
+			reconIconsP1[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_down_p1.png"), null, options);
+			reconIconsP1[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_left_p1.png"), null, options);
+			cqcIconsP1[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqc_up_p1.png"), null, options);
+			cqcIconsP1[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqc_right_p1.png"), null, options);
+			cqcIconsP1[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqc_down_p1.png"), null, options);
+			cqcIconsP1[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqc_left_p1.png"), null, options);
+			medicIconsP1[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_up_p1.png"), null, options);
+			medicIconsP1[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_right_p1.png"), null, options);
+			medicIconsP1[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_down_p1.png"), null, options);
+			medicIconsP1[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_left_p1.png"), null, options);
+			sniperIconsP2[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_up_p2.png"), null, options);
+			sniperIconsP2[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_right_p2.png"), null, options);
+			sniperIconsP2[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_down_p2.png"), null, options);
+			sniperIconsP2[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/sniper_left_p2.png"), null, options);
+			assaultIconsP2[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_up_p2.png"), null, options);
+			assaultIconsP2[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_right_p2.png"), null, options);
+			assaultIconsP2[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_down_p2.png"), null, options);
+			assaultIconsP2[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/assault_left_p2.png"), null, options);
+			reconIconsP2[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_up_p2.png"), null, options);
+			reconIconsP2[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_right_p2.png"), null, options);
+			reconIconsP2[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_down_p2.png"), null, options);
+			reconIconsP2[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/recon_left_p2.png"), null, options);
+			cqcIconsP2[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqc_up_p2.png"), null, options);
+			cqcIconsP2[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqc_right_p2.png"), null, options);
+			cqcIconsP2[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqc_down_p2.png"), null, options);
+			cqcIconsP2[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/cqc_left_p2.png"), null, options);
+			medicIconsP2[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_up_p2.png"), null, options);
+			medicIconsP2[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_right_p2.png"), null, options);
+			medicIconsP2[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_down_p2.png"), null, options);
+			medicIconsP2[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_left_p2.png"), null, options);
 			
 			unitInfoIcon = BitmapFactory.decodeStream(am.open("sprites/hud/unit_info_icon.png"), null, options);
 			moveIcon = BitmapFactory.decodeStream(am.open("sprites/hud/move_icon.png"), null, options);
@@ -247,17 +272,29 @@ public class GameplayAssets {
 	}*/
 	
 	public static void dispose() {
-		for(int i = 0; i < sniperIcons.length; i++) {
-			if(sniperIcons[i] != null)
-				sniperIcons[i].recycle();
-			if(assaultIcons[i] != null)
-				assaultIcons[i].recycle();
-			if(reconIcons[i] != null)
-				reconIcons[i].recycle();
-			if(cqbIcons[i] != null)
-				cqbIcons[i].recycle();
-			if(medicIcons[i] != null)
-				medicIcons[i].recycle();
+		for(int i = 0; i < sniperIconsP1.length; i++) {
+			if(sniperIconsP1[i] != null)
+				sniperIconsP1[i].recycle();
+			if(assaultIconsP1[i] != null)
+				assaultIconsP1[i].recycle();
+			if(reconIconsP1[i] != null)
+				reconIconsP1[i].recycle();
+			if(cqcIconsP1[i] != null)
+				cqcIconsP1[i].recycle();
+			if(medicIconsP1[i] != null)
+				medicIconsP1[i].recycle();
+		}
+		for(int i = 0; i < sniperIconsP2.length; i++) {
+			if(sniperIconsP2[i] != null)
+				sniperIconsP2[i].recycle();
+			if(assaultIconsP2[i] != null)
+				assaultIconsP2[i].recycle();
+			if(reconIconsP2[i] != null)
+				reconIconsP2[i].recycle();
+			if(cqcIconsP2[i] != null)
+				cqcIconsP2[i].recycle();
+			if(medicIconsP2[i] != null)
+				medicIconsP2[i].recycle();
 		}
 		
 		if(unitInfoIcon != null)
