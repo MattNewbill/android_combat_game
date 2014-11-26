@@ -6,6 +6,7 @@ import combatgame.units.Ability;
 import combatgame.util.Util;
 
 public class Recon extends Unit {
+	
 
 	public Recon(int player_id, String name, boolean isPlayerOne) {
 		this.name = name;
