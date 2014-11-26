@@ -5,16 +5,11 @@ import combatgame.objects.Unit;
 import combatgame.units.Ability;
 import combatgame.util.Util;
 
-/**
- * **NOT HAPPY**
- * TODO: Potentially get a better unit id
- */
-
 public class Sniper extends Unit {
 	public Sniper (int player_id, String name) {
 		this.name = name;
 		this.player_id = player_id;
-		this.unit_id = (int)System.currentTimeMillis() + Util.getRand(); //TODO
+		this.unit_id = (int)System.currentTimeMillis() + Util.getRand(); //TODO: id system...
 		this.movementCost = 2;
 		this.visionRadius = 6;
 		this.health = 100;

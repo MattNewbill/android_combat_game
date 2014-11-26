@@ -1,9 +1,5 @@
 package combatgame.objects;
 
-/**
- * **HAPPY**
- */
-
 public class MapFeature {
 	private boolean isPassable;
 	private boolean isSeethrough;

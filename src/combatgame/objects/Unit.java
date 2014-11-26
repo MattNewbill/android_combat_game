@@ -4,10 +4,6 @@ import combatgame.graphics.*;
 import combatgame.units.Ability;
 import android.graphics.Bitmap;
 
-/**
- * **HAPPY**
- */
-
 public abstract class Unit {
 	protected String name;
 	protected int player_id = -1;
@@ -78,8 +74,8 @@ public abstract class Unit {
 			this.isDead=true;
 			map.getTile(this.xyCoordinate).clearUnit();
 		}
-		if(health > 100) {
-			this.health = 100;
+		if(health > maxHealth) {
+			this.health = maxHealth;
 		}
 		return -d;
 	}
@@ -87,8 +83,8 @@ public abstract class Unit {
 	public void heal(int h) {
 		this.health += h;
 		
-		if(health>100)
-			this.health=100;
+		if(health>maxHealth)
+			this.health=maxHealth;
 	}
 	
 	public int getDirectionFacing() {

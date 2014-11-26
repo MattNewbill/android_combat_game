@@ -11,10 +11,6 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-/**
- * **HAPPY**
- */
-
 public class AboutState extends State {
 
 	Button backButton;

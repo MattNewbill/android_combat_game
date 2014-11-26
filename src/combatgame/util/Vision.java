@@ -7,16 +7,9 @@ import java.util.*;
 import combatgame.graphics.GPoint;
 import combatgame.input.LazyPool;
 import combatgame.input.LazyPool.LazyPoolObjectFactory;
-import combatgame.input.Pool;
-import combatgame.input.TouchEvent;
-import combatgame.input.Pool.PoolObjectFactory;
 import combatgame.objects.Map;
 import combatgame.objects.Unit;
 import android.util.Log;
-
-/**
- * **HAPPY**
- */
 
 public class Vision
 {

@@ -2,13 +2,6 @@ package combatgame.objects;
 
 import android.util.Log;
 
-/**
- * **HAPPY**
- */
-
-/*
- * Individual tile of Map, contains properties to determine game flow
- */
 public class MapTile {
 	private MapFeature	feature;
 	private boolean hasUnit;

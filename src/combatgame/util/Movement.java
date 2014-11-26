@@ -8,10 +8,6 @@ import combatgame.objects.*;
 import combatgame.objects.Map;
 import combatgame.graphics.GPoint;
 
-/**
- * **HAPPY**
- */
-
 public class Movement
 {
 //	private static int[][]map;

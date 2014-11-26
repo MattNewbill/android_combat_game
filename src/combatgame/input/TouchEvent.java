@@ -1,9 +1,5 @@
 package combatgame.input;
 
-/**
- * **HAPPY**
- */
-
 public class TouchEvent {
 	
 	public static final int TOUCH_DOWN = 0; //six points for the Eagles!!

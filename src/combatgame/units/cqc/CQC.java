@@ -10,7 +10,7 @@ public class CQC extends Unit {
 	public CQC(int player_id, String name) {
 		this.name = name;
 		this.player_id = player_id;
-		this.unit_id = (int)System.currentTimeMillis() + Util.getRand(); //TODO
+		this.unit_id = (int)System.currentTimeMillis() + Util.getRand(); //TODO: id system....
 		this.movementCost = 3;
 		this.visionRadius = 3;
 		this.health = 100;

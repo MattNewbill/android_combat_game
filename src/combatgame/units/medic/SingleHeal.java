@@ -69,8 +69,14 @@ public class SingleHeal extends Ability {
 		return attackedTiles;
 	}
 	
-	//heal one tile for 40 damage
-	//cost = 5;
-	//range = 1;
+	public boolean isValidTileToAttack(Unit unitWhoIsAttacking, GPoint tileToCheck, Map map) {
+		//check player id of units
+		if(map.getTile(tileToCheck).hasUnit()) {
+			int currentMapTilePlayerId = map.getTile(tileToCheck).getPlayer_id();
+			if(currentMapTilePlayerId == unitWhoIsAttacking.getPlayer_id())
+				return true;
+		}
+		return false;
+	}
 	
 }

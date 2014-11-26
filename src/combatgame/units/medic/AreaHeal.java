@@ -89,6 +89,10 @@ public class AreaHeal extends Ability {
 		
 		return attackedTiles;
 	}
+	
+	public boolean isValidTileToAttack(Unit unitWhoIsAttacking, GPoint tileToCheck, Map map) {
+		return true;
+	}
 
 	//15 heal to 8 surrounding tiles
 	//cost = 5

@@ -21,11 +21,6 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.util.Log;
 
-/**
- * **NOT HAPPY**
- * TODO: get a better rendering system down for the fog of war overlays...
- */
-
 public class Map {
 	
 	//gamestate that created us

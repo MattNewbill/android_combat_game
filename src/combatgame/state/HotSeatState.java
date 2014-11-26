@@ -15,10 +15,6 @@ import android.graphics.Paint.Align;
 import android.util.Log;
 import android.content.res.AssetManager;
 
-/**
- * **HAPPY**
- */
-
 public class HotSeatState extends GameState {
 	
 	Map map;

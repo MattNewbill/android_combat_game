@@ -37,6 +37,7 @@ public abstract class Ability {
 	
 	public abstract List<GPoint> getTilesAttackable(Unit unit, Map map);
 	public abstract List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking, GPoint tileTouched, Map map);
+	public abstract boolean isValidTileToAttack(Unit unitWhoIsAttacking, GPoint tileToCheck, Map map);
 	public void renderButton(Graphics2D g, int x, int y) {
 		abilityButton.render(g, x, y);
 	}

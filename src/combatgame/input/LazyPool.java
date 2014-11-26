@@ -3,10 +3,6 @@ package combatgame.input;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * **HAPPY**
- */
-
 public class LazyPool<T> {
 	
 	public interface LazyPoolObjectFactory<T> {

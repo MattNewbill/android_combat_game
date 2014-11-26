@@ -12,10 +12,6 @@ import android.graphics.Color;
 import android.util.Log;
 import android.content.res.AssetManager;
 
-/**
- * **HAPPY**
- */
-
 public class GameplayAssets {
 
 	//class icons
@@ -59,6 +55,7 @@ public class GameplayAssets {
 		
 	//selection overlays
 	public static Bitmap attackOverlay;
+	public static Bitmap healOverlay;
 	public static Bitmap selectionOverlay;
 	public static Bitmap[] numberOverlays;
 	
@@ -158,6 +155,7 @@ public class GameplayAssets {
 			quickShotIcon = BitmapFactory.decodeStream(am.open("sprites/hud/ability_buttons/Sniper/quick_shot.png"), null, options);
 			
 			attackOverlay = BitmapFactory.decodeStream(am.open("sprites/tiles/attack_overlay.png"), null, options);
+			healOverlay = BitmapFactory.decodeStream(am.open("sprites/tiles/heal_overlay.png"), null, options);
 			selectionOverlay = BitmapFactory.decodeStream(am.open("sprites/tiles/selection_overlay.png"), null, options);
 			
 			numberOverlays = new Bitmap[10];
@@ -285,6 +283,10 @@ public class GameplayAssets {
 		if(rightRotateSetupIcon != null)
 			rightRotateSetupIcon.recycle();
 		
+		if(attackOverlay != null)
+			attackOverlay.recycle();
+		if(healOverlay != null)
+			healOverlay.recycle();
 		if(selectionOverlay != null)
 			selectionOverlay.recycle();
 		

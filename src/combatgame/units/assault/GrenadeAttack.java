@@ -29,10 +29,10 @@ public class GrenadeAttack extends Ability {
 		if(unit.getUnit_id() == -1)//checks to make sure the space has a valid unit
 			return null;
 		tilesAttackable.clear();
-		List<GPoint> tiles = Vision.getLaunchVision(map, unit, distance );
-		for(int i = 0; i < tiles.size(); i++)
-			tilesAttackable.add(tiles.get(i));
-		//check player id of units
+		List<GPoint> temp = Vision.getLaunchVision(map, unit, distance );
+		for(int i = 0; i < temp.size(); i++) {
+			tilesAttackable.add(temp.get(i));
+		}
 		return tilesAttackable;
 	}
 
@@ -99,6 +99,10 @@ public class GrenadeAttack extends Ability {
 		}
 		
 		return attackedTiles;
+	}
+	
+	public boolean isValidTileToAttack(Unit unitWhoIsAttacking, GPoint tileToCheck, Map map) {
+		return true;
 	}
 	
 	

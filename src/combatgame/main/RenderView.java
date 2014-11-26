@@ -1,10 +1,6 @@
 package combatgame.main;
 
-import java.text.DecimalFormat;
-
 import combatgame.graphics.*;
-import combatgame.util.Util;
-import android.content.Context;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.graphics.Bitmap;
@@ -14,10 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Color;
 import android.os.Debug;
 import android.util.Log;
-
-/**
- * **HAPPY**
- */
 
 public class RenderView extends SurfaceView implements Runnable {
 

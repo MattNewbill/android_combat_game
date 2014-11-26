@@ -9,10 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.util.Log;
 
-/**
- * **HAPPY**
- */
-
 public class Button {
 
 	public static final int DISARMED = 0;

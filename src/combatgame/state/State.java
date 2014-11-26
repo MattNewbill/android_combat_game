@@ -3,10 +3,6 @@ package combatgame.state;
 import combatgame.main.*;
 import combatgame.graphics.*;
 
-/**
- * **HAPPY**
- */
-
 public abstract class State {
 
 	StateManager stateManager;

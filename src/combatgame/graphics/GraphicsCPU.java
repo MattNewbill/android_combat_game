@@ -4,10 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-/**
- * **HAPPY**
- */
-
 public class GraphicsCPU implements Graphics2D {
 
 	Canvas drawingCanvas;

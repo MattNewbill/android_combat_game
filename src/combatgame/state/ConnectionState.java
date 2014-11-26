@@ -10,10 +10,6 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-/**
- * **HAPPY**
- */
-
 public class ConnectionState extends State {
 
 	public static final int V_BUTTON_MARGIN = 10;

@@ -4,10 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Bitmap;
 
-/**
- * **HAPPY**
- */
-
 public interface Graphics2D {
 
 	public void setCanvas(Canvas canvas);

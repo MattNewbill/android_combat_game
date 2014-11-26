@@ -9,10 +9,6 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 
-/**
- * **HAPPY**
- */
-
 public class Util {
 
 	private static Random rand = new Random(System.currentTimeMillis());

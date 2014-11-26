@@ -4,10 +4,6 @@ import combatgame.input.TouchHandler;
 import combatgame.main.*;
 import combatgame.state.State;
 
-/**
- * **HAPPY**
- */
-
 public interface StateManager {
 
 	public void setState(State state);

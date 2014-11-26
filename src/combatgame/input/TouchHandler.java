@@ -10,10 +10,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.util.Log;
 
-/**
- * **HAPPY**
- */
-
 public class TouchHandler implements OnTouchListener {
 
 	public static final int MAX_POOL_SIZE = 100;

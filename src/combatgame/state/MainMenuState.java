@@ -12,10 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-/**
- * **HAPPY**
- */
-
 public class MainMenuState extends State {
 
 	static final int V_BUTTON_MARGIN = 10;

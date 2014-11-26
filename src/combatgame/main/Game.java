@@ -19,11 +19,6 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Point;
 import android.util.Log;
 
-/**
- * **NOT HAPPY**
- * TODO: Find a way to propogate back button presses to each state in a clean way
- */
-
 public class Game extends Activity implements StateManager {
 
 	State currentState;
