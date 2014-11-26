@@ -18,7 +18,7 @@ public class GrenadeAttack extends Ability {
 	
 	public GrenadeAttack() {
 		this.damage = 35;
-		this.abilityCost = 7;
+		this.abilityCost = 6;
 		this.distance = 3;
 		this.splash = 1;
 		this.abilityButton = new Button(GameplayAssets.throwGrenadeIcon, null, 0, 0);
