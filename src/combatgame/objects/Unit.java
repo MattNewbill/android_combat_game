@@ -88,6 +88,9 @@ public abstract class Unit {
 		this.health -= damageToHealth;
 		this.armor -= damageAbsorbedByArmor;
 		
+		if(armor < 0) {
+			armor = 0;
+		}
 		if(health<=0) {
 			this.isDead=true;
 			map.getTile(this.xyCoordinate).clearUnit();
