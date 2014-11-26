@@ -25,8 +25,8 @@ public class AboutState extends State {
 		//load assets
 		AssetManager am = stateManager.getAssetManager();
 		try {		
-			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button.png"));
-			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button_armed.png"));
+			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
+			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			contributors = BitmapFactory.decodeStream(am.open("images/about_us/awesome_contributors.png"));
 			
 			int backButtonX = 0;

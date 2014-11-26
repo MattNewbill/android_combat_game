@@ -42,8 +42,8 @@ public class MapSelectionState extends State {
 		try {
 			Bitmap ok = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
 			Bitmap okArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));
-			Bitmap back = BitmapFactory.decodeStream(am.open("images/about_us/back_button.png"));
-			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/about_us/back_button_armed.png"));
+			Bitmap back = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
+			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			
 			int okButtonX = Game.G_WIDTH - ok.getWidth() - 25;
 			int okButtonY = Game.G_HEIGHT - ok.getHeight() - 15;
