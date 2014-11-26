@@ -1,6 +1,7 @@
 package combatgame.objects;
 
 import android.graphics.Bitmap;
+
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.GPoint;
 import combatgame.graphics.Graphics2D;
@@ -21,7 +22,7 @@ public class HitIndicator {
 		
 		//trick shot attack from recon class
 		if (TrickShot.ABILITY_TYPE.equals(currentAbility.getType())) {
-			int random_direction = Util.getRand() % 4;
+			int random_direction = Math.abs(Util.getRand() % 4);
 			switch (random_direction) {
 			case 0:
 				indicator = GameplayAssets.hitIndicatorUpIcon;
@@ -35,6 +36,8 @@ public class HitIndicator {
 			case 3:
 				indicator = GameplayAssets.hitIndicatorRightIcon;
 				break;
+			default:
+				throw new IllegalArgumentException();
 			}
 
 		} else {//regular attack
