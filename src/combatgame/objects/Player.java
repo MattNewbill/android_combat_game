@@ -701,7 +701,7 @@ public class Player {
 										healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), 0, damageDone.armorDamage, indicatorPaint, true));
 									}
 									if(units[selectedUnitIndex] != unit && damageDone.isAttack) //don't send indicator for heals
-										map.sendHitIndicator(new HitIndicator(units[selectedUnitIndex], unit, tilesAffected.get(j).tile, map), unit);
+										map.sendHitIndicator(new HitIndicator(units[selectedUnitIndex], currentAbility, unit, tilesAffected.get(j).tile, map), unit);
 								}
 							}
 						}

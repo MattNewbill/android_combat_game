@@ -15,10 +15,14 @@ public abstract class Ability {
 
 	protected int abilityCost;
 	protected int damage;
+	protected String type = null;
+	
+
 	protected List<GPoint> tilesAttackable = new ArrayList<GPoint>();
 	protected List<AttackedTile> attackedTiles = new ArrayList<AttackedTile>();
 	
 	protected Button abilityButton;
+	
 	
 	protected static LazyPool<AttackedTile> pool;
 	public static final int MAX_POOL_SIZE = 50;
@@ -52,5 +56,8 @@ public abstract class Ability {
 	
 	public int getDamage() {
 		return damage;
+	}
+	public String getType() {
+		return type;
 	}
 }
