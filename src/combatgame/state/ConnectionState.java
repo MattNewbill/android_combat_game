@@ -19,6 +19,8 @@ public class ConnectionState extends State {
 	Button hotSeatButton;
 	Button backButton;
 	
+	Bitmap background;
+	
 	public ConnectionState(StateManager sm) {
 		super(sm);
 		Game.shouldScale(true);
@@ -36,18 +38,20 @@ public class ConnectionState extends State {
 			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			
 			int internetButtonX = (Game.G_WIDTH / 2) - internetBitmapDisarmed.getWidth() / 2;
-			int internetButtonY = (int) (Game.G_HEIGHT / 2 - (internetBitmapDisarmed.getHeight() * 1.5));
+			int internetButtonY = (int) (Game.G_HEIGHT / 2 - (internetBitmapDisarmed.getHeight() - 50));
 			int bluetoothButtonX = (Game.G_WIDTH / 2) - bluetoothBitmapDisarmed.getWidth() / 2;
-			int bluetoothButtonY = (int) (Game.G_HEIGHT / 2 - (bluetoothBitmapDisarmed.getHeight() * 1.5) + V_BUTTON_MARGIN + internetBitmapDisarmed.getHeight());
+			int bluetoothButtonY = (int) (Game.G_HEIGHT / 2 - (bluetoothBitmapDisarmed.getHeight() - 50) + V_BUTTON_MARGIN + internetBitmapDisarmed.getHeight());
 			int hotSeatButtonX = (Game.G_WIDTH / 2) - hotSeatBitmapDisarmed.getWidth() / 2;
-			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (hotSeatBitmapDisarmed.getHeight() * 1.5) + (V_BUTTON_MARGIN * 2) + internetBitmapDisarmed.getHeight() + bluetoothBitmapDisarmed.getHeight());
-			int backButtonX = 0;
-			int backButtonY = Game.G_HEIGHT - backUnarmed.getHeight();
+			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (hotSeatBitmapDisarmed.getHeight() - 50) + (V_BUTTON_MARGIN * 2) + internetBitmapDisarmed.getHeight() + bluetoothBitmapDisarmed.getHeight());
+			int backButtonX = Game.G_HEIGHT - hotSeatButtonY - hotSeatBitmapDisarmed.getHeight();
+			int backButtonY = hotSeatButtonY;
 			
 			internetButton = new Button(internetBitmapDisarmed, internetBitmapArmed, internetButtonX, internetButtonY);
 			bluetoothButton = new Button(bluetoothBitmapDisarmed, bluetoothBitmapArmed, bluetoothButtonX, bluetoothButtonY);
 			hotSeatButton = new Button(hotSeatBitmapDisarmed, hotSeatBitmapArmed, hotSeatButtonX, hotSeatButtonY);
 			backButton = new Button(backUnarmed, backArmed, backButtonX, backButtonY);
+			
+			background = BitmapFactory.decodeStream(am.open("images/menu/background.png"));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -85,6 +89,9 @@ public class ConnectionState extends State {
 
 	@Override
 	public void render(Graphics2D g, float delta) {
+		//render background
+		g.drawBitmap(background, 0, 0, null);
+		
 		//draw internet connection button
 		internetButton.render(g);
 		

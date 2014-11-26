@@ -14,6 +14,7 @@ public class Medic extends Unit {
 		this.movementCost = 1;
 		this.visionRadius = 4;
 		this.health = 100;
+		this.armor = 25;
 		this.isDead=false;
 		this.sprites = GameplayAssets.medicIcons;
 		this.maxHealth = 100;

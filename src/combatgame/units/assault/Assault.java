@@ -6,6 +6,7 @@ import combatgame.units.Ability;
 import combatgame.util.Util;
 
 public class Assault extends Unit {
+	
 	public Assault (int player_id, String name) {
 		this.name = name;
 		this.player_id = player_id;
@@ -13,6 +14,7 @@ public class Assault extends Unit {
 		this.movementCost = 2;
 		this.visionRadius = 4;
 		this.health = 100;
+		this.armor = 50;
 		this.isDead=false;
 		this.sprites = GameplayAssets.assaultIcons;
 		this.maxHealth = 100;

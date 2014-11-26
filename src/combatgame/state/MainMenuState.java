@@ -20,6 +20,8 @@ public class MainMenuState extends State {
 	Button aboutButton;
 	Button exitButton;
 	
+	Bitmap background;
+	
 	public MainMenuState(StateManager stateManager) {
 		super(stateManager);
 		Game.shouldScale(true);
@@ -38,16 +40,18 @@ public class MainMenuState extends State {
 			
 			//determine button coordinates
 			int startButtonX = (Game.G_WIDTH / 2) - startButtonDisarmed.getWidth() / 2;
-			int startButtonY = (int) (Game.G_HEIGHT / 2 - (startButtonDisarmed.getHeight() * 1.5));
+			int startButtonY = (int) (Game.G_HEIGHT / 2 - (startButtonDisarmed.getHeight() - 50));
 			int aboutButtonX = (Game.G_WIDTH / 2) - aboutButtonDisarmed.getWidth() / 2;
-			int aboutButtonY = (int) (Game.G_HEIGHT / 2 - (aboutButtonDisarmed.getHeight() * 1.5) + V_BUTTON_MARGIN + startButtonDisarmed.getHeight());
+			int aboutButtonY = (int) (Game.G_HEIGHT / 2 - (aboutButtonDisarmed.getHeight() - 50) + V_BUTTON_MARGIN + startButtonDisarmed.getHeight());
 			int exitButtonX = (Game.G_WIDTH / 2) - exitButtonDisarmed.getWidth() / 2;
-			int exitButtonY = (int) (Game.G_HEIGHT / 2 - (exitButtonDisarmed.getHeight() * 1.5) + (V_BUTTON_MARGIN * 2) + startButtonDisarmed.getHeight() + aboutButtonDisarmed.getHeight());
+			int exitButtonY = (int) (Game.G_HEIGHT / 2 - (exitButtonDisarmed.getHeight() - 50) + (V_BUTTON_MARGIN * 2) + startButtonDisarmed.getHeight() + aboutButtonDisarmed.getHeight());
 			
 			//create actual buttons
 			startButton = new Button(startButtonDisarmed, startButtonArmed, startButtonX, startButtonY);
 			aboutButton = new Button(aboutButtonDisarmed, aboutButtonArmed, aboutButtonX, aboutButtonY);
 			exitButton = new Button(exitButtonDisarmed, exitButtonArmed, exitButtonX, exitButtonY);
+			
+			background = BitmapFactory.decodeStream(am.open("images/menu/background.png"));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -80,6 +84,9 @@ public class MainMenuState extends State {
 
 	@Override
 	public void render(Graphics2D g, float delta) {
+		//render background
+		g.drawBitmap(background, 0, 0, null);
+		
 		//draw start button
 		startButton.render(g);
 		

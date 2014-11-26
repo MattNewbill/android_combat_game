@@ -13,6 +13,7 @@ public class Sniper extends Unit {
 		this.movementCost = 2;
 		this.visionRadius = 6;
 		this.health = 100;
+		this.armor = 25;
 		this.isDead=false;
 		this.sprites = GameplayAssets.sniperIcons;
 		this.maxHealth = 100;

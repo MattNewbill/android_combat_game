@@ -12,6 +12,7 @@ public abstract class Unit {
 	protected int movementCost;
 	protected int visionRadius;
 	protected int health;
+	protected int armor;
 	protected boolean isDead;
 	protected int directionFacing;
 	protected Bitmap[] sprites;
@@ -60,6 +61,9 @@ public abstract class Unit {
 	public int getVisionRadius() {
 		return this.visionRadius;	}
 	
+	public int getArmor() {
+		return armor;
+	}
 	
 	public int getHealth() {
 		return this.health;	}

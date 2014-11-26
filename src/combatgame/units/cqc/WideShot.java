@@ -27,25 +27,25 @@ public class WideShot extends BasicAttack {
 	public List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking, GPoint tile, Map map) {
 		attackedTiles.clear();
 		GPoint tileInFrontofUnit = tile;
-		GPoint diagonalLeftTile = null;
-		GPoint diagonalRightTile = null;
+		GPoint leftTile = null;
+		GPoint rightTile = null;
 		
 		switch (UnitWhoIsAttacking.getDirectionFacing()) {
 		case Unit.FACING_UP: 
-			diagonalLeftTile = new GPoint(tile.row - 1, tile.col - 1);//upper left
-			diagonalRightTile = new GPoint(tile.row - 1, tile.col + 1);//upper right
+			leftTile = new GPoint(tile.row, tile.col - 1);//upper left
+			rightTile = new GPoint(tile.row, tile.col + 1);//upper right
 			break;
 		case Unit.FACING_DOWN:
-			diagonalLeftTile = new GPoint(tile.row + 1, tile.col + 1);//bottom right
-			diagonalRightTile = new GPoint(tile.row + 1, tile.col - 1);//bottom left
+			leftTile = new GPoint(tile.row, tile.col + 1);//bottom right
+			rightTile = new GPoint(tile.row, tile.col - 1);//bottom left
 			break;
 		case Unit.FACING_RIGHT:
-			diagonalLeftTile = new GPoint(tile.row - 1, tile.col + 1);//upper right
-			diagonalRightTile = new GPoint(tile.row + 1, tile.col + 1);//bottom right
+			leftTile = new GPoint(tile.row - 1, tile.col);//upper right
+			rightTile = new GPoint(tile.row + 1, tile.col);//bottom right
 			break;
 		case Unit.FACING_LEFT:
-			diagonalLeftTile = new GPoint(tile.row + 1, tile.col - 1);//bottom left
-			diagonalRightTile = new GPoint(tile.row - 1, tile.col - 1);//top left
+			leftTile = new GPoint(tile.row + 1, tile.col);//bottom left
+			rightTile = new GPoint(tile.row - 1, tile.col);//top left
 			break;
 		}
 		
@@ -53,16 +53,16 @@ public class WideShot extends BasicAttack {
 		tileInFrontofUnitAttacked.tile = tileInFrontofUnit; tileInFrontofUnitAttacked.damageTaken = this.damage;
 		attackedTiles.add(tileInFrontofUnitAttacked);
 		
-		if(diagonalLeftTile != null && Map.isValidTile(diagonalLeftTile.row, diagonalLeftTile.col, map)) {
-			AttackedTile diagonalLeftTileAttacked = pool.newObject();
-			diagonalLeftTileAttacked.tile = diagonalLeftTile; diagonalLeftTileAttacked.damageTaken = indirect_damage ;
-			attackedTiles.add(diagonalLeftTileAttacked);
+		if(leftTile != null && Map.isValidTile(leftTile.row, leftTile.col, map)) {
+			AttackedTile leftTileAttacked = pool.newObject();
+			leftTileAttacked.tile = leftTile; leftTileAttacked.damageTaken = indirect_damage ;
+			attackedTiles.add(leftTileAttacked);
 		}
 		
-		if(diagonalRightTile != null && Map.isValidTile(diagonalRightTile.row, diagonalRightTile.col, map)){
-			AttackedTile diagonalRightTileAttacked = pool.newObject();
-			diagonalRightTileAttacked.tile = diagonalRightTile; diagonalRightTileAttacked.damageTaken = indirect_damage;
-			attackedTiles.add(diagonalRightTileAttacked);
+		if(rightTile != null && Map.isValidTile(rightTile.row, rightTile.col, map)){
+			AttackedTile rightTileAttacked = pool.newObject();
+			rightTileAttacked.tile = rightTile; rightTileAttacked.damageTaken = indirect_damage;
+			attackedTiles.add(rightTileAttacked);
 		}
 		return attackedTiles;
 	}

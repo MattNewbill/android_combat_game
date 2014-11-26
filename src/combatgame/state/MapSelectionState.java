@@ -20,7 +20,7 @@ import combatgame.widgets.MapListView;
 
 public class MapSelectionState extends State {
 
-	Button okButton;
+	Button nextButton;
 	Button backButton;
 	
 	ListView listView;
@@ -40,8 +40,8 @@ public class MapSelectionState extends State {
 		
 		AssetManager am = stateManager.getAssetManager();
 		try {
-			Bitmap ok = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
-			Bitmap okArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));
+			Bitmap ok = BitmapFactory.decodeStream(am.open("images/interface_buttons/next_button.png"));
+			Bitmap okArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/next_button_armed.png"));
 			Bitmap back = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
 			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			
@@ -50,7 +50,7 @@ public class MapSelectionState extends State {
 			int backButtonX = okButtonX - back.getWidth() - 10;
 			int backButtonY = okButtonY;
 			
-			okButton = new Button(ok, okArmed, okButtonX, okButtonY);
+			nextButton = new Button(ok, okArmed, okButtonX, okButtonY);
 			backButton = new Button(back, backArmed, backButtonX, backButtonY);
 			
 			String[] mapList = am.list(mapPath);
@@ -77,7 +77,7 @@ public class MapSelectionState extends State {
 	@Override
 	public void update(float delta) {
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
-		events = okButton.update(events);
+		events = nextButton.update(events);
 		events = backButton.update(events);
 		listView.update(events);
 		
@@ -87,8 +87,8 @@ public class MapSelectionState extends State {
 			isCurrentMapThumbnailLoaded = false;
 		}
 		
-		if(okButton.state == Button.ACTIVATED) {
-			okButton.disarm();
+		if(nextButton.state == Button.ACTIVATED) {
+			nextButton.disarm();
 			//stateManager.setState(new GamemodeSelectionState(stateManager, mapPath+"/"+selectedMap));
 			stateManager.setState(new HotSeatState(stateManager, mapPath+"/"+selectedMap, "woodland", null));
 		}
@@ -103,7 +103,7 @@ public class MapSelectionState extends State {
 
 	@Override
 	public void render(Graphics2D g, float delta) {
-		okButton.render(g);
+		nextButton.render(g);
 		backButton.render(g);
 		listView.render(g);
 		
@@ -139,7 +139,7 @@ public class MapSelectionState extends State {
 
 	@Override
 	public void dispose() {
-		okButton.recycle();
+		nextButton.recycle();
 		backButton.recycle();
 	}
 

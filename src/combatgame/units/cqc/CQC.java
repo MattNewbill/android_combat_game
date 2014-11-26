@@ -14,6 +14,7 @@ public class CQC extends Unit {
 		this.movementCost = 3;
 		this.visionRadius = 3;
 		this.health = 100;
+		this.armor = 75;
 		this.isDead=false;
 		this.sprites = GameplayAssets.cqbIcons;
 		this.maxHealth = 100;

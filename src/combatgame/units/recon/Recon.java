@@ -14,6 +14,7 @@ public class Recon extends Unit {
 		this.movementCost = 1;
 		this.visionRadius = 5;
 		this.health = 100;
+		this.armor = 25;
 		this.isDead=false;
 		this.sprites = GameplayAssets.reconIcons;
 		this.maxHealth = 100;
