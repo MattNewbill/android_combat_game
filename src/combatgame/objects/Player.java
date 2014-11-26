@@ -903,7 +903,7 @@ public class Player {
 		//otherwise scroll to the selected unit (if there is no selected unit, pick a new unit to be selected and scroll to him), reset action points
 		else {
 			healthIndicators.clear(); //remove any indicators if we had any
-			
+			enemyUnitSelected = null;
 			for(int i = 0; i < units.length; i++)
 				units[i].resetPoints();
 			
