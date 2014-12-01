@@ -8,6 +8,7 @@ import combatgame.objects.Map;
 import combatgame.objects.Unit;
 import combatgame.units.Ability;
 import combatgame.units.AttackedTile;
+import combatgame.util.Vision;
 import combatgame.widgets.Button;
 
 public class SingleHeal extends Ability {
@@ -20,8 +21,9 @@ public class SingleHeal extends Ability {
 
 	@Override
 	public List<GPoint> getTilesAttackable(Unit unit, Map map) {
+		List<GPoint> temp;
 		tilesAttackable.clear();
-		GPoint tileOfUnit = unit.getXYCoordinate();
+/*		GPoint tileOfUnit = unit.getXYCoordinate();
 		GPoint tileInFrontofUnit = null;
 		GPoint diagonalLeftTile = null;
 		GPoint diagonalRightTile = null;
@@ -58,7 +60,10 @@ public class SingleHeal extends Ability {
 		
 		if(diagonalRightTile != null && Map.isValidTile(diagonalRightTile.row, diagonalRightTile.col, map)){
 			tilesAttackable.add(diagonalRightTile);
-		}
+		} 
+*/
+		temp = Vision.getSprintVision( map, unit, 1 );
+		tilesAttackable.addAll(temp);
 		return tilesAttackable;
 	}
 
