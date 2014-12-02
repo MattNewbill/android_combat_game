@@ -363,10 +363,21 @@ public class Player {
 		}
 		//ends the turn
 		if(endTurnButton.state == Button.ACTIVATED) {
+			//TODO: add a "are you sure you want to finish your turn" dialog thingy
 			hitIndicators.clear(); //remove any hit indicators
 			endTurnButton.disarm();
 			map.switchTurn();
-		}
+		}	
+		/*
+		 (3,0]: reset bits to 0
+		    (6,3]: flip bits
+		    (9,6]: set bits to 1
+		   (12,9]: leave unchanged
+		  (15,12]: swap with (18,15]
+		  (18,15]: swap with (15,12]
+		  (32,18]: leave unchanged
+			*/																						// 0x000001C0U 
+		//return n & 0xFFFC0000U | n<<3 & 0x00038000U | (n&0x00038000U) >> 3 | n & 0x00000E00U | (1U<<9) - (1U<<6) | ~n & (1U<<6)-(1U<<3);
 		return events;
 	}
 	
@@ -567,7 +578,7 @@ public class Player {
 				if(i == selectedUnitIndex)
 					continue;
 				unitTile = units[i].getXYCoordinate();
-				if(tileTouched.equals(unitTile)) {
+				if(tileTouched.equals(unitTile) && !units[i].isDead()) {
 					selectedUnitIndex = i;
 					movementPoints = null;
 					return;
