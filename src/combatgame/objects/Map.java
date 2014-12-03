@@ -1,5 +1,6 @@
 package combatgame.objects;
 
+import combatgame.alerts.HitIndicator;
 import combatgame.assets.GameplayAssets;
 import combatgame.gamemode.GameMode;
 import combatgame.graphics.*;

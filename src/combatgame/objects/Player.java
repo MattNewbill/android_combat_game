@@ -8,6 +8,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
+import combatgame.alerts.APNotification;
+import combatgame.alerts.HealthIndicator;
+import combatgame.alerts.HitIndicator;
+import combatgame.alerts.Notification;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
@@ -69,10 +73,11 @@ public class Player {
 	private Button spawnUnitButton;
 	private Button respawnUnitButton;
 	
-	//damage indicators
+	//damage indicators/notifications
 	private Paint indicatorPaint;
 	private List<HealthIndicator> healthIndicators = new LinkedList<HealthIndicator>();
 	private List<HitIndicator> hitIndicators = new ArrayList<HitIndicator>();
+	private List<Notification> notifications = new ArrayList<Notification>();
 	
 	//movement hud icons
 	private Button movementButton;
@@ -83,7 +88,9 @@ public class Player {
 	
 	//determine presses vs scrolls
 	private TouchEvent previousEvent;
+	private TouchEvent previousTouchDownEvent;
 	private GPoint previousTouchDownTile;
+	public static final int INELIGIBLE_TOUCH_DISTANCE = 10;
 	
 	//attack and heal overlays on the attackable tiles
 	private Paint attackOverlayPaint;
@@ -297,6 +304,13 @@ public class Player {
 				i--;
 			}
 		}
+		for(int i = 0; i < notifications.size(); i++) {
+			notifications.get(i).update();
+			if(notifications.get(i).isFinished()) {
+				notifications.remove(i);
+				i--;
+			}
+		}
 		
 		//----------------------------------------
 		//--TURN BASED GAME LOGIC--
@@ -368,16 +382,6 @@ public class Player {
 			endTurnButton.disarm();
 			map.switchTurn();
 		}	
-		/*
-		 (3,0]: reset bits to 0
-		    (6,3]: flip bits
-		    (9,6]: set bits to 1
-		   (12,9]: leave unchanged
-		  (15,12]: swap with (18,15]
-		  (18,15]: swap with (15,12]
-		  (32,18]: leave unchanged
-			*/																						// 0x000001C0U 
-		//return n & 0xFFFC0000U | n<<3 & 0x00038000U | (n&0x00038000U) >> 3 | n & 0x00000E00U | (1U<<9) - (1U<<6) | ~n & (1U<<6)-(1U<<3);
 		return events;
 	}
 	
@@ -394,8 +398,10 @@ public class Player {
 			//loop through our TouchEvents
 			for(int i = 0; i < events.size(); i++) {
 				//record the last time we touched down on the screen
-				if(events.get(i).type == TouchEvent.TOUCH_DOWN)
+				if(events.get(i).type == TouchEvent.TOUCH_DOWN) {
+					previousTouchDownEvent = events.get(i);
 					previousTouchDownTile = map.getTileTouched(events.get(i));
+				}
 				//if our previousEvent pointer is null then copy the first TouchEvent into it
 				if(previousEvent == null) {
 					previousEvent = new TouchEvent();
@@ -409,18 +415,22 @@ public class Player {
 					//call the map to get the exact tile that was touched
 					pointTouched = map.getTileTouched(events.get(i));
 					isUsed = true; //we used this touch event
-					//if(pointTouched != null) {
-					//Log.i("combatgame", "row: " + pointTouched.row);
-					//Log.i("combatgame", "col: " + pointTouched.col);
-					//}
-					//the point is null if the point touched was out of bounds
-					//else {
-					//Log.i("combatgame", "out of bounds");
-					//}
 				}
 				//we did not use this particular touch event
 				else {
 					isUsed = false;
+				}
+				//if we scrolled more than 50 pixels in either direction then we can no longer press down on a tile
+				if(events.get(i).type == TouchEvent.TOUCH_DRAGGED) {
+					if(previousTouchDownEvent != null) {
+						TouchEvent ev = events.get(i);
+						if(ev.x - previousTouchDownEvent.x > INELIGIBLE_TOUCH_DISTANCE ||
+						   previousTouchDownEvent.x - ev.x > INELIGIBLE_TOUCH_DISTANCE ||
+						   ev.y - previousTouchDownEvent.y > INELIGIBLE_TOUCH_DISTANCE ||
+						   previousTouchDownEvent.y - ev.y > INELIGIBLE_TOUCH_DISTANCE) {
+							previousTouchDownTile = null; previousTouchDownEvent = null;
+						}
+					}
 				}
 				//copy the current event into the previous event pointer
 				previousEvent.copy(events.get(i));
@@ -621,7 +631,13 @@ public class Player {
 		events = rightRotateButton.update(events);
 		
 		if(movementButton.state == Button.ACTIVATED) {
-			currentAction = USE_MOVEMENT;
+			if(units[selectedUnitIndex].getPointsLeft() >= units[selectedUnitIndex].getMovementCost()) {
+				currentAction = USE_MOVEMENT;
+			}
+			else {
+				notifications.add(new APNotification(map, units[selectedUnitIndex].getXYCoordinate(), 0, indicatorPaint));
+				currentAction = SELECTION;
+			}
 			movementButton.disarm();
 		}
 		if(leftRotateButton.state == Button.ACTIVATED) {
@@ -630,6 +646,7 @@ public class Player {
 				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
 			}
 			else {
+				notifications.add(new APNotification(map, units[selectedUnitIndex].getXYCoordinate(), 0, indicatorPaint));
 				currentAction = SELECTION;
 			}
 			leftRotateButton.disarm();
@@ -640,6 +657,7 @@ public class Player {
 				units[selectedUnitIndex].usePoints(units[selectedUnitIndex].getRotationCost());
 			}
 			else {
+				notifications.add(new APNotification(map, units[selectedUnitIndex].getXYCoordinate(), 0, indicatorPaint));
 				currentAction = SELECTION;
 			}
 			rightRotateButton.disarm();
@@ -665,6 +683,7 @@ public class Player {
 				ability.disarm();
 				//if the unit can't afford this ability then go back to the selection state
 				if(units[selectedUnitIndex].getPointsLeft() < abilities[i].getCost()) {
+					notifications.add(new APNotification(map, units[selectedUnitIndex].getXYCoordinate(), 0, indicatorPaint));
 					currentAction = SELECTION;
 				}
 				else {
@@ -800,6 +819,9 @@ public class Player {
 		for(int i = 0; i < healthIndicators.size(); i++) {
 			healthIndicators.get(i).render(g);
 		}
+		for(int i = 0; i < notifications.size(); i++) {
+			notifications.get(i).render(g);
+		}
 		
 		//---------------------------------------
 		//--Render our turn HUD at the very end
@@ -914,6 +936,7 @@ public class Player {
 		//otherwise scroll to the selected unit (if there is no selected unit, pick a new unit to be selected and scroll to him), reset action points
 		else {
 			healthIndicators.clear(); //remove any indicators if we had any
+			notifications.clear();
 			enemyUnitSelected = null;
 			for(int i = 0; i < units.length; i++)
 				units[i].resetPoints();
@@ -928,6 +951,7 @@ public class Player {
 						enableButtons();
 						selectedUnitIndex = i;
 						map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
+						break;
 					}
 				}
 			}
