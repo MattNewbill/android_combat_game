@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import android.util.Log;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -85,6 +86,11 @@ public class Player {
 	private Button rightRotateButton;
 	private Button leftRotateSetupButton;
 	private Button rightRotateSetupButton;
+	
+	//confirm end turn data
+	private Button yesButton;
+	private Button noButton;
+	private boolean isEndingTurn = false;
 	
 	//determine presses vs scrolls
 	private TouchEvent previousEvent;
@@ -175,6 +181,9 @@ public class Player {
 		
 		spawnUnitButton = new Button(GameplayAssets.spawnUnitIcon, null, spawnUnitButtonX, spawnUnitButtonY);
 		respawnUnitButton = new Button(GameplayAssets.respawnUnitIcon, null, respawnUnitButtonX, respawnUnitButtonY);
+		
+		yesButton = new Button(GameplayAssets.yesIcon, GameplayAssets.yesArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.yesIcon.getWidth() - 10, Game.G_HEIGHT / 2 + GameplayAssets.yesIcon.getHeight() / 2 + 30);
+		noButton = new Button(GameplayAssets.noIcon, GameplayAssets.noArmedIcon, Game.G_WIDTH / 2 + 10, Game.G_HEIGHT / 2 + GameplayAssets.noIcon.getHeight() / 2 + 30);
 		
 		disableButtons();
 		endTurnButton.disable();
@@ -283,6 +292,23 @@ public class Player {
 	}
 	
 	private List<TouchEvent> updateTurnPhase(List<TouchEvent> events) {
+		if(isEndingTurn) {
+			events = yesButton.update(events);
+			events = noButton.update(events);
+			
+			if(yesButton.state == Button.ACTIVATED) {
+				yesButton.disarm();
+				hitIndicators.clear(); //remove any hit indicators
+				map.switchTurn();
+				isEndingTurn = false;
+			}
+			if(noButton.state == Button.ACTIVATED) {
+				noButton.disarm();
+				isEndingTurn = false;
+			}
+			return events;
+		}
+		
 		//----------------------------------------
 		//--UPDATE BUTTON STATES--
 		//----------------------------------------
@@ -378,9 +404,8 @@ public class Player {
 		//ends the turn
 		if(endTurnButton.state == Button.ACTIVATED) {
 			//TODO: add a "are you sure you want to finish your turn" dialog thingy
-			hitIndicators.clear(); //remove any hit indicators
+			isEndingTurn = true;
 			endTurnButton.disarm();
-			map.switchTurn();
 		}	
 		return events;
 	}
@@ -870,6 +895,13 @@ public class Player {
 			for(int i = 0; i < abilities.length; i++) {
 				abilities[i].renderButton(g, abilityButton.getX(), abilityButton.getY() - ((abilities.length-i) * GameplayAssets.throwGrenadeIcon.getHeight()));
 			}
+		}
+		
+		//if the user hit the end turn button, put up a dialog making sure they wanted to do that
+		if(isEndingTurn) {
+			g.drawBitmap(GameplayAssets.exitDialogIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null); //TODO: scale for larger devices
+			yesButton.render(g);
+			noButton.render(g);
 		}
 		
 		//reset overlays
