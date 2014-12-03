@@ -17,7 +17,7 @@ public class WideShot extends BasicAttack {
 
 	public WideShot() {
 		this.damage = 50;
-		this.abilityCost = 4;
+		this.abilityCost = 5;
 		this.indirect_damage = 30;//damage to the left and right targets
 		this.abilityButton = new Button(GameplayAssets.wideShotIcon, null, 0, 0);
 	}
