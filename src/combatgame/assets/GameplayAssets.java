@@ -97,6 +97,7 @@ public class GameplayAssets {
 	public static Bitmap noIcon;
 	public static Bitmap noArmedIcon;
 	public static Bitmap exitDialogIcon;
+	public static Bitmap endTurnDialogIcon;
 	
 	//hit indicators
 	public static Bitmap hitIndicatorUpIcon;
@@ -202,6 +203,7 @@ public class GameplayAssets {
 			noIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button.png"), null, options);
 			noArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button_armed.png"), null, options);
 			exitDialogIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/confirm_exit_popup.png"), null, options);
+			endTurnDialogIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/confirm_endturn_popup.png"), null, options);
 			
 			hitIndicatorUpIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_up.png"), null, options);
 			hitIndicatorRightIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_right.png"), null, options);
@@ -393,6 +395,8 @@ public class GameplayAssets {
 			okArmedIcon.recycle();
 		if(exitDialogIcon != null)
 			exitDialogIcon.recycle();
+		if(endTurnDialogIcon != null)
+			endTurnDialogIcon.recycle();
 		
 		if(hitIndicatorUpIcon != null)
 			hitIndicatorUpIcon.recycle();

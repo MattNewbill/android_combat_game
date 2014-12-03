@@ -107,6 +107,11 @@ public class Game extends Activity implements StateManager {
 	}
 	
 	@Override
+	public boolean onPrepareOptionsMenu (Menu menu) {
+		return false;
+	}
+	
+	@Override
 	public void setState(State state) {
 		if(state == null) {
 			throw new IllegalArgumentException("The freakin screen is null, idiot");

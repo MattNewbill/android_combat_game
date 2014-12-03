@@ -899,7 +899,7 @@ public class Player {
 		
 		//if the user hit the end turn button, put up a dialog making sure they wanted to do that
 		if(isEndingTurn) {
-			g.drawBitmap(GameplayAssets.exitDialogIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null); //TODO: scale for larger devices
+			g.drawBitmap(GameplayAssets.endTurnDialogIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null); //TODO: scale for larger devices
 			yesButton.render(g);
 			noButton.render(g);
 		}

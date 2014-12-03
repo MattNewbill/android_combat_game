@@ -109,11 +109,11 @@ public class HotSeatState extends GameState {
 		if(switchTurns) {
 			if(Game.isScaled()) {
 				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, switchTurnsFill);
-				g.drawText("Are you ready " + map.getCurrentPlayersTurn().getGamertag() + "?", Game.G_WIDTH / 2, Game.G_HEIGHT / 2, switchTurnsFont);
+				g.drawText(map.getCurrentPlayersTurn().getGamertag() + "'s turn", Game.G_WIDTH / 2, Game.G_HEIGHT / 2, switchTurnsFont);
 			}
 			else {
 				g.drawRect(0, 0, Game.P_WIDTH, Game.P_HEIGHT, switchTurnsFill);
-				g.drawText("Are you ready " + map.getCurrentPlayersTurn().getGamertag() + "?", Game.P_WIDTH / 2, Game.P_HEIGHT / 2, switchTurnsFont);
+				g.drawText(map.getCurrentPlayersTurn().getGamertag() + "'s turn", Game.P_WIDTH / 2, Game.P_HEIGHT / 2, switchTurnsFont);
 			}
 			switchTurnsOKButton.render(g);
 		}
