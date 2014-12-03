@@ -1,10 +1,12 @@
-package combatgame.objects;
+package combatgame.alerts;
 
 import android.graphics.Bitmap;
 
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.GPoint;
 import combatgame.graphics.Graphics2D;
+import combatgame.objects.Map;
+import combatgame.objects.Unit;
 import combatgame.units.Ability;
 import combatgame.units.recon.TrickShot;
 import combatgame.util.Util;
