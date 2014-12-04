@@ -56,7 +56,7 @@ public class Button {
 				}
 			}
 			else if(events.get(i).type == TouchEvent.TOUCH_UP) {
-				if(Util.isInBounds(events.get(i), x, y, images[DISARMED].getWidth(), images[DISARMED].getHeight())) {
+				if(Util.isInBounds(events.get(i), x, y, images[DISARMED].getWidth(), images[DISARMED].getHeight()) && state == ARMED) {
 					state = ACTIVATED;
 				}
 				else {

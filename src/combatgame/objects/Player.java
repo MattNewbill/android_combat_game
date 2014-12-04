@@ -217,19 +217,20 @@ public class Player {
 		if((spawnUnitIndex == -1 || selectedUnitIndex == -1) || currentAction == SPAWN_UNIT)
 			respawnUnitButton.disable();
 		else
-			respawnUnitButton.enable();
+			if(respawnUnitButton.state == Button.DISABLED)
+				respawnUnitButton.enable();
 		
 		events = unitInfoButton.update(events);
 		events = moveButton.update(events);
 		events = spawnUnitButton.update(events);
 		events = respawnUnitButton.update(events);
 		if(spawnUnitIndex == units.length) {
-			endTurnButton.enable();
+			if(endTurnButton.state == Button.DISABLED)
+				endTurnButton.enable();
 			events = endTurnButton.update(events);
 			if(endTurnButton.state == Button.ACTIVATED) {
 				endTurnButton.disarm();
 				isSetupPhase = false;
-				selectedUnitIndex = 0;
 				map.switchTurn();
 			}
 		}
