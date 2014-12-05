@@ -64,10 +64,10 @@ public class ConnectionState extends State {
 			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (hotSeatBitmapDisarmed.getHeight() - 50) + (V_BUTTON_MARGIN * 2) + internetBitmapDisarmed.getHeight() + bluetoothBitmapDisarmed.getHeight());
 			int backButtonX = Game.G_HEIGHT - hotSeatButtonY - hotSeatBitmapDisarmed.getHeight();
 			int backButtonY = hotSeatButtonY;
-			int onlineBattleOkButtonX = Game.G_WIDTH - onlineBattleOkArmed.getWidth();
+			int onlineBattleOkButtonX = Game.G_WIDTH - onlineBattleOkArmed.getWidth() - 150;
 			int onlineBattleOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight();
-			int bluetoothOkButtonX = Game.G_WIDTH - onlineBattleOkArmed.getWidth();
-			int bluetoothOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight();
+			int bluetoothOkButtonX = Game.G_WIDTH/2 - onlineBattleOkArmed.getWidth()/2;
+			int bluetoothOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight() - 150;
 			
 			internetButton = new Button(internetBitmapDisarmed, internetBitmapArmed, internetButtonX, internetButtonY);
 			bluetoothButton = new Button(bluetoothBitmapDisarmed, bluetoothBitmapArmed, bluetoothButtonX, bluetoothButtonY);
@@ -122,6 +122,10 @@ public class ConnectionState extends State {
 			if(bluetoothOkButton.state == Button.ACTIVATED) {
 				bluetoothOkButton.disarm();
 				isBluetoothFeatureNotAvailableDialogShowing = false;
+				internetButton.enable();
+				bluetoothButton.enable();
+				hotSeatButton.enable();
+				backButton.enable();
 			}
 		}
 		
@@ -130,6 +134,10 @@ public class ConnectionState extends State {
 			if(onlineBattleOkButton.state == Button.ACTIVATED) {
 				onlineBattleOkButton.disarm();
 				isOnlineBattleFeatureNotAvailableDialogShowing = false;
+				internetButton.enable();
+				bluetoothButton.enable();
+				hotSeatButton.enable();
+				backButton.enable();
 			}
 		}
 		
@@ -156,11 +164,20 @@ public class ConnectionState extends State {
 			g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, exitDialogPaint);
 			g.drawBitmap(bluetoothSoon, Game.G_WIDTH / 2 - bluetoothSoon.getWidth() / 2, Game.G_HEIGHT / 2 - bluetoothSoon.getHeight() / 2, null); //TODO: scale for larger devices
 			bluetoothOkButton.render(g);
+			internetButton.disable();
+			bluetoothButton.disable();
+			hotSeatButton.disable();
+			backButton.disable();
+			
 		}
 		if(isOnlineBattleFeatureNotAvailableDialogShowing){
 			g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, exitDialogPaint);
 			g.drawBitmap(onlineSoon, Game.G_WIDTH / 2 - onlineSoon.getWidth() / 2, Game.G_HEIGHT / 2 - onlineSoon.getHeight() / 2, null); //TODO: scale for larger devices
 			onlineBattleOkButton.render(g);
+			internetButton.disable();
+			bluetoothButton.disable();
+			hotSeatButton.disable();
+			backButton.disable();
 		}
 	}
 
