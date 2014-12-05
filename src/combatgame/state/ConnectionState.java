@@ -184,6 +184,14 @@ public class ConnectionState extends State {
 			hotSeatButton.recycle();
 		if(backButton != null)
 			backButton.recycle();
+		if(onlineSoon != null)
+			onlineSoon.recycle();
+		if(bluetoothSoon != null)
+			bluetoothSoon.recycle();
+		if(bluetoothOkButton != null)
+			bluetoothOkButton.recycle();
+		if(onlineBattleOkButton != null)
+			onlineBattleOkButton.recycle();
 	}
 	
 }

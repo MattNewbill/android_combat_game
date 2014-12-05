@@ -6,7 +6,7 @@ import android.graphics.Paint;
 
 public class ListViewRegion {
 
-	private Bitmap thumbnail;
+	private Bitmap thumbnail; //100x100
 	private String title = "";
 	private String subtitle = "";
 	

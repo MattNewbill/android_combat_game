@@ -29,18 +29,10 @@ public abstract class ListView {
 	protected Paint titlePaint;
 	protected Paint subtitlePaint;
 	
-	protected Bitmap noImageAvailableIcon;
 	
-	public ListView(AssetManager am) {
-		try {
-			noImageAvailableIcon = BitmapFactory.decodeStream(am.open("images/no_image_available.png"));
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
+	public ListView(AssetManager am) {		
 		selectedPaint = new Paint();
 		selectedPaint.setColor(Color.parseColor("#AAFFFFFF"));
-		//selectedPaint.setColor(Color.parseColor("#E64A3F3F"));
 		
 		titlePaint = new Paint();
 		titlePaint.setTextSize(34);
@@ -79,12 +71,14 @@ public abstract class ListView {
 		}
 		
 		//make sure we aren't going out of bounds
-		
 		if(offset < 0)
 			offset = 0;
 		//else if(offset > (items.size() - 1) * ListViewRegion.HEIGHT)
 		//	if(items.size() * ListViewRegion.HEIGHT > )
 		//	offset = items.size() * ListViewRegion.HEIGHT;
+		else if(offset > ListViewRegion.HEIGHT * (items.size() / (Game.G_HEIGHT / ListViewRegion.HEIGHT))) {
+			offset = ListViewRegion.HEIGHT * (items.size() / (Game.G_HEIGHT / ListViewRegion.HEIGHT));
+		}
 			
 	}
 	
@@ -92,10 +86,8 @@ public abstract class ListView {
 		for(int i = 0; i < items.size(); i++) {
 			if(i == selectedItemIndex)
 				g.drawRect(0, i * ListViewRegion.HEIGHT - offset, ListViewRegion.WIDTH, (i+1) * ListViewRegion.HEIGHT - offset, selectedPaint);
-			if(items.get(i).getThumbnail() == null)
-				g.drawBitmap(noImageAvailableIcon, 20, i * ListViewRegion.HEIGHT + 10 - offset, null);
-			else
-				g.drawBitmap(items.get(i).getThumbnail(), 20, i * ListViewRegion.HEIGHT + 10 - offset, null);
+			
+			g.drawBitmap(items.get(i).getThumbnail(), 20, i * ListViewRegion.HEIGHT + 10 - offset, null);
 			
 			g.drawText(items.get(i).getTitle().substring(0, items.get(i).getTitle().length() - 4), 130, i * ListViewRegion.HEIGHT + 45 - offset, titlePaint);
 			g.drawText(items.get(i).getSubtitle(), 130, i * ListViewRegion.HEIGHT + 85 - offset, subtitlePaint);			
@@ -104,6 +96,13 @@ public abstract class ListView {
 	
 	public String getSelectedItem() {
 		return items.get(selectedItemIndex).getTitle();
+	}
+	
+	public void recycle() {
+		for(int i = 0; i < items.size(); i++) {
+			if(items.get(i).getThumbnail() != null)
+				items.get(i).getThumbnail().recycle();
+		}
 	}
 	
 }

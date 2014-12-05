@@ -220,7 +220,7 @@ public class GameplayAssets {
 	}
 	
 	private static void loadMapTiles(AssetManager am, Options options, String mapSetting) {
-		if(mapSetting.equals("woodland"))
+		if(mapSetting.equals("Woodland"))
 			loadWoodlandTiles(am, options);
 		shadeMapTiles();
 	}

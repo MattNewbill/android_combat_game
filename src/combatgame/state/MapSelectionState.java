@@ -14,6 +14,7 @@ import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.main.StateManager;
+import combatgame.objects.PartialMap;
 import combatgame.widgets.Button;
 import combatgame.widgets.ListView;
 import combatgame.widgets.MapListView;
@@ -23,12 +24,10 @@ public class MapSelectionState extends State {
 	Button nextButton;
 	Button backButton;
 	
-	ListView listView;
+	MapListView listView;
 	public static final String mapPath = "maps/geometry";
 	String selectedMap;
-	
-	boolean isCurrentMapThumbnailLoaded = false;
-	Bitmap selectedMapThumbnail;
+	PartialMap selectedPartialMap;
 	
 	Paint selectedMapNamePaint;
 	Paint selectedMapSizePaint;
@@ -83,14 +82,16 @@ public class MapSelectionState extends State {
 		
 		String temp = listView.getSelectedItem();
 		if(!temp.equals(selectedMap)) {
-			selectedMap = listView.getSelectedItem();
-			isCurrentMapThumbnailLoaded = false;
+			selectedMap = temp;
+			selectedPartialMap = listView.getSelectedMap();
 		}
 		
 		if(nextButton.state == Button.ACTIVATED) {
 			nextButton.disarm();
 			//stateManager.setState(new GamemodeSelectionState(stateManager, mapPath+"/"+selectedMap));
-			stateManager.setState(new HotSeatState(stateManager, mapPath+"/"+selectedMap, "woodland", null));
+			Log.i("combatgame", ""+mapPath+"/"+selectedMap);
+			Log.i("combatgame", ""+selectedPartialMap.getTileset());
+			stateManager.setState(new HotSeatState(stateManager, mapPath+"/"+selectedMap, selectedPartialMap.getTileset(), null));
 		}
 		else if(backButton.state == Button.ACTIVATED) {
 			backButton.disarm();
@@ -107,23 +108,33 @@ public class MapSelectionState extends State {
 		backButton.render(g);
 		listView.render(g);
 		
-		//TODO: render preview of currently selected map
-		if(!isCurrentMapThumbnailLoaded) {
-			AssetManager am = stateManager.getAssetManager();
-			try {
-				selectedMapThumbnail = BitmapFactory.decodeStream(am.open("images/no_image_available_upscaled.png"));
-				isCurrentMapThumbnailLoaded = true;
-			} catch(Exception e) {
-					e.printStackTrace();
+		//draw preview
+		Bitmap preview = selectedPartialMap.getPreview();
+		g.drawBitmap(preview, 810, 25, null);
+		
+		//draw name and size
+		g.drawText(selectedPartialMap.getName(), 810, 25 + preview.getHeight() + 30, selectedMapNamePaint);
+		g.drawText("Size: " + selectedPartialMap.getSize(), 810, 25 + preview.getHeight() + 60, selectedMapSizePaint);
+		
+		//draw description
+		String[] description = selectedPartialMap.getDescription();
+		StringBuilder line = new StringBuilder("Description: ");
+		StringBuilder temp = new StringBuilder(line.toString());
+		int linesDrawn = 0;
+		for(int i = 0; i < description.length; i++) {
+			temp.append(description[i]).append(" ");
+			if(selectedMapDescriptionPaint.measureText(temp.toString()) + 810 > 1280) {
+				g.drawText(line.toString(), 810, 25 + preview.getHeight() + 85 + 25 * linesDrawn, selectedMapDescriptionPaint);
+				linesDrawn++;
+				line.delete(0, line.length()); temp.delete(0, temp.length());
+				line.append(description[i]).append(" "); temp.append(description[i]).append(" ");
 			}
+			else {
+				line.append(description[i]).append(" ");
+			}
+				
 		}
-		
-		g.drawBitmap(selectedMapThumbnail, 810, 25, null);
-		
-		//TODO: draw description of map
-		g.drawText(selectedMap.substring(0, selectedMap.length()-4), 810, 25 + selectedMapThumbnail.getHeight() + 30, selectedMapNamePaint);
-		g.drawText("Size: medium", 810, 25 + selectedMapThumbnail.getHeight() + 60, selectedMapSizePaint);
-		g.drawText("map description", 810, 25 + selectedMapThumbnail.getHeight() + 85, selectedMapDescriptionPaint);
+		g.drawText(line.toString(), 810, 25 + preview.getHeight() + 85 + 25 * linesDrawn, selectedMapDescriptionPaint);
 		
 	}
 
@@ -139,8 +150,12 @@ public class MapSelectionState extends State {
 
 	@Override
 	public void dispose() {
-		nextButton.recycle();
-		backButton.recycle();
+		if(nextButton != null)
+			nextButton.recycle();
+		if(backButton != null)
+			backButton.recycle();
+		if(listView != null)
+			listView.recycle();
 	}
 
 }
