@@ -64,8 +64,8 @@ public class ConnectionState extends State {
 			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (hotSeatBitmapDisarmed.getHeight() - 50) + (V_BUTTON_MARGIN * 2) + internetBitmapDisarmed.getHeight() + bluetoothBitmapDisarmed.getHeight());
 			int backButtonX = Game.G_HEIGHT - hotSeatButtonY - hotSeatBitmapDisarmed.getHeight();
 			int backButtonY = hotSeatButtonY;
-			int onlineBattleOkButtonX = Game.G_WIDTH - onlineBattleOkArmed.getWidth() - 150;
-			int onlineBattleOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight();
+			int onlineBattleOkButtonX = Game.G_WIDTH - onlineBattleOkArmed.getWidth()/2 ;
+			int onlineBattleOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight()- 150;
 			int bluetoothOkButtonX = Game.G_WIDTH/2 - onlineBattleOkArmed.getWidth()/2;
 			int bluetoothOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight() - 150;
 			
