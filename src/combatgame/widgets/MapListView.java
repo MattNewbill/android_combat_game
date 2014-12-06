@@ -18,7 +18,7 @@ public class MapListView extends ListView {
 	List<PartialMap> partialMaps = new ArrayList<PartialMap>();
 	
 	public MapListView(AssetManager am, String[] mapPaths) {
-		super(am);
+		super();
 		
 		BufferedReader reader;
 		try {
@@ -39,7 +39,7 @@ public class MapListView extends ListView {
 				while((line = reader.readLine()) != null) {
 					description.append(line);
 				}
-				items.add(new ListViewRegion(thumbnail, mapPaths[i], mapData[3]));
+				items.add(new ListViewRegion(thumbnail, mapPaths[i].substring(0, mapPaths[i].length()-4), mapData[3]));
 				partialMaps.add(new PartialMap(preview, MapSelectionState.mapPath+"/"+mapPaths[i], mapPaths[i].substring(0, mapPaths[i].length()-4), mapData[3], description.toString().split(" "), mapData[2])); //TODO: load description of map
 				reader.close();
 			}

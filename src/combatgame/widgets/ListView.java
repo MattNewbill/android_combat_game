@@ -23,14 +23,14 @@ public abstract class ListView {
 	protected TouchEvent previousTouchEvent;
 	
 	protected int offset = 0;
-	public static final int SCROLL_SPEED = 10;
+	public static final int SCROLL_SPEED = 3;
 	
 	protected Paint selectedPaint;
 	protected Paint titlePaint;
 	protected Paint subtitlePaint;
 	
 	
-	public ListView(AssetManager am) {		
+	public ListView() {		
 		selectedPaint = new Paint();
 		selectedPaint.setColor(Color.parseColor("#AAFFFFFF"));
 		
@@ -59,9 +59,9 @@ public abstract class ListView {
 					if(previousTouchEvent != null)
 						if(previousTouchEvent.type == TouchEvent.TOUCH_DRAGGED) {
 							if(previousTouchEvent.y > events.get(i).y)
-								offset += SCROLL_SPEED;
+								offset += SCROLL_SPEED * (previousTouchEvent.y - events.get(i).y);
 							else if(previousTouchEvent.y < events.get(i).y)
-								offset -= SCROLL_SPEED;
+								offset -= SCROLL_SPEED * (events.get(i).y - previousTouchEvent.y);
 						}
 				}
 			}
@@ -71,9 +71,6 @@ public abstract class ListView {
 		//make sure we aren't going out of bounds
 		if(offset < 0)
 			offset = 0;
-		//else if(offset > (items.size() - 1) * ListViewRegion.HEIGHT)
-		//	if(items.size() * ListViewRegion.HEIGHT > )
-		//	offset = items.size() * ListViewRegion.HEIGHT;
 		else if(offset > ListViewRegion.HEIGHT * (items.size() / (Game.G_HEIGHT / ListViewRegion.HEIGHT))) {
 			offset = ListViewRegion.HEIGHT * (items.size() / (Game.G_HEIGHT / ListViewRegion.HEIGHT));
 		}
@@ -94,7 +91,7 @@ public abstract class ListView {
 			
 			g.drawBitmap(items.get(i).getThumbnail(), 20, i * ListViewRegion.HEIGHT + 10 - offset, null);
 			
-			g.drawText(items.get(i).getTitle().substring(0, items.get(i).getTitle().length() - 4), 130, i * ListViewRegion.HEIGHT + 45 - offset, titlePaint);
+			g.drawText(items.get(i).getTitle(), 130, i * ListViewRegion.HEIGHT + 45 - offset, titlePaint);
 			g.drawText(items.get(i).getSubtitle(), 130, i * ListViewRegion.HEIGHT + 85 - offset, subtitlePaint);			
 		}
 	}

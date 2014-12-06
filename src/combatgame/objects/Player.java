@@ -102,20 +102,16 @@ public class Player {
 	private Paint attackOverlayPaint;
 	private Paint healOverlayPaint;
 	
-	public Player(String gamertag, boolean isPlayerOne, Map map, int numUnits) {
+	public Player(String gamertag, boolean isPlayerOne, Map map, Unit[] units) {
 		this.gamertag = gamertag;
 		this.isPlayerOne = isPlayerOne;
 		playerId = (int)System.currentTimeMillis() + Util.getRand(); //TODO potentially get a better ID system going...
 		
-		units = new Unit[numUnits];
 		this.map = map;
-		
-		//just adding stock units for test purposes
-		units[0] = new Assault(playerId, "Assault \u03B1", isPlayerOne);
-		units[1] = new Recon(playerId, "Recon \u03B1", isPlayerOne);
-		units[2] = new CQC(playerId, "Juggernaut \u03B1", isPlayerOne);
-		units[3] = new Sniper(playerId, "Sniper \u03B1", isPlayerOne);
-		units[4] = new Medic(playerId, "Medic \u03B1", isPlayerOne);
+		this.units = units;
+		for(int i = 0; i < units.length; i++) {
+			units[i].setPlayer_id(playerId);
+		}
 		
 		//indicator font
 		indicatorPaint = new Paint();

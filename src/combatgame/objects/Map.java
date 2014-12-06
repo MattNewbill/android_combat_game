@@ -76,8 +76,8 @@ public class Map {
 		this.gamestate = gamestate;
 		this.gamemode = gm;
 		//create players
-		player1 = new Player("Player 1", true, this, 5);
-		player2 = new Player("Player 2", false, this, 5);
+		player1 = new Player("Player 1", true, this, gm.getPlayer1Units());
+		player2 = new Player("Player 2", false, this, gm.getPlayer2Units());
 		thisPlayersTurn = player1;
 		
 		gamertagFont = new Paint();
@@ -179,31 +179,19 @@ public class Map {
 	}
 	
 	private void checkWinConditions() {
-		//TODO: if we have different gamemodes then the victory conditions will be dependent on the gamemode
-		//just using standard deathmatch victory condition
-		Unit[] player1Units = player1.getUnits();
-		Unit[] player2Units = player2.getUnits();
-		boolean isPlayer1Destroyed = true;
-		boolean isPlayer2Destroyed = true;
-		for(int i = 0; i < player1Units.length; i++) {
-			if(!player1Units[i].isDead())
-				isPlayer1Destroyed = false;
-		}
-		for(int i = 0; i < player2Units.length; i++) {
-			if(!player2Units[i].isDead())
-				isPlayer2Destroyed = false;
-		}
+		int victory = gamemode.checkWinConditions(this);
+		
 		//both teams wiped out, stalemate
-		if(isPlayer1Destroyed && isPlayer2Destroyed) {
+		if(victory == GameMode.STALEMATE) {
 			isGameOver = true;
 		}
 		//player 2 wins
-		else if(isPlayer1Destroyed && !isPlayer2Destroyed) {
+		else if(victory == GameMode.PLAYER_2_WINS) {
 			isGameOver = true;
 			winningPlayer = player2;
 		}
 		//player 1 wins
-		else if(!isPlayer1Destroyed && isPlayer2Destroyed) {
+		else if(victory == GameMode.PLAYER_1_WINS) {
 			isGameOver = true;
 			winningPlayer = player1;
 		}
@@ -512,6 +500,14 @@ public class Map {
 	
 	public boolean[][] getLightmap() {
 		return lightmap;
+	}
+	
+	public Player getPlayer1() {
+		return player1;
+	}
+	
+	public Player getPlayer2() {
+		return player2;
 	}
 	
 	public Unit getUnit(int unitId) {

@@ -40,6 +40,10 @@ public abstract class Unit {
 	public String getName() {
 		return name;	}
 	
+	public void setPlayer_id(int id) {
+		this.player_id = id;
+	}
+	
 	public int getPlayer_id() {
 		return this.player_id;	}
 	

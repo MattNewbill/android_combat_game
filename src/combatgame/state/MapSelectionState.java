@@ -88,8 +88,7 @@ public class MapSelectionState extends State {
 		
 		if(nextButton.state == Button.ACTIVATED) {
 			nextButton.disarm();
-			//stateManager.setState(new GamemodeSelectionState(stateManager, mapPath+"/"+selectedMap));
-			stateManager.setState(new HotSeatState(stateManager, mapPath+"/"+selectedMap, selectedPartialMap.getTileset(), null));
+			stateManager.setState(new GamemodeSelectionState(stateManager, selectedPartialMap));
 		}
 		else if(backButton.state == Button.ACTIVATED) {
 			backButton.disarm();
