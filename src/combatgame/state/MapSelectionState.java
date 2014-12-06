@@ -89,8 +89,6 @@ public class MapSelectionState extends State {
 		if(nextButton.state == Button.ACTIVATED) {
 			nextButton.disarm();
 			//stateManager.setState(new GamemodeSelectionState(stateManager, mapPath+"/"+selectedMap));
-			Log.i("combatgame", ""+mapPath+"/"+selectedMap);
-			Log.i("combatgame", ""+selectedPartialMap.getTileset());
 			stateManager.setState(new HotSeatState(stateManager, mapPath+"/"+selectedMap, selectedPartialMap.getTileset(), null));
 		}
 		else if(backButton.state == Button.ACTIVATED) {
@@ -131,8 +129,7 @@ public class MapSelectionState extends State {
 			}
 			else {
 				line.append(description[i]).append(" ");
-			}
-				
+			}	
 		}
 		g.drawText(line.toString(), 810, 25 + preview.getHeight() + 85 + 25 * linesDrawn, selectedMapDescriptionPaint);
 		

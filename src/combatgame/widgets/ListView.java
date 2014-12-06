@@ -35,12 +35,10 @@ public abstract class ListView {
 		selectedPaint.setColor(Color.parseColor("#AAFFFFFF"));
 		
 		titlePaint = new Paint();
-		titlePaint.setTextSize(34);
-		titlePaint.setColor(Color.BLACK);
+		titlePaint.setTextSize(38);
 		
 		subtitlePaint = new Paint();
-		subtitlePaint.setTextSize(28);
-		subtitlePaint.setColor(Color.BLACK);
+		subtitlePaint.setTextSize(32);
 	}
 	
 	public void update(List<TouchEvent> events) {
@@ -84,8 +82,15 @@ public abstract class ListView {
 	
 	public void render(Graphics2D g) {
 		for(int i = 0; i < items.size(); i++) {
-			if(i == selectedItemIndex)
+			if(i == selectedItemIndex) {
+				titlePaint.setColor(Color.BLACK);
+				subtitlePaint.setColor(Color.BLACK);
 				g.drawRect(0, i * ListViewRegion.HEIGHT - offset, ListViewRegion.WIDTH, (i+1) * ListViewRegion.HEIGHT - offset, selectedPaint);
+			}
+			else {
+				titlePaint.setColor(Color.WHITE);
+				subtitlePaint.setColor(Color.WHITE);
+			}
 			
 			g.drawBitmap(items.get(i).getThumbnail(), 20, i * ListViewRegion.HEIGHT + 10 - offset, null);
 			
