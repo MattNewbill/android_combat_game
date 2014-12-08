@@ -11,7 +11,7 @@ public class MeatGrinder extends DeathMatch {
 		super(am, path);
 		gamemodeName = "Meat Grinder";
 		gamemodeLength = "Long";
-		gamemodeDescription = "The grinder of meat.";
+		gamemodeDescription = "Prepare to shoot, and shoot, and shoot some more.";
 	}
 	
 	@Override

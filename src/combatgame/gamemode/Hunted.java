@@ -13,7 +13,7 @@ public class Hunted extends DeathMatch {
 		super(am, path);
 		gamemodeName = "Hunted";
 		gamemodeLength = "Quick";
-		gamemodeDescription = "We are being hunted";
+		gamemodeDescription = "Evade and take down the roving assault troopers with precision and trickery.";
 	}
 	
 	@Override

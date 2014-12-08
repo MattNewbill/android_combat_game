@@ -27,7 +27,8 @@ public abstract class Unit {
 		CQC,
 		MEDIC,
 		RECON,
-		SNIPER	
+		SNIPER,
+		PRESIDENT
 	};
 	
 	public static final int POINTS_PER_TURN = 9;

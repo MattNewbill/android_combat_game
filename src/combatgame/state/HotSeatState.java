@@ -37,11 +37,12 @@ public class HotSeatState extends GameState {
 		super(stateManager);
 		
 		//if the device's resolution is our target size or lower, then we scale the game to our target size
-		if(Game.P_WIDTH < Game.G_WIDTH && Game.P_HEIGHT < Game.G_HEIGHT)
-			Game.shouldScale(true);
+		//if(Game.P_WIDTH < Game.G_WIDTH && Game.P_HEIGHT < Game.G_HEIGHT)
+		//	Game.shouldScale(true);
 		//anything bigger and we don't scale
-		else
-			Game.shouldScale(false);
+		//else
+		//	Game.shouldScale(false);
+		Game.shouldScale(true); //TODO: change this
 		
 		paint = new Paint();
 		switchTurnsFill = new Paint(); switchTurnsFill.setColor(Color.BLACK);

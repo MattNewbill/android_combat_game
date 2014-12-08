@@ -13,7 +13,7 @@ public class ShootingFlies extends DeathMatch {
 		super(am, path);
 		gamemodeName = "Shooting Flies";
 		gamemodeLength = "Medium";
-		gamemodeDescription = "Pesky scouts, always getting in the way.";
+		gamemodeDescription = "Face the fury of a horde of angry recons.";
 	}
 	
 	@Override

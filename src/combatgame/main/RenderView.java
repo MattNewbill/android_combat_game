@@ -78,10 +78,10 @@ public class RenderView extends SurfaceView implements Runnable {
 			//render
 			startTimeRender = System.currentTimeMillis();
 			game.getCurrentState().render(drawingCanvas, delta);
-			drawingCanvas.drawText(Long.toString(fps), 30, 30, fpsPaint); //draw fps
-			drawingCanvas.drawText("U: " + endTimeUpdate, 30, 50, fpsPaint); //draw time to update
-			drawingCanvas.drawText("R: " + (System.currentTimeMillis() - startTimeRender), 30, 70, fpsPaint); //draw time to render
-			drawingCanvas.drawText("D: " + drawTime, 30, 90, fpsPaint); //draw time to post to screen
+			//drawingCanvas.drawText(Long.toString(fps), 30, 30, fpsPaint); //draw fps
+			//drawingCanvas.drawText("U: " + endTimeUpdate, 30, 50, fpsPaint); //draw time to update
+			//drawingCanvas.drawText("R: " + (System.currentTimeMillis() - startTimeRender), 30, 70, fpsPaint); //draw time to render
+			//drawingCanvas.drawText("D: " + drawTime, 30, 90, fpsPaint); //draw time to post to screen
 			
 			long startTimeCleanup = System.currentTimeMillis();
 			Canvas canvas = holder.lockCanvas();

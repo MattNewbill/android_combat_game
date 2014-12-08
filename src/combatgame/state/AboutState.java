@@ -15,6 +15,7 @@ public class AboutState extends State {
 
 	Button backButton;
 	Bitmap contributors;
+	Bitmap awesomeContributors;
 	
 	int contributorsX, contributorsY;
 	
@@ -28,6 +29,7 @@ public class AboutState extends State {
 			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
 			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			contributors = BitmapFactory.decodeStream(am.open("images/about_us/awesome_contributors.png"));
+			awesomeContributors = BitmapFactory.decodeStream(am.open("images/about_us/even_more_awesome_contributors.png"));
 			
 			int backButtonX = 0;
 			int backButtonY = Game.G_HEIGHT - backUnarmed.getHeight();
@@ -55,7 +57,8 @@ public class AboutState extends State {
 		backButton.render(g);
 		
 		//draw awesome contributors
-		g.drawBitmap(contributors, contributorsX, contributorsY, null);
+		//g.drawBitmap(contributors, contributorsX, contributorsY, null);
+		g.drawBitmap(awesomeContributors, 0, 0, null);
 	}
 
 	@Override
@@ -74,6 +77,8 @@ public class AboutState extends State {
 			backButton.recycle();
 		if(contributors != null)
 			contributors.recycle();
+		if(awesomeContributors != null)
+			awesomeContributors.recycle();
 	}
 	
 }

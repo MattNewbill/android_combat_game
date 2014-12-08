@@ -26,6 +26,9 @@ public class GameplayAssets {
 	public static Bitmap[] cqcIconsP2 = new Bitmap[4];
 	public static Bitmap[] medicIconsP2 = new Bitmap[4];
 	
+	public static Bitmap[] presidentIconsP1 = new Bitmap[4];
+	public static Bitmap[] presidentIconsP2 = new Bitmap[4];
+	
 	//hud icons
 	public static Bitmap unitInfoIcon;
 	public static Bitmap moveIcon;
@@ -152,6 +155,14 @@ public class GameplayAssets {
 			medicIconsP2[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_right_p2.png"), null, options);
 			medicIconsP2[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_down_p2.png"), null, options);
 			medicIconsP2[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/medic_left_p2.png"), null, options);
+			presidentIconsP1[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/president_up_p1.png"), null, options);
+			presidentIconsP1[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/president_right_p1.png"), null, options);
+			presidentIconsP1[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/president_down_p1.png"), null, options);
+			presidentIconsP1[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/president_left_p1.png"), null, options);
+			presidentIconsP2[0] = BitmapFactory.decodeStream(am.open("sprites/class_icons/president_up_p2.png"), null, options);
+			presidentIconsP2[1] = BitmapFactory.decodeStream(am.open("sprites/class_icons/president_right_p2.png"), null, options);
+			presidentIconsP2[2] = BitmapFactory.decodeStream(am.open("sprites/class_icons/president_down_p2.png"), null, options);
+			presidentIconsP2[3] = BitmapFactory.decodeStream(am.open("sprites/class_icons/president_left_p2.png"), null, options);
 			
 			unitInfoIcon = BitmapFactory.decodeStream(am.open("sprites/hud/unit_info_icon.png"), null, options);
 			moveIcon = BitmapFactory.decodeStream(am.open("sprites/hud/move_icon.png"), null, options);
@@ -285,6 +296,8 @@ public class GameplayAssets {
 				cqcIconsP1[i].recycle();
 			if(medicIconsP1[i] != null)
 				medicIconsP1[i].recycle();
+			if(presidentIconsP1[i] != null)
+				presidentIconsP1[i].recycle();
 		}
 		for(int i = 0; i < sniperIconsP2.length; i++) {
 			if(sniperIconsP2[i] != null)
@@ -297,6 +310,8 @@ public class GameplayAssets {
 				cqcIconsP2[i].recycle();
 			if(medicIconsP2[i] != null)
 				medicIconsP2[i].recycle();
+			if(presidentIconsP2[i] != null)
+				presidentIconsP2[i].recycle();
 		}
 		
 		if(unitInfoIcon != null)

@@ -12,7 +12,7 @@ public class Mediccc extends DeathMatch {
 		super(am, path);
 		gamemodeName = "Medic!!!!";
 		gamemodeLength = "Long";
-		gamemodeDescription = "Let loose the cries of medic!!!!!";
+		gamemodeDescription = "MEDIC!! MEDIC!! MEDIC!! MEDIC!!  BOOM! HEADSHOT!";
 	}
 	
 	@Override
