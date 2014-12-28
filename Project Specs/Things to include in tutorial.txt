@@ -1,0 +1,5 @@
+1. Goal of game
+2. What are Hit Indicators?
+3. How much damage do i do?
+4. Where can I see? What do trees/hedgehogs/rocks do to my vision?
+5. How is health dmg calculated? How does armor work?
