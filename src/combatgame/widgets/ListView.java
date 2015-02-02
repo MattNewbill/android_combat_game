@@ -3,12 +3,8 @@ package combatgame.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
@@ -101,10 +97,14 @@ public abstract class ListView {
 	}
 	
 	public void recycle() {
-		for(int i = 0; i < items.size(); i++) {
+		for(int i = 0; i < items.size(); i++)
 			if(items.get(i).getThumbnail() != null)
-				items.get(i).getThumbnail().recycle();
-		}
+				items.get(i).recycle();
+		
+		selectedPaint = null;
+		titlePaint = null;
+		subtitlePaint = null;
+		previousTouchEvent = null;
 	}
 	
 }

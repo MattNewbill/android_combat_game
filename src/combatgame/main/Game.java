@@ -1,11 +1,16 @@
 package combatgame.main;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import combatgame.input.TouchHandler;
 import combatgame.state.*;
 
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.Menu;
@@ -23,7 +28,7 @@ public class Game extends Activity implements StateManager {
 
 	State currentState;
 	RenderView renderView;
-	WakeLock wakeLock;
+	PowerManager.WakeLock wakeLock;
 	
 	TouchHandler touchHandler;
 	AssetManager assetManager;
@@ -56,6 +61,7 @@ public class Game extends Activity implements StateManager {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
         
         Display display = getWindowManager().getDefaultDisplay();
@@ -92,7 +98,8 @@ public class Game extends Activity implements StateManager {
 		
 		assetManager = getAssets();
 		
-		currentState = getInitialState();
+		if(renderView != null)
+			renderView.destroy();
 		renderView = new RenderView(this, frameBuffer);
 		
 		touchHandler = new TouchHandler(this, renderView, scaleX, scaleY);
@@ -117,11 +124,16 @@ public class Game extends Activity implements StateManager {
 			throw new IllegalArgumentException("The freakin screen is null, idiot");
 		}
 		isBackPressed = false;
-		this.currentState.pause();
+		this.currentState.pause(this, false);
 		this.currentState.dispose();
-		state.resume();
+		state.resume(this);
 		state.update(0);
 		this.currentState = state;
+	}
+	
+	@Override
+	public Activity getActivity() {
+		return this;
 	}
 	
 	@Override
@@ -152,7 +164,51 @@ public class Game extends Activity implements StateManager {
 		super.onResume();
 		isBackPressed = false;
 		wakeLock.acquire();
-		currentState.resume();
+		try {
+			//read in which state we were last at so we know what to cast our stream as
+			FileInputStream finput = openFileInput("state");
+		    ObjectInputStream oinput = new ObjectInputStream(finput);
+		    StateWrapper sw = (StateWrapper) oinput.readObject();
+		    
+			FileInputStream fis = openFileInput("storage");
+		    ObjectInputStream ois = new ObjectInputStream(fis);
+		    
+		    //cast our stream depending on which state we left off at
+		    switch(sw.getState()) {
+		    	case State.MAIN_MENU:
+		    		currentState = (MainMenuState) ois.readObject();
+		    		break;
+		    	case State.ABOUT:
+		    		currentState = (AboutState) ois.readObject();
+		    		break;
+		    	case State.CONNECTION:
+		    		currentState = (ConnectionState) ois.readObject();
+		    		break;
+		    	case State.BLUETOOTH:
+		    		currentState = (BluetoothGameState) ois.readObject();
+		    		break;
+		    	case State.INTERNET:
+		    		currentState = (InternetGameState) ois.readObject();
+		    		break;
+		    	case State.HOT_SEAT:
+		    		currentState = (HotSeatState) ois.readObject();
+		    		break;
+		    	case State.MAP_SELECTION:
+		    		currentState = (MapSelectionState) ois.readObject();
+		    		break;
+		    	case State.GAMEMODE_SELECTION:
+		    		currentState = (GamemodeSelectionState) ois.readObject();
+		    		break;
+	    		default:
+	    			throw new IllegalArgumentException("Invalid state");
+		    }
+		    currentState.resume(this);
+		} catch(FileNotFoundException e) {
+			currentState = getInitialState();
+			currentState.resume(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		renderView.resume();
 	}
 	
@@ -160,11 +216,34 @@ public class Game extends Activity implements StateManager {
 	public void onPause() {
 		super.onPause();
 		wakeLock.release();
-		currentState.pause();
+		currentState.pause(this, true);
 		renderView.pause();
+		//if the game is closing up, clear our cache and exit
 		if(isFinishing()) {
-			currentState.dispose();
+			deleteFile("storage");
+			deleteFile("state");
 		}
+		//otherwise serialize the current state so we can pick up where we left off
+		else {
+			try {
+				//save the state we are leaving off at
+				FileOutputStream fout = openFileOutput("state", Context.MODE_PRIVATE);
+				ObjectOutputStream oout = new ObjectOutputStream(fout);
+				oout.writeObject(new StateWrapper(currentState.getStateID()));
+				oout.close();
+				fout.close();
+				
+				//save the actual state data
+				FileOutputStream fos = openFileOutput("storage", Context.MODE_PRIVATE);
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				oos.writeObject(currentState);
+				oos.close();
+				fos.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		currentState.dispose();
 	}
 	
 	@Override

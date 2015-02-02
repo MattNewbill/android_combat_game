@@ -1,11 +1,14 @@
 package combatgame.state;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import combatgame.main.*;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.Graphics2D;
 
 public class BluetoothGameState extends GameState {
+
+	private static final long serialVersionUID = 1L;
 
 	public BluetoothGameState(StateManager stateManager) {
 		super(stateManager);
@@ -15,6 +18,11 @@ public class BluetoothGameState extends GameState {
 		//GameplayAssets.loadGameplayAssets(am);
 	}
 
+	@Override
+	public int getStateID() {
+		return State.BLUETOOTH;
+	}
+	
 	@Override
 	public void update(float delta) {
 
@@ -26,13 +34,13 @@ public class BluetoothGameState extends GameState {
 	}
 
 	@Override
-	public void pause() {
+	public void pause(Context context, boolean saveData) {
 
 	}
 
 	@Override
-	public void resume() {
-
+	public void resume(StateManager stateManager) {
+		
 	}
 	
 	@Override
@@ -42,6 +50,7 @@ public class BluetoothGameState extends GameState {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		GameplayAssets.dispose();
 	}
 	

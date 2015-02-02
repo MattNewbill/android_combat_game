@@ -2,6 +2,7 @@ package combatgame.state;
 
 import java.util.List;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,10 +16,10 @@ import combatgame.main.StateManager;
 import combatgame.objects.PartialMap;
 import combatgame.widgets.Button;
 import combatgame.widgets.GamemodeListView;
-import combatgame.widgets.ListView;
 
 public class GamemodeSelectionState extends State {
 
+	private static final long serialVersionUID = 1L;
 	PartialMap map;
 	GameMode selectedGamemode;
 	
@@ -69,6 +70,11 @@ public class GamemodeSelectionState extends State {
 		}
 	}
 
+	@Override
+	public int getStateID() {
+		return State.GAMEMODE_SELECTION;
+	}
+	
 	@Override
 	public void update(float delta) {
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
@@ -126,17 +132,18 @@ public class GamemodeSelectionState extends State {
 	}
 
 	@Override
-	public void pause() {
+	public void pause(Context context, boolean saveData) {
 		
 	}
 
 	@Override
-	public void resume() {
+	public void resume(StateManager stateManager) {
 		
 	}
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		if(startButton != null)
 			startButton.recycle();
 		if(backButton != null)

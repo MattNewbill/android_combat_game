@@ -4,75 +4,45 @@ import java.io.IOException;
 import java.util.List;
 
 import junit.framework.Assert;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.main.StateManager;
 import combatgame.objects.PartialMap;
 import combatgame.widgets.Button;
-import combatgame.widgets.ListView;
 import combatgame.widgets.MapListView;
 
 public class MapSelectionState extends State {
 
-	Button nextButton;
-	Button backButton;
+	private static final long serialVersionUID = 1L;
+	transient Button nextButton;
+	transient Button backButton;
 	
-	MapListView listView;
+	transient MapListView listView;
 	public static final String mapPath = "maps/geometry";
-	String selectedMap;
-	PartialMap selectedPartialMap;
+	transient String selectedMap;
+	transient PartialMap selectedPartialMap;
 	
-	Paint selectedMapNamePaint;
-	Paint selectedMapSizePaint;
-	Paint selectedMapDescriptionPaint;
+	transient Paint selectedMapNamePaint;
+	transient Paint selectedMapSizePaint;
+	transient Paint selectedMapDescriptionPaint;
 	
 	public MapSelectionState(StateManager stateManager) {
 		super(stateManager);
 		Game.shouldScale(true);
-		
-		AssetManager am = stateManager.getAssetManager();
-		try {
-			Bitmap ok = BitmapFactory.decodeStream(am.open("images/interface_buttons/next_button.png"));
-			Bitmap okArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/next_button_armed.png"));
-			Bitmap back = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
-			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
-			
-			int okButtonX = Game.G_WIDTH - ok.getWidth() - 25;
-			int okButtonY = Game.G_HEIGHT - ok.getHeight() - 15;
-			int backButtonX = okButtonX - back.getWidth() - 10;
-			int backButtonY = okButtonY;
-			
-			nextButton = new Button(ok, okArmed, okButtonX, okButtonY);
-			backButton = new Button(back, backArmed, backButtonX, backButtonY);
-			
-			String[] mapList = am.list(mapPath);
-			Assert.assertTrue("no maps", mapList.length > 0); //assume we have at least one map
-			listView = new MapListView(am, mapList);
-			
-			selectedMapNamePaint = new Paint();
-			selectedMapNamePaint.setTextSize(36);
-			selectedMapNamePaint.setColor(Color.WHITE);
-			
-			selectedMapSizePaint = new Paint();
-			selectedMapSizePaint.setTextSize(32);
-			selectedMapSizePaint.setColor(Color.WHITE);
-			
-			selectedMapDescriptionPaint = new Paint();
-			selectedMapDescriptionPaint.setTextSize(28);
-			selectedMapDescriptionPaint.setColor(Color.WHITE);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
+	@Override
+	public int getStateID() {
+		return State.MAP_SELECTION;
+	}
+	
 	@Override
 	public void update(float delta) {
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
@@ -135,23 +105,68 @@ public class MapSelectionState extends State {
 	}
 
 	@Override
-	public void pause() {
+	public void pause(Context context, boolean saveData) {
 		
 	}
 
 	@Override
-	public void resume() {
-		
+	public void resume(StateManager stateManager) {
+		this.stateManager = stateManager;
+		AssetManager am = stateManager.getAssetManager();
+		try {
+			Bitmap ok = BitmapFactory.decodeStream(am.open("images/interface_buttons/next_button.png"));
+			Bitmap okArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/next_button_armed.png"));
+			Bitmap back = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
+			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
+			
+			int okButtonX = Game.G_WIDTH - ok.getWidth() - 25;
+			int okButtonY = Game.G_HEIGHT - ok.getHeight() - 15;
+			int backButtonX = okButtonX - back.getWidth() - 10;
+			int backButtonY = okButtonY;
+			
+			nextButton = new Button(ok, okArmed, okButtonX, okButtonY);
+			backButton = new Button(back, backArmed, backButtonX, backButtonY);
+			
+			String[] mapList = am.list(mapPath);
+			Assert.assertTrue("no maps", mapList.length > 0); //assume we have at least one map
+			listView = new MapListView(am, mapList);
+			
+			selectedMapNamePaint = new Paint();
+			selectedMapNamePaint.setTextSize(36);
+			selectedMapNamePaint.setColor(Color.WHITE);
+			
+			selectedMapSizePaint = new Paint();
+			selectedMapSizePaint.setTextSize(32);
+			selectedMapSizePaint.setColor(Color.WHITE);
+			
+			selectedMapDescriptionPaint = new Paint();
+			selectedMapDescriptionPaint.setTextSize(28);
+			selectedMapDescriptionPaint.setColor(Color.WHITE);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void dispose() {
-		if(nextButton != null)
+		super.dispose();
+		if(nextButton != null) {
 			nextButton.recycle();
-		if(backButton != null)
+			nextButton = null;
+		}
+		if(backButton != null) {
 			backButton.recycle();
-		if(listView != null)
+			backButton = null;
+		}
+		if(listView != null) {
 			listView.recycle();
+			listView = null;
+		}
+		selectedMapNamePaint = null;
+		selectedMapSizePaint = null;
+		selectedMapDescriptionPaint = null;
+		selectedPartialMap = null;
 	}
 
 }

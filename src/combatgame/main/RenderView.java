@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
-import android.os.Debug;
 import android.util.Log;
 
 public class RenderView extends SurfaceView implements Runnable {
@@ -69,10 +68,8 @@ public class RenderView extends SurfaceView implements Runnable {
 			
 			//update
 			startTimeUpdate = System.currentTimeMillis();
-			//while(accumulator >= targetUpdateTime) {
-				game.getCurrentState().update(delta);
-				accumulator -= targetUpdateTime;
-			//}
+			game.getCurrentState().update(delta);
+			accumulator -= targetUpdateTime;
 			long endTimeUpdate = System.currentTimeMillis() - startTimeUpdate;
 			
 			//render
@@ -94,10 +91,8 @@ public class RenderView extends SurfaceView implements Runnable {
 			holder.unlockCanvasAndPost(canvas);
 			drawTime = System.currentTimeMillis() - startTimeCleanup;
 
-			//accumulator += System.currentTimeMillis() - startTime;
 			
 			
-			//sleep if we've rendered faster than our target tick time
 			long elapsedTime;
 			//because we freakin can
 			while(true) {
@@ -107,16 +102,6 @@ public class RenderView extends SurfaceView implements Runnable {
 				}
 				
 			}
-			/*
-			long elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
-			if(elapsedTime < targetFPSTime) {
-				try {
-					Thread.sleep(targetFPSTime - elapsedTime);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-			*/
 			
 			//other fps stuff
 			elapsedTime = (System.nanoTime() - startTimeFrame) / 1000000;
@@ -145,6 +130,18 @@ public class RenderView extends SurfaceView implements Runnable {
 			} catch(InterruptedException e) {
 				//do nothing
 			}
+		}
+	}
+	
+	public void destroy() {
+		game = null;
+		renderThread = null;
+		holder = null;
+		drawingCanvas = null;
+		
+		if(frameBuffer != null) {
+			frameBuffer.recycle();
+			frameBuffer = null;
 		}
 	}
 }

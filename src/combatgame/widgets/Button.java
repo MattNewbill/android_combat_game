@@ -3,21 +3,23 @@ package combatgame.widgets;
 import combatgame.util.Util;
 import combatgame.graphics.*;
 import combatgame.input.*;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.util.Log;
 
-public class Button {
+public class Button implements Serializable {
 
+	private static final long serialVersionUID = -8391698997912810876L;
 	public static final int DISARMED = 0;
 	public static final int ARMED = 1;
 	public static final int DISABLED = 2;
 	public static final int ACTIVATED = 3;
 	public int state = 0;
 	
-	protected Bitmap[] images = new Bitmap[4];
+	protected transient Bitmap[] images = new Bitmap[4];
 	protected int x;
 	protected int y;
 	
@@ -120,8 +122,10 @@ public class Button {
 	
 	public void recycle() {
 		for(int i = 0; i < images.length; i++) {
-			if(images[i] != null)
+			if(images[i] != null) {
 				images[i].recycle();
+				images[i] = null;
+			}
 		}
 	}
 }

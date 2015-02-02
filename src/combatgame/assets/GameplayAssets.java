@@ -286,141 +286,259 @@ public class GameplayAssets {
 	
 	public static void dispose() {
 		for(int i = 0; i < sniperIconsP1.length; i++) {
-			if(sniperIconsP1[i] != null)
+			if(sniperIconsP1[i] != null) {
 				sniperIconsP1[i].recycle();
-			if(assaultIconsP1[i] != null)
+				sniperIconsP1[i] = null;
+			}
+			if(assaultIconsP1[i] != null) {
 				assaultIconsP1[i].recycle();
-			if(reconIconsP1[i] != null)
+				assaultIconsP1[i] = null;
+			}
+			if(reconIconsP1[i] != null) {
 				reconIconsP1[i].recycle();
-			if(cqcIconsP1[i] != null)
+				reconIconsP1[i] = null;
+			}
+			if(cqcIconsP1[i] != null) {
 				cqcIconsP1[i].recycle();
-			if(medicIconsP1[i] != null)
+				cqcIconsP1[i] = null;
+			}
+			if(medicIconsP1[i] != null) {
 				medicIconsP1[i].recycle();
-			if(presidentIconsP1[i] != null)
+				medicIconsP1[i] = null;
+			}
+			if(presidentIconsP1[i] != null) {
 				presidentIconsP1[i].recycle();
+				presidentIconsP1[i] = null;
+			}
 		}
 		for(int i = 0; i < sniperIconsP2.length; i++) {
-			if(sniperIconsP2[i] != null)
+			if(sniperIconsP2[i] != null) {
 				sniperIconsP2[i].recycle();
-			if(assaultIconsP2[i] != null)
+				sniperIconsP2[i] = null;
+			}
+			if(assaultIconsP2[i] != null) {
 				assaultIconsP2[i].recycle();
-			if(reconIconsP2[i] != null)
+				assaultIconsP2[i] = null;
+			}
+			if(reconIconsP2[i] != null) {
 				reconIconsP2[i].recycle();
-			if(cqcIconsP2[i] != null)
+				reconIconsP2[i] = null;
+			}
+			if(cqcIconsP2[i] != null) {
 				cqcIconsP2[i].recycle();
-			if(medicIconsP2[i] != null)
+				cqcIconsP2[i] = null;
+			}
+			if(medicIconsP2[i] != null) {
 				medicIconsP2[i].recycle();
-			if(presidentIconsP2[i] != null)
+				medicIconsP2[i] = null;
+			}
+			if(presidentIconsP2[i] != null) {
 				presidentIconsP2[i].recycle();
+				presidentIconsP2[i] = null;
+			}
 		}
 		
-		if(unitInfoIcon != null)
+		if(unitInfoIcon != null) {
 			unitInfoIcon.recycle();
-		if(moveIcon != null)
+			unitInfoIcon = null;
+		}
+		if(moveIcon != null) {
 			moveIcon.recycle();
-		if(abilityIcon != null)
+			moveIcon = null;
+		}
+		if(abilityIcon != null) {
 			abilityIcon.recycle();
-		if(deselectIcon != null)
+			abilityIcon = null;
+		}
+		if(deselectIcon != null) {
 			deselectIcon.recycle();
-		if(endTurnIcon != null)
+			deselectIcon = null;
+		}
+		if(endTurnIcon != null) {
 			endTurnIcon.recycle();
+			endTurnIcon = null;
+		}
 		
 		for(int i = 0; i < movementIcons.length; i++)
-			if(movementIcons[i] != null)
+			if(movementIcons[i] != null) {
 				movementIcons[i].recycle();
-		if(leftRotateIcon != null)
+				movementIcons[i] = null;
+			}
+		if(leftRotateIcon != null) {
 			leftRotateIcon.recycle();
-		if(rightRotateIcon != null)
+			leftRotateIcon = null;
+		}
+		if(rightRotateIcon != null) {
 			rightRotateIcon.recycle();
-		if(leftRotateSetupIcon != null)
+			rightRotateIcon = null;
+		}
+		if(leftRotateSetupIcon != null) {
 			leftRotateSetupIcon.recycle();
-		if(rightRotateSetupIcon != null)
+			leftRotateSetupIcon = null;
+		}
+		if(rightRotateSetupIcon != null) {
 			rightRotateSetupIcon.recycle();
-		
-		if(attackOverlay != null)
-			attackOverlay.recycle();
-		if(healOverlay != null)
-			healOverlay.recycle();
-		if(selectionOverlay != null)
-			selectionOverlay.recycle();
-		
-		for(int i = 0; i < numberOverlays.length; i++)
-			if(numberOverlays[i] != null)
-				numberOverlays[i].recycle();
-		
-		if(spawnUnitIcon != null)
-			spawnUnitIcon.recycle();
-		if(respawnUnitIcon != null)
-			respawnUnitIcon.recycle();
-		
-		if(playerBanner != null)
-			playerBanner.recycle();
-		
-		for(int i = 0; i < terrainSprites.length; i++) {
-			if(terrainSprites[i] != null)
-				terrainSprites[i].recycle();
-			if(barrierSprites[i] != null)
-				barrierSprites[i].recycle();
-			if(coverSprites[i] != null)
-				coverSprites[i].recycle();
-			if(waterSprites[i] != null)
-				waterSprites[i].recycle();
-			if(wallSprites[i] != null)
-				wallSprites[i].recycle();
-			if(player1BaseSprites[i] != null)
-				player1BaseSprites[i].recycle();
-			if(player2BaseSprites[i] != null)
-				player2BaseSprites[i].recycle();
+			rightRotateSetupIcon = null;
 		}
 		
-		if(rifleFireIcon != null)
+		if(attackOverlay != null) {
+			attackOverlay.recycle();
+			attackOverlay = null;
+		}
+		if(healOverlay != null) {
+			healOverlay.recycle();
+			healOverlay = null;
+		}
+		if(selectionOverlay != null) {
+			selectionOverlay.recycle();
+			selectionOverlay = null;
+		}
+		
+		for(int i = 0; i < numberOverlays.length; i++)
+			if(numberOverlays[i] != null) {
+				numberOverlays[i].recycle();
+				numberOverlays[i] = null;
+			}
+		
+		if(spawnUnitIcon != null) {
+			spawnUnitIcon.recycle();
+			spawnUnitIcon = null;
+		}
+		if(respawnUnitIcon != null) {
+			respawnUnitIcon.recycle();
+			respawnUnitIcon = null;
+		}
+		
+		if(playerBanner != null) {
+			playerBanner.recycle();
+			playerBanner = null;
+		}
+		
+		for(int i = 0; i < terrainSprites.length; i++) {
+			if(terrainSprites[i] != null) {
+				terrainSprites[i].recycle();
+				terrainSprites[i] = null;
+			}
+			if(barrierSprites[i] != null) {
+				barrierSprites[i].recycle();
+				barrierSprites[i] = null;
+			}
+			if(coverSprites[i] != null) {
+				coverSprites[i].recycle();
+				coverSprites[i] = null;
+			}
+			if(waterSprites[i] != null) {
+				waterSprites[i].recycle();
+				waterSprites[i] = null;
+			}
+			if(wallSprites[i] != null) {
+				wallSprites[i].recycle();
+				wallSprites[i] = null;
+			}
+			if(player1BaseSprites[i] != null) {
+				player1BaseSprites[i].recycle();
+				player1BaseSprites[i] = null;
+			}
+			if(player2BaseSprites[i] != null) {
+				player2BaseSprites[i].recycle();
+				player2BaseSprites[i] = null;
+			}
+		}
+		
+		if(rifleFireIcon != null) {
 			rifleFireIcon.recycle();
-		if(throwGrenadeIcon != null)
+			rifleFireIcon = null;
+		}
+		if(throwGrenadeIcon != null) {
 			throwGrenadeIcon.recycle();
-		if(concentratedShotIcon != null)
+			throwGrenadeIcon = null;
+		}
+		if(concentratedShotIcon != null) {
 			concentratedShotIcon.recycle();
-		if(wideShotIcon != null)
+			concentratedShotIcon = null;
+		}
+		if(wideShotIcon != null) {
 			wideShotIcon.recycle();
-		if(areaHealIcon != null)
+			wideShotIcon = null;
+		}
+		if(areaHealIcon != null) {
 			areaHealIcon.recycle();
-		if(singleHealIcon != null)
+			areaHealIcon = null;
+		}
+		if(singleHealIcon != null) {
 			singleHealIcon.recycle();
-		if(pistolShotIcon != null)
+			singleHealIcon = null;
+		}
+		if(pistolShotIcon != null) {
 			pistolShotIcon.recycle();
-		if(straightShotIcon != null)
+			pistolShotIcon = null;
+		}
+		if(straightShotIcon != null) {
 			straightShotIcon.recycle();
-		if(trickShotIcon != null)
+			straightShotIcon = null;
+		}
+		if(trickShotIcon != null) {
 			trickShotIcon.recycle();
-		if(chargedShotIcon != null)
+			trickShotIcon = null;
+		}
+		if(chargedShotIcon != null) {
 			chargedShotIcon.recycle();
-		if(quickShotIcon != null)
+			chargedShotIcon = null;
+		}
+		if(quickShotIcon != null) {
 			quickShotIcon.recycle();
+			quickShotIcon = null;
+		}
 		
-		if(yesIcon != null)
+		if(yesIcon != null) {
 			yesIcon.recycle();
-		if(yesArmedIcon != null)
+			yesIcon = null;
+		}
+		if(yesArmedIcon != null) {
 			yesArmedIcon.recycle();
-		if(noIcon != null)
+			yesArmedIcon = null;
+		}
+		if(noIcon != null) {
 			noIcon.recycle();
-		if(noArmedIcon != null)
+			noIcon = null;
+		}
+		if(noArmedIcon != null) {
 			noArmedIcon.recycle();
-		if(okIcon != null)
+			noArmedIcon = null;
+		}
+		if(okIcon != null) {
 			okIcon.recycle();
-		if(okArmedIcon != null)
+			okIcon = null;
+		}
+		if(okArmedIcon != null) {
 			okArmedIcon.recycle();
-		if(exitDialogIcon != null)
+			okArmedIcon = null;
+		}
+		if(exitDialogIcon != null) {
 			exitDialogIcon.recycle();
-		if(endTurnDialogIcon != null)
+			exitDialogIcon = null;
+		}
+		if(endTurnDialogIcon != null) {
 			endTurnDialogIcon.recycle();
+			endTurnDialogIcon = null;
+		}
 		
-		if(hitIndicatorUpIcon != null)
+		if(hitIndicatorUpIcon != null) {
 			hitIndicatorUpIcon.recycle();
-		if(hitIndicatorRightIcon != null)
+			hitIndicatorUpIcon = null;
+		}
+		if(hitIndicatorRightIcon != null) {
 			hitIndicatorRightIcon.recycle();
-		if(hitIndicatorDownIcon != null)
+			hitIndicatorRightIcon = null;
+		}
+		if(hitIndicatorDownIcon != null) {
 			hitIndicatorDownIcon.recycle();
-		if(hitIndicatorLeftIcon != null)
+			hitIndicatorDownIcon = null;
+		}
+		if(hitIndicatorLeftIcon != null) {
 			hitIndicatorLeftIcon.recycle();
+			hitIndicatorLeftIcon = null;
+		}
 		
 	}
 }

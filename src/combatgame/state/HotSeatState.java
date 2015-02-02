@@ -12,11 +12,13 @@ import java.util.List;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.util.Log;
+import android.content.Context;
 import android.content.res.AssetManager;
 
 public class HotSeatState extends GameState {
 	
+	private static final long serialVersionUID = 1L;
+
 	Map map;
 	
 	Paint paint;
@@ -65,6 +67,11 @@ public class HotSeatState extends GameState {
 		exitDialogPaint.setAlpha(125);
 	}
 
+	@Override
+	public int getStateID() {
+		return State.HOT_SEAT;
+	}
+	
 	@Override
 	public void update(float delta) {
 		if(!isGameOver) {
@@ -128,17 +135,18 @@ public class HotSeatState extends GameState {
 	}
 
 	@Override
-	public void pause() {
+	public void pause(Context context, boolean saveData) {
 		
 	}
 
 	@Override
-	public void resume() {
+	public void resume(StateManager stateManager) {
 		
 	}
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		GameplayAssets.dispose();
 		if(map != null)
 			map.dispose();

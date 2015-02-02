@@ -1,7 +1,6 @@
 package combatgame.main;
 
 import combatgame.input.TouchHandler;
-import combatgame.main.*;
 import combatgame.state.State;
 
 public interface StateManager {
@@ -12,5 +11,6 @@ public interface StateManager {
 	public android.content.res.AssetManager getAssetManager();
 	public TouchHandler getTouchHandler();
 	public boolean isBackPressed();
+	public android.app.Activity getActivity();
 	
 }

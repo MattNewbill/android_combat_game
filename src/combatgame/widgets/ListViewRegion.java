@@ -1,8 +1,6 @@
 package combatgame.widgets;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Paint;
 
 public class ListViewRegion {
 
@@ -31,6 +29,13 @@ public class ListViewRegion {
 	
 	public String getSubtitle() {
 		return subtitle;
+	}
+	
+	public void recycle() {
+		if(thumbnail != null) {
+			thumbnail.recycle();
+			thumbnail = null;
+		}
 	}
 	
 }

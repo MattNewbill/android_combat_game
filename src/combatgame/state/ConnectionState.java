@@ -1,12 +1,12 @@
 package combatgame.state;
 
-import combatgame.assets.GameplayAssets;
 import combatgame.graphics.Graphics2D;
 import combatgame.main.*;
 import combatgame.widgets.*;
 import combatgame.input.*;
-import combatgame.state.*;
 import java.util.List;
+
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,78 +15,36 @@ import android.graphics.Paint;
 
 public class ConnectionState extends State {
 
+	private static final long serialVersionUID = 1L;
+
 	public static final int V_BUTTON_MARGIN = 10;
 	
-	Button internetButton;
-	Button bluetoothButton;
-	Button hotSeatButton;
-	Button backButton;
+	transient Button internetButton;
+	transient Button bluetoothButton;
+	transient Button hotSeatButton;
+	transient Button backButton;
 	
 	boolean isBluetoothFeatureNotAvailableDialogShowing = false;
 	boolean isOnlineBattleFeatureNotAvailableDialogShowing = false;
 	
-	Bitmap background;
+	transient Bitmap background;
 
-	private Button onlineBattleOkButton;
-	private Button bluetoothOkButton;
-	private Paint exitDialogPaint;
-	private Bitmap onlineSoon;
-	private Bitmap bluetoothSoon;
+	private transient Button onlineBattleOkButton;
+	private transient Button bluetoothOkButton;
+	private transient Paint exitDialogPaint;
+	private transient Bitmap onlineSoon;
+	private transient Bitmap bluetoothSoon;
 	
 	public ConnectionState(StateManager sm) {
 		super(sm);
 		Game.shouldScale(true);
-		
-		AssetManager am = this.stateManager.getAssetManager();
-		
-		try {
-			Bitmap internetBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/online.png"));
-			Bitmap internetBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/online_armed.png"));
-			Bitmap bluetoothBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/bluetooth.png"));
-			Bitmap bluetoothBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/bluetooth_armed.png"));
-			Bitmap hotSeatBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/solo.png"));
-			Bitmap hotSeatBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/solo_armed.png"));
-			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
-			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
-			
-			Bitmap onlineBattleOkArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));
-			Bitmap onlineBattleOkDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
-			Bitmap bluetoothOkArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));;
-			Bitmap bluetoothOkDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
-			onlineSoon = BitmapFactory.decodeStream(am.open("images/menu/online_soon.png"));
-			bluetoothSoon = BitmapFactory.decodeStream(am.open("images/menu/bluetooth_soon.png"));
-			
-			int internetButtonX = (Game.G_WIDTH / 2) - internetBitmapDisarmed.getWidth() / 2;
-			int internetButtonY = (int) (Game.G_HEIGHT / 2 - (internetBitmapDisarmed.getHeight() - 50));
-			int bluetoothButtonX = (Game.G_WIDTH / 2) - bluetoothBitmapDisarmed.getWidth() / 2;
-			int bluetoothButtonY = (int) (Game.G_HEIGHT / 2 - (bluetoothBitmapDisarmed.getHeight() - 50) + V_BUTTON_MARGIN + internetBitmapDisarmed.getHeight());
-			int hotSeatButtonX = (Game.G_WIDTH / 2) - hotSeatBitmapDisarmed.getWidth() / 2;
-			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (hotSeatBitmapDisarmed.getHeight() - 50) + (V_BUTTON_MARGIN * 2) + internetBitmapDisarmed.getHeight() + bluetoothBitmapDisarmed.getHeight());
-			int backButtonX = Game.G_HEIGHT - hotSeatButtonY - hotSeatBitmapDisarmed.getHeight();
-			int backButtonY = hotSeatButtonY;
-			int onlineBattleOkButtonX = Game.G_WIDTH/2 - onlineBattleOkArmed.getWidth()/2 ;
-			int onlineBattleOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight()- 150;
-			int bluetoothOkButtonX = Game.G_WIDTH/2 - onlineBattleOkArmed.getWidth()/2;
-			int bluetoothOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight() - 150;
-			
-			internetButton = new Button(internetBitmapDisarmed, internetBitmapArmed, internetButtonX, internetButtonY);
-			bluetoothButton = new Button(bluetoothBitmapDisarmed, bluetoothBitmapArmed, bluetoothButtonX, bluetoothButtonY);
-			hotSeatButton = new Button(hotSeatBitmapDisarmed, hotSeatBitmapArmed, hotSeatButtonX, hotSeatButtonY);
-			backButton = new Button(backUnarmed, backArmed, backButtonX, backButtonY);
-			onlineBattleOkButton = new Button(onlineBattleOkDisarmed,onlineBattleOkArmed , onlineBattleOkButtonX, onlineBattleOkButtonY);
-			bluetoothOkButton = new Button(bluetoothOkDisarmed,bluetoothOkArmed , bluetoothOkButtonX, bluetoothOkButtonY);
-
-			
-			exitDialogPaint = new Paint();
-			exitDialogPaint.setColor(Color.BLACK);
-			exitDialogPaint.setAlpha(125);
-			
-			background = BitmapFactory.decodeStream(am.open("images/menu/background.png"));
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
 	}
 
+	@Override
+	public int getStateID() {
+		return State.CONNECTION;
+	}
+	
 	@Override
 	public void update(float delta) {
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
@@ -182,33 +140,103 @@ public class ConnectionState extends State {
 	}
 
 	@Override
-	public void pause() {
+	public void pause(Context context, boolean saveData) {
 
 	}
 
 	@Override
-	public void resume() {
+	public void resume(StateManager stateManager) {
+		this.stateManager = stateManager;
+		AssetManager am = this.stateManager.getAssetManager();
+		
+		try {
+			Bitmap internetBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/online.png"));
+			Bitmap internetBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/online_armed.png"));
+			Bitmap bluetoothBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/bluetooth.png"));
+			Bitmap bluetoothBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/bluetooth_armed.png"));
+			Bitmap hotSeatBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/solo.png"));
+			Bitmap hotSeatBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/solo_armed.png"));
+			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
+			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
+			
+			Bitmap onlineBattleOkArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));
+			Bitmap onlineBattleOkDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
+			Bitmap bluetoothOkArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));;
+			Bitmap bluetoothOkDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
+			onlineSoon = BitmapFactory.decodeStream(am.open("images/menu/online_soon.png"));
+			bluetoothSoon = BitmapFactory.decodeStream(am.open("images/menu/bluetooth_soon.png"));
+			
+			int internetButtonX = (Game.G_WIDTH / 2) - internetBitmapDisarmed.getWidth() / 2;
+			int internetButtonY = (int) (Game.G_HEIGHT / 2 - (internetBitmapDisarmed.getHeight() - 50));
+			int bluetoothButtonX = (Game.G_WIDTH / 2) - bluetoothBitmapDisarmed.getWidth() / 2;
+			int bluetoothButtonY = (int) (Game.G_HEIGHT / 2 - (bluetoothBitmapDisarmed.getHeight() - 50) + V_BUTTON_MARGIN + internetBitmapDisarmed.getHeight());
+			int hotSeatButtonX = (Game.G_WIDTH / 2) - hotSeatBitmapDisarmed.getWidth() / 2;
+			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (hotSeatBitmapDisarmed.getHeight() - 50) + (V_BUTTON_MARGIN * 2) + internetBitmapDisarmed.getHeight() + bluetoothBitmapDisarmed.getHeight());
+			int backButtonX = Game.G_HEIGHT - hotSeatButtonY - hotSeatBitmapDisarmed.getHeight();
+			int backButtonY = hotSeatButtonY;
+			int onlineBattleOkButtonX = Game.G_WIDTH/2 - onlineBattleOkArmed.getWidth()/2 ;
+			int onlineBattleOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight()- 150;
+			int bluetoothOkButtonX = Game.G_WIDTH/2 - onlineBattleOkArmed.getWidth()/2;
+			int bluetoothOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight() - 150;
+			
+			internetButton = new Button(internetBitmapDisarmed, internetBitmapArmed, internetButtonX, internetButtonY);
+			bluetoothButton = new Button(bluetoothBitmapDisarmed, bluetoothBitmapArmed, bluetoothButtonX, bluetoothButtonY);
+			hotSeatButton = new Button(hotSeatBitmapDisarmed, hotSeatBitmapArmed, hotSeatButtonX, hotSeatButtonY);
+			backButton = new Button(backUnarmed, backArmed, backButtonX, backButtonY);
+			onlineBattleOkButton = new Button(onlineBattleOkDisarmed,onlineBattleOkArmed , onlineBattleOkButtonX, onlineBattleOkButtonY);
+			bluetoothOkButton = new Button(bluetoothOkDisarmed,bluetoothOkArmed , bluetoothOkButtonX, bluetoothOkButtonY);
 
+			
+			exitDialogPaint = new Paint();
+			exitDialogPaint.setColor(Color.BLACK);
+			exitDialogPaint.setAlpha(125);
+			
+			background = BitmapFactory.decodeStream(am.open("images/menu/background.png"));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void dispose() {
-		if(internetButton != null)
+		super.dispose();
+		if(internetButton != null) {
 			internetButton.recycle();
-		if(bluetoothButton != null)
+			internetButton = null;
+		}
+		if(bluetoothButton != null) {
 			bluetoothButton.recycle();
-		if(hotSeatButton != null)
+			bluetoothButton = null;
+		}
+		if(hotSeatButton != null) {
 			hotSeatButton.recycle();
-		if(backButton != null)
+			hotSeatButton = null;
+		}
+		if(backButton != null) {
 			backButton.recycle();
-		if(onlineSoon != null)
+			backButton = null;
+		}
+		if(onlineSoon != null) {
 			onlineSoon.recycle();
-		if(bluetoothSoon != null)
+			onlineSoon = null;
+		}
+		if(bluetoothSoon != null) {
 			bluetoothSoon.recycle();
-		if(bluetoothOkButton != null)
+			bluetoothSoon = null;
+		}
+		if(bluetoothOkButton != null) {
 			bluetoothOkButton.recycle();
-		if(onlineBattleOkButton != null)
+			bluetoothOkButton = null;
+		}
+		if(onlineBattleOkButton != null) {
 			onlineBattleOkButton.recycle();
+			onlineBattleOkButton = null;
+		}
+		if(background != null) {
+			background.recycle();
+			background = null;
+		}
+		exitDialogPaint = null;
 	}
 	
 }
