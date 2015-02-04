@@ -9,7 +9,6 @@ import combatgame.input.LazyPool;
 import combatgame.input.LazyPool.LazyPoolObjectFactory;
 import combatgame.objects.Map;
 import combatgame.objects.Unit;
-import android.util.Log;
 
 public class Vision
 {

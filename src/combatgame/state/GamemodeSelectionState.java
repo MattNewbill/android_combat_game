@@ -21,53 +21,21 @@ public class GamemodeSelectionState extends State {
 
 	private static final long serialVersionUID = 1L;
 	PartialMap map;
-	GameMode selectedGamemode;
+	transient GameMode selectedGamemode;
 	
-	GamemodeListView listview;
+	transient GamemodeListView listview;
 	
-	Button startButton;
-	Button backButton;
+	transient Button startButton;
+	transient Button backButton;
 	
-	Paint selectedGamemodeNamePaint;
-	Paint selectedGamemodeLengthPaint;
-	Paint selectedGamemodeDescriptionPaint;
+	transient Paint selectedGamemodeNamePaint;
+	transient Paint selectedGamemodeLengthPaint;
+	transient Paint selectedGamemodeDescriptionPaint;
 	
 	public GamemodeSelectionState(StateManager stateManager, PartialMap map) {
 		super(stateManager);
-		Game.shouldScale(true);
 		
 		this.map = map;
-		
-		AssetManager am = stateManager.getAssetManager();
-		this.listview = new GamemodeListView(am);
-		try {
-			Bitmap start = BitmapFactory.decodeStream(am.open("images/interface_buttons/start_button.png"));
-			Bitmap startArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/start_button_armed.png"));
-			Bitmap back = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
-			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
-			
-			int okButtonX = Game.G_WIDTH - start.getWidth() - 25;
-			int okButtonY = Game.G_HEIGHT - start.getHeight() - 15;
-			int backButtonX = okButtonX - back.getWidth() - 10;
-			int backButtonY = okButtonY;
-			
-			startButton = new Button(start, startArmed, okButtonX, okButtonY);
-			backButton = new Button(back, backArmed, backButtonX, backButtonY);
-			
-			selectedGamemodeNamePaint = new Paint();
-			selectedGamemodeNamePaint.setTextSize(36);
-			selectedGamemodeNamePaint.setColor(Color.WHITE);
-			
-			selectedGamemodeLengthPaint = new Paint();
-			selectedGamemodeLengthPaint.setTextSize(32);
-			selectedGamemodeLengthPaint.setColor(Color.WHITE);
-			
-			selectedGamemodeDescriptionPaint = new Paint();
-			selectedGamemodeDescriptionPaint.setTextSize(28);
-			selectedGamemodeDescriptionPaint.setColor(Color.WHITE);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -138,17 +106,59 @@ public class GamemodeSelectionState extends State {
 
 	@Override
 	public void resume(StateManager stateManager) {
+		Game.shouldScale(true);
+		this.stateManager = stateManager;
 		
+		AssetManager am = stateManager.getAssetManager();
+		this.listview = new GamemodeListView(am);
+		try {
+			Bitmap start = BitmapFactory.decodeStream(am.open("images/interface_buttons/start_button.png"));
+			Bitmap startArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/start_button_armed.png"));
+			Bitmap back = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
+			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
+			
+			int okButtonX = Game.G_WIDTH - start.getWidth() - 25;
+			int okButtonY = Game.G_HEIGHT - start.getHeight() - 15;
+			int backButtonX = okButtonX - back.getWidth() - 10;
+			int backButtonY = okButtonY;
+			
+			startButton = new Button(start, startArmed, okButtonX, okButtonY);
+			backButton = new Button(back, backArmed, backButtonX, backButtonY);
+			
+			selectedGamemodeNamePaint = new Paint();
+			selectedGamemodeNamePaint.setTextSize(36);
+			selectedGamemodeNamePaint.setColor(Color.WHITE);
+			
+			selectedGamemodeLengthPaint = new Paint();
+			selectedGamemodeLengthPaint.setTextSize(32);
+			selectedGamemodeLengthPaint.setColor(Color.WHITE);
+			
+			selectedGamemodeDescriptionPaint = new Paint();
+			selectedGamemodeDescriptionPaint.setTextSize(28);
+			selectedGamemodeDescriptionPaint.setColor(Color.WHITE);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		if(startButton != null)
+		if(startButton != null) {
 			startButton.recycle();
-		if(backButton != null)
+			startButton = null;
+		}
+		if(backButton != null) {
 			backButton.recycle();
-		if(listview != null)
+			backButton = null;
+		}
+		if(listview != null) {
 			listview.recycle();
+			listview = null;
+		}
+		
+		selectedGamemodeNamePaint = null;
+		selectedGamemodeLengthPaint = null;
+		selectedGamemodeDescriptionPaint = null;
 	}
 }

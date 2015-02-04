@@ -24,7 +24,6 @@ public class AboutState extends State implements Serializable {
 	
 	public AboutState(StateManager stateManager) {
 		super(stateManager);
-		Game.shouldScale(true);
 	}
 	
 	@Override
@@ -58,6 +57,7 @@ public class AboutState extends State implements Serializable {
 
 	@Override
 	public void resume(StateManager stateManager) {
+		Game.shouldScale(true);
 		this.stateManager = stateManager;
 		
 		//load assets

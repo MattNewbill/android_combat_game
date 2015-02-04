@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.util.Log;
 
 public class TouchHandler implements OnTouchListener {
 

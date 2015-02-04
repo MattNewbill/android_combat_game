@@ -2,8 +2,6 @@ package combatgame.alerts;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Align;
-import android.graphics.Typeface;
 import combatgame.graphics.GPoint;
 import combatgame.graphics.Graphics2D;
 import combatgame.objects.Map;

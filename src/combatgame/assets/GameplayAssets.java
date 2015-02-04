@@ -2,14 +2,12 @@ package combatgame.assets;
 
 import java.io.IOException;
 
-import combatgame.main.Game;
 import combatgame.util.Util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
-import android.util.Log;
 import android.content.res.AssetManager;
 
 public class GameplayAssets {

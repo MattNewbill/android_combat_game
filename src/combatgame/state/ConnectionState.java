@@ -37,7 +37,6 @@ public class ConnectionState extends State {
 	
 	public ConnectionState(StateManager sm) {
 		super(sm);
-		Game.shouldScale(true);
 	}
 
 	@Override
@@ -146,6 +145,7 @@ public class ConnectionState extends State {
 
 	@Override
 	public void resume(StateManager stateManager) {
+		Game.shouldScale(true);
 		this.stateManager = stateManager;
 		AssetManager am = this.stateManager.getAssetManager();
 		

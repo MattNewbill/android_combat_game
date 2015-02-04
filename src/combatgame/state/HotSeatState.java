@@ -38,14 +38,6 @@ public class HotSeatState extends GameState {
 	public HotSeatState(StateManager stateManager, String mapPath, String tileSet, GameMode gm) {
 		super(stateManager);
 		
-		//if the device's resolution is our target size or lower, then we scale the game to our target size
-		//if(Game.P_WIDTH < Game.G_WIDTH && Game.P_HEIGHT < Game.G_HEIGHT)
-		//	Game.shouldScale(true);
-		//anything bigger and we don't scale
-		//else
-		//	Game.shouldScale(false);
-		Game.shouldScale(true); //TODO: change this
-		
 		paint = new Paint();
 		switchTurnsFill = new Paint(); switchTurnsFill.setColor(Color.BLACK);
 		switchTurnsFont = new Paint(); switchTurnsFont.setColor(Color.WHITE); switchTurnsFont.setTextAlign(Align.CENTER); switchTurnsFont.setTextSize(60); //TODO: scale this font size
@@ -141,7 +133,13 @@ public class HotSeatState extends GameState {
 
 	@Override
 	public void resume(StateManager stateManager) {
-		
+		//if the device's resolution is our target size or lower, then we scale the game to our target size
+		//if(Game.P_WIDTH < Game.G_WIDTH && Game.P_HEIGHT < Game.G_HEIGHT)
+		//	Game.shouldScale(true);
+		//anything bigger and we don't scale
+		//else
+		//	Game.shouldScale(false);
+		Game.shouldScale(true); //TODO: change this
 	}
 
 	@Override

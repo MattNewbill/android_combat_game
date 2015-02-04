@@ -35,7 +35,6 @@ public class MapSelectionState extends State {
 	
 	public MapSelectionState(StateManager stateManager) {
 		super(stateManager);
-		Game.shouldScale(true);
 	}
 
 	@Override
@@ -111,6 +110,7 @@ public class MapSelectionState extends State {
 
 	@Override
 	public void resume(StateManager stateManager) {
+		Game.shouldScale(true);
 		this.stateManager = stateManager;
 		AssetManager am = stateManager.getAssetManager();
 		try {

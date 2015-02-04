@@ -53,6 +53,9 @@ public class Game extends Activity implements StateManager {
 	//was the back button pressed
 	private static boolean isBackPressed = false;
 	
+	private boolean configurationChanged = false;
+	private boolean isStartUp = true;
+	
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
@@ -63,6 +66,13 @@ public class Game extends Activity implements StateManager {
                                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
+        if(savedInstanceState != null) {
+        	configurationChanged = true;
+        	isStartUp = true;
+        }
+        else {
+        	isStartUp = false;
+        }
         
         Display display = getWindowManager().getDefaultDisplay();
         if(android.os.Build.VERSION.SDK_INT >= 13) {
@@ -162,6 +172,7 @@ public class Game extends Activity implements StateManager {
 	@Override
 	public void onResume() {
 		super.onResume();
+		Log.i("combatgame", "on resume");
 		isBackPressed = false;
 		wakeLock.acquire();
 		try {
@@ -169,62 +180,89 @@ public class Game extends Activity implements StateManager {
 			FileInputStream finput = openFileInput("state");
 		    ObjectInputStream oinput = new ObjectInputStream(finput);
 		    StateWrapper sw = (StateWrapper) oinput.readObject();
+		    finput.close();
+		    oinput.close();
 		    
 			FileInputStream fis = openFileInput("storage");
 		    ObjectInputStream ois = new ObjectInputStream(fis);
 		    
+		    Object temp = ois.readObject();
+		    fis.close();
+		    ois.close();
+		    
 		    //cast our stream depending on which state we left off at
 		    switch(sw.getState()) {
 		    	case State.MAIN_MENU:
-		    		currentState = (MainMenuState) ois.readObject();
+		    		currentState = (MainMenuState) temp;
 		    		break;
 		    	case State.ABOUT:
-		    		currentState = (AboutState) ois.readObject();
+		    		currentState = (AboutState) temp;
 		    		break;
 		    	case State.CONNECTION:
-		    		currentState = (ConnectionState) ois.readObject();
+		    		currentState = (ConnectionState) temp;
 		    		break;
 		    	case State.BLUETOOTH:
-		    		currentState = (BluetoothGameState) ois.readObject();
+		    		currentState = (BluetoothGameState) temp;
 		    		break;
 		    	case State.INTERNET:
-		    		currentState = (InternetGameState) ois.readObject();
+		    		currentState = (InternetGameState) temp;
 		    		break;
 		    	case State.HOT_SEAT:
-		    		currentState = (HotSeatState) ois.readObject();
+		    		currentState = (HotSeatState) temp;
 		    		break;
 		    	case State.MAP_SELECTION:
-		    		currentState = (MapSelectionState) ois.readObject();
+		    		currentState = (MapSelectionState) temp;
 		    		break;
 		    	case State.GAMEMODE_SELECTION:
-		    		currentState = (GamemodeSelectionState) ois.readObject();
+		    		currentState = (GamemodeSelectionState) temp;
 		    		break;
 	    		default:
 	    			throw new IllegalArgumentException("Invalid state");
 		    }
-		    currentState.resume(this);
 		} catch(FileNotFoundException e) {
-			currentState = getInitialState();
-			currentState.resume(this);
+			if(isStartUp) {
+				isStartUp = false;
+				currentState = getInitialState();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			currentState = getInitialState();
+		} finally {
+			if(configurationChanged) {
+				configurationChanged = false;
+			}
+			else {
+				Log.i("combatgame", "deleting cache");
+				deleteFile("storage");
+				deleteFile("state");
+			}
 		}
+		currentState.resume(this);
 		renderView.resume();
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
+		Log.i("combatgame", "on pause");
 		wakeLock.release();
 		currentState.pause(this, true);
 		renderView.pause();
-		//if the game is closing up, clear our cache and exit
+		currentState.dispose();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.i("combatgame", "on destroy");
+		//delete the cache if we are closing the app
 		if(isFinishing()) {
 			deleteFile("storage");
 			deleteFile("state");
 		}
-		//otherwise serialize the current state so we can pick up where we left off
+		//if the game isn't closing up serialize the current state so we can pick up where we left off
 		else {
+			Log.i("combatgame", "saving state");
 			try {
 				//save the state we are leaving off at
 				FileOutputStream fout = openFileOutput("state", Context.MODE_PRIVATE);
@@ -243,7 +281,6 @@ public class Game extends Activity implements StateManager {
 				e.printStackTrace();
 			}
 		}
-		currentState.dispose();
 	}
 	
 	@Override

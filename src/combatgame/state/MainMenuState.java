@@ -7,7 +7,6 @@ import combatgame.graphics.*;
 import combatgame.main.StateManager;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -28,7 +27,6 @@ public class MainMenuState extends State {
 	
 	public MainMenuState(StateManager stateManager) {
 		super(stateManager);
-		Game.shouldScale(true);
 	}
 
 	@Override
@@ -38,6 +36,7 @@ public class MainMenuState extends State {
 	
 	@Override
 	public void update(float delta) {
+		//Log.i("combatgame", ""+Game.isScaled());
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
 		events = startButton.update(events);
 		events = aboutButton.update(events);
@@ -84,9 +83,9 @@ public class MainMenuState extends State {
 		
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public void resume(StateManager stateManager) {
+		Game.shouldScale(true);
 		this.stateManager = stateManager;
 		AssetManager am = stateManager.getAssetManager();
 		
@@ -99,13 +98,6 @@ public class MainMenuState extends State {
 			Bitmap startButtonArmed = BitmapFactory.decodeStream(am.open("images/menu/start_button_armed.png"));
 			Bitmap aboutButtonArmed = BitmapFactory.decodeStream(am.open("images/menu/about_button_armed.png"));
 			Bitmap exitButtonArmed = BitmapFactory.decodeStream(am.open("images/menu/exit_button_armed.png"));
-			
-			Log.i("combatgame", ""+startButtonDisarmed.getByteCount());
-			Log.i("combatgame", ""+startButtonArmed.getByteCount());
-			Log.i("combatgame", ""+aboutButtonDisarmed.getByteCount());
-			Log.i("combatgame", ""+aboutButtonArmed.getByteCount());
-			Log.i("combatgame", ""+exitButtonDisarmed.getByteCount());
-			Log.i("combatgame", ""+exitButtonArmed.getByteCount());
 			
 			//determine button coordinates
 			int startButtonX = (Game.G_WIDTH / 2) - startButtonDisarmed.getWidth() / 2;
@@ -121,7 +113,6 @@ public class MainMenuState extends State {
 			exitButton = new Button(exitButtonDisarmed, exitButtonArmed, exitButtonX, exitButtonY);
 			
 			background = BitmapFactory.decodeStream(am.open("images/menu/background.png"));
-			Log.i("combatgame", ""+background.getByteCount());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

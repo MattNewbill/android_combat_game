@@ -1,7 +1,5 @@
 package combatgame.objects;
 
-import android.util.Log;
-
 public class MapTile {
 	private MapFeature	feature;
 	private boolean hasUnit;

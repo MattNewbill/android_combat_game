@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
-import android.util.Log;
 
 public class RenderView extends SurfaceView implements Runnable {
 

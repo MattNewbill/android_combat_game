@@ -1,10 +1,14 @@
 package combatgame.objects;
 
+import java.io.Serializable;
+
 import android.graphics.Bitmap;
 
-public class PartialMap {
+public class PartialMap implements Serializable {
 
-	private Bitmap preview; //300x300
+	private static final long serialVersionUID = 1L;
+
+	private transient Bitmap preview; //300x300
 	
 	private String path;
 	private String name;

@@ -4,15 +4,13 @@ import combatgame.util.Util;
 import combatgame.graphics.*;
 import combatgame.input.*;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 
-public class Button implements Serializable {
-
-	private static final long serialVersionUID = -8391698997912810876L;
+public class Button {
+	
 	public static final int DISARMED = 0;
 	public static final int ARMED = 1;
 	public static final int DISABLED = 2;

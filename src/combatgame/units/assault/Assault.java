@@ -2,7 +2,6 @@ package combatgame.units.assault;
 
 import combatgame.assets.*;
 import combatgame.objects.Unit;
-import combatgame.objects.Unit.UnitType;
 import combatgame.units.Ability;
 import combatgame.util.Util;
 
