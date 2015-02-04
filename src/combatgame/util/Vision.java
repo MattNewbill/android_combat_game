@@ -16,10 +16,8 @@ public class Vision
 	private static int view;
 	private static int width;
 	private static int height;
-//	private static char direction;
 	private static int direction;
 	
-//	private static int[][] mapmap;
 	private static Map MAP;
 	private static Unit UNIT;
 
@@ -30,10 +28,9 @@ public class Vision
 	private static boolean[][] notUsed;
 	private static List<GPoint> ans= new ArrayList<GPoint>();
 	
-
 	private static GPoint point;
 	private static LazyPool<GPoint> pool;
-	public static final int MAX_POOL_SIZE = 120;
+	public static final int MAX_POOL_SIZE = 200;
 	
 	static {
 		LazyPoolObjectFactory<GPoint> factory = new LazyPoolObjectFactory<GPoint>() {
@@ -45,16 +42,8 @@ public class Vision
 		pool = new LazyPool<GPoint>(factory, MAX_POOL_SIZE);
 	}
 
-//	public static List<GPoint> getSprintVision( int[][] map, GPoint locIn, int viewIn, int widthIn, int heightIn, char directionIn, int distance)
 	public static List<GPoint> getSprintVision( Map iMAP, Unit iUNIT )
 	{
-//		loc= new GPoint(locIn);
-//		view=viewIn;
-//		width=widthIn;
-//		height=heightIn;
-//		direction=directionIn;
-//		mapmap=map;
-		
 		MAP = iMAP;
 		UNIT = iUNIT;
 		loc = UNIT.getXYCoordinate();
@@ -96,15 +85,8 @@ public class Vision
 		return ans;
 	}
 
-//	public static List<GPoint> getSlowVision( int[][] map, GPoint locIn, int viewIn, int widthIn, int heightIn, char directionIn, int distance)
 	public static List<GPoint> getSlowVision( Map iMAP, Unit iUNIT )
 	{
-//		loc= new GPoint(locIn);
-//		view=viewIn;
-//		width=widthIn;
-//		height=heightIn;
-//		mapmap=map;
-		
 		MAP = iMAP;
 		UNIT = iUNIT;
 		loc = UNIT.getXYCoordinate();
@@ -140,34 +122,22 @@ public class Vision
 		ans.add(loc);
 		
 		direction = Unit.FACING_LEFT;
-//		direction = 'l';
 		work();
 		direction = Unit.FACING_DOWN;
-//		direction = 'd';
 		work();
 		direction = Unit.FACING_RIGHT;
-//		direction = 'r';
 		work();
 		direction = Unit.FACING_UP;
-//		direction = 'u';
 		work();
 		return ans;
 	}
 	
-//	public static List<GPoint> getLaunchVision( int[][] map, GPoint locIn, int viewIn, int widthIn, int heightIn, char directionIn, int distance)
 	public static List<GPoint> getLaunchVision( Map iMAP, Unit iUNIT, int distance )
 	{
-//		loc= new GPoint(locIn);
-//		view=distance;
-//		width=widthIn;
-//		height=heightIn;
-		
-//		mapmap=map;
 		MAP = iMAP;
 		UNIT = iUNIT;
 		
 		loc = UNIT.getXYCoordinate();
-		//view = UNIT.getVisionRadius()/2;
 		view = distance;
 		width = MAP.getNum_horizontal_tiles();
 		height = MAP.getNum_vertical_tiles();
@@ -184,16 +154,12 @@ public class Vision
 		ans.add(loc);
 		
 		direction = Unit.FACING_LEFT;
-//		direction = 'l';
 		work();
 		direction = Unit.FACING_DOWN;
-//		direction = 'd';
 		work();
 		direction = Unit.FACING_RIGHT;
-//		direction = 'r';
 		work();
 		direction = Unit.FACING_UP;
-//		direction = 'u';
 		work();
 		return ans;
 	}
@@ -205,7 +171,6 @@ public class Vision
 		for(int i=left;i<=right;i++)
 			for(int j=top;j<=bottom;j++) {
 				if( (direction==Unit.FACING_UP)||(direction==Unit.FACING_DOWN) ) //up or down
-//				if( (direction=='u')||(direction=='d') )
 				{
 					if(notUsed[j][i])
 						if( Math.abs(loc.row-j) >= Math.abs(loc.col-i) )
@@ -216,7 +181,6 @@ public class Vision
 									point.row = j; point.col = i;
 									ans.add(point);
 									notUsed[j][i] = false;
-//									ans.add(new GPoint(j,i));
 								}
 				}
 				else //left or right
@@ -230,7 +194,6 @@ public class Vision
 									point.row = j; point.col = i;
 									ans.add(point);
 									notUsed[j][i] = false;
-//									ans.add(new GPoint(j,i));
 								}
 				}
 			}
@@ -240,7 +203,6 @@ public class Vision
 	
 	private static void limit()
 	{
-//		if(direction=='u')
 		if(direction==Unit.FACING_UP)
 		{
 			left=loc.col-view;
@@ -258,8 +220,6 @@ public class Vision
 			bottom=loc.row-1;
 
 		}//dir up
-		
-//		else if(direction=='d')
 		else if(direction==Unit.FACING_DOWN)
 		{
 			left=loc.col-view;
@@ -276,8 +236,6 @@ public class Vision
 			if(bottom>=height)
 				bottom=height-1;
 		}//dir down
-		
-//		else if(direction=='l')
 		else if(direction==Unit.FACING_LEFT)
 		{
 			left=loc.col-view;
@@ -294,8 +252,6 @@ public class Vision
 			if(bottom>=height)
 				bottom=height-1;
 		}//dir left
-		
-//		else if(direction=='r')
 		else if(direction==Unit.FACING_RIGHT)
 		{
 			left=loc.col+1;
@@ -322,7 +278,6 @@ public class Vision
 			return lineOfSight;
 		
 		if( (direction==Unit.FACING_UP)||(direction==Unit.FACING_DOWN) ) //up or down
-//		if( (direction=='u')||(direction=='d') )
 		{
 			if(J < loc.row)
 			{
@@ -351,7 +306,6 @@ public class Vision
 					tempY=(int) ((k-minR)*slope + minC +.5);
 				
 				if(!(MAP.getFeature(k, tempY).isSeethrough()))
-//				if(mapmap[k][tempY] == 3)
 					lineOfSight=false;
 			}
 		}
@@ -384,7 +338,6 @@ public class Vision
 					tempX=(int) ((k-minC)*slope + minR +.5);
 				
 				if(!(MAP.getFeature(tempX, k).isSeethrough()))
-//				if(mapmap[tempX][k] == 3)
 					lineOfSight=false;
 			}
 		}

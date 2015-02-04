@@ -10,8 +10,6 @@ import combatgame.graphics.GPoint;
 
 public class Movement
 {
-//	private static int[][]map;
-	
 	private static Map MAP;
 	private static Unit UNIT;
 	private static GPoint loc;
@@ -26,13 +24,7 @@ public class Movement
 	private static List<GPoint> vis;
 
 	public static GPoint[][] getMovement( Map iMAP, Unit iUNIT )
-//	public static GPoint[][] getMovement( int[][]Imap, GPoint Iloc, int Idistance )
 	{
-		//map=Imap;
-		//loc=Iloc;
-		//distance=Idistance;
-		//width = map[0].length;
-		//height = map.length;
 		MAP=iMAP;
 		UNIT=iUNIT;
 		loc =UNIT.getXYCoordinate();
@@ -47,10 +39,7 @@ public class Movement
 			for(int b=0; b<notUsed[a].length; b++)
 				notUsed[a][b]=false;
 		
-//		if(Unit.sprint)
-			vis = Vision.getSprintVision( MAP, UNIT );
-//		else
-//			vis = Vision.getSlowVision( MAP, UNIT );
+		vis = Vision.getSprintVision( MAP, UNIT );
 		
 		for(int v=0; v < vis.size(); v++)
 			notUsed[vis.get(v).row][vis.get(v).col]=true;
@@ -77,7 +66,6 @@ public class Movement
 					if(notUsed[tempPoint.row][tempPoint.col])
 						if( !(MAP.getTile(tempPoint.row, tempPoint.col).hasUnit()) )
 							if(MAP.getFeature(tempPoint.row, tempPoint.col).isPassable())
-						//if(map[tempPoint.row][tempPoint.col] == 0)
 							{
 								ans[i] = Arrays.copyOf(ans[i], ans[i].length + 1);
 								ans[i][ans[i].length-1]= new GPoint(tempPoint);
@@ -91,7 +79,6 @@ public class Movement
 					if(notUsed[tempPoint.row][tempPoint.col])
 						if( !(MAP.getTile(tempPoint.row, tempPoint.col).hasUnit()) )
 							if(MAP.getFeature(tempPoint.row, tempPoint.col).isPassable())
-							//if(map[tempPoint.row][tempPoint.col] == 0)
 							{
 								ans[i] = Arrays.copyOf(ans[i], ans[i].length + 1);
 								ans[i][ans[i].length-1]= new GPoint(tempPoint);
@@ -103,7 +90,6 @@ public class Movement
 					if(notUsed[tempPoint.row][tempPoint.col])
 						if( !(MAP.getTile(tempPoint.row, tempPoint.col).hasUnit()) )
 							if(MAP.getFeature(tempPoint.row, tempPoint.col).isPassable())
-							//if(map[tempPoint.row][tempPoint.col] == 0)
 							{
 								ans[i] = Arrays.copyOf(ans[i], ans[i].length + 1);
 								ans[i][ans[i].length-1]= new GPoint(tempPoint);
@@ -115,7 +101,6 @@ public class Movement
 					if(notUsed[tempPoint.row][tempPoint.col])
 						if( !(MAP.getTile(tempPoint.row, tempPoint.col).hasUnit()) )
 							if(MAP.getFeature(tempPoint.row, tempPoint.col).isPassable())
-							//if(map[tempPoint.row][tempPoint.col] == 0)
 							{
 								ans[i] = Arrays.copyOf(ans[i], ans[i].length + 1);
 								ans[i][ans[i].length-1]= new GPoint(tempPoint);
