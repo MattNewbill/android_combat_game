@@ -68,10 +68,10 @@ public class Game extends Activity implements StateManager {
 		
         if(savedInstanceState != null) {
         	configurationChanged = true;
-        	isStartUp = true;
+        	isStartUp = false;
         }
         else {
-        	isStartUp = false;
+        	isStartUp = true;
         }
         
         Display display = getWindowManager().getDefaultDisplay();
@@ -175,70 +175,82 @@ public class Game extends Activity implements StateManager {
 		Log.i("combatgame", "on resume");
 		isBackPressed = false;
 		wakeLock.acquire();
-		try {
-			//read in which state we were last at so we know what to cast our stream as
-			FileInputStream finput = openFileInput("state");
-		    ObjectInputStream oinput = new ObjectInputStream(finput);
-		    StateWrapper sw = (StateWrapper) oinput.readObject();
-		    finput.close();
-		    oinput.close();
-		    
-			FileInputStream fis = openFileInput("storage");
-		    ObjectInputStream ois = new ObjectInputStream(fis);
-		    
-		    Object temp = ois.readObject();
-		    fis.close();
-		    ois.close();
-		    
-		    //cast our stream depending on which state we left off at
-		    switch(sw.getState()) {
-		    	case State.MAIN_MENU:
-		    		currentState = (MainMenuState) temp;
-		    		break;
-		    	case State.ABOUT:
-		    		currentState = (AboutState) temp;
-		    		break;
-		    	case State.CONNECTION:
-		    		currentState = (ConnectionState) temp;
-		    		break;
-		    	case State.BLUETOOTH:
-		    		currentState = (BluetoothGameState) temp;
-		    		break;
-		    	case State.INTERNET:
-		    		currentState = (InternetGameState) temp;
-		    		break;
-		    	case State.HOT_SEAT:
-		    		currentState = (HotSeatState) temp;
-		    		break;
-		    	case State.MAP_SELECTION:
-		    		currentState = (MapSelectionState) temp;
-		    		break;
-		    	case State.GAMEMODE_SELECTION:
-		    		currentState = (GamemodeSelectionState) temp;
-		    		break;
-	    		default:
-	    			throw new IllegalArgumentException("Invalid state");
-		    }
-		} catch(FileNotFoundException e) {
-			if(isStartUp) {
-				isStartUp = false;
-				currentState = getInitialState();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(isStartUp) {
+			Log.i("combatgame", "startup if");
+			isStartUp = false;
 			currentState = getInitialState();
-		} finally {
-			if(configurationChanged) {
-				configurationChanged = false;
-			}
-			else {
-				Log.i("combatgame", "deleting cache");
-				deleteFile("storage");
-				deleteFile("state");
+			deleteCache();
+		}
+		else {
+			try {
+				Log.i("combatgame", "try loading cache");
+				//read in which state we were last at so we know what to cast our stream as
+				FileInputStream finput = openFileInput("state");
+			    ObjectInputStream oinput = new ObjectInputStream(finput);
+			    StateWrapper sw = (StateWrapper) oinput.readObject();
+			    finput.close();
+			    oinput.close();
+			    
+				FileInputStream fis = openFileInput("storage");
+			    ObjectInputStream ois = new ObjectInputStream(fis);
+			    
+			    Object temp = ois.readObject();
+			    fis.close();
+			    ois.close();
+			    
+			    //cast our stream depending on which state we left off at
+			    switch(sw.getState()) {
+			    	case State.MAIN_MENU:
+			    		currentState = (MainMenuState) temp;
+			    		break;
+			    	case State.ABOUT:
+			    		currentState = (AboutState) temp;
+			    		break;
+			    	case State.CONNECTION:
+			    		currentState = (ConnectionState) temp;
+			    		break;
+			    	case State.BLUETOOTH:
+			    		currentState = (BluetoothGameState) temp;
+			    		break;
+			    	case State.INTERNET:
+			    		currentState = (InternetGameState) temp;
+			    		break;
+			    	case State.HOT_SEAT:
+			    		currentState = (HotSeatState) temp;
+			    		break;
+			    	case State.MAP_SELECTION:
+			    		currentState = (MapSelectionState) temp;
+			    		break;
+			    	case State.GAMEMODE_SELECTION:
+			    		currentState = (GamemodeSelectionState) temp;
+			    		break;
+		    		default:
+		    			throw new IllegalArgumentException("Invalid state");
+			    }
+			} catch(FileNotFoundException e) {
+				Log.i("combatgame", "cache not found");
+			} catch (Exception e) {
+				Log.i("combatgame", "weird catch");
+				e.printStackTrace();
+				currentState = getInitialState();
+			} finally {
+				if(configurationChanged) {
+					Log.i("combatgame", "config changed finally");
+					configurationChanged = false;
+				}
+				else {
+					deleteCache();
+				}
 			}
 		}
 		currentState.resume(this);
 		renderView.resume();
+	}
+	
+	public void deleteCache() {
+		Log.i("combatgame", "deleting cache");
+		deleteFile("storage");
+		deleteFile("state");
 	}
 	
 	@Override
@@ -257,8 +269,7 @@ public class Game extends Activity implements StateManager {
 		Log.i("combatgame", "on destroy");
 		//delete the cache if we are closing the app
 		if(isFinishing()) {
-			deleteFile("storage");
-			deleteFile("state");
+			deleteCache();
 		}
 		//if the game isn't closing up serialize the current state so we can pick up where we left off
 		else {
