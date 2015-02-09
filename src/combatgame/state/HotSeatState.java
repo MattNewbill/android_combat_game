@@ -140,6 +140,7 @@ public class HotSeatState extends GameState {
 		//else
 		//	Game.shouldScale(false);
 		Game.shouldScale(true); //TODO: change this
+		this.stateManager = stateManager;
 	}
 
 	@Override

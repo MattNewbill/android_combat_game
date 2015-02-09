@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Point;
@@ -128,6 +129,15 @@ public class Game extends Activity implements StateManager {
 		return false;
 	}
 	
+	public int getScreenOrientation() {
+	    int orientation = Configuration.ORIENTATION_UNDEFINED;
+        if(P_WIDTH < P_HEIGHT)
+            orientation = Configuration.ORIENTATION_PORTRAIT;
+        else
+             orientation = Configuration.ORIENTATION_LANDSCAPE;
+	    return orientation;
+	}
+	
 	@Override
 	public void setState(State state) {
 		if(state == null) {
@@ -234,7 +244,7 @@ public class Game extends Activity implements StateManager {
 				e.printStackTrace();
 				currentState = getInitialState();
 			} finally {
-				if(configurationChanged) {
+				if(configurationChanged && getScreenOrientation() != Configuration.ORIENTATION_LANDSCAPE) {
 					Log.i("combatgame", "config changed finally");
 					configurationChanged = false;
 				}
