@@ -106,6 +106,12 @@ public class GameplayAssets {
 	public static Bitmap hitIndicatorDownIcon;
 	public static Bitmap hitIndicatorLeftIcon;
 	
+	//tool tip images
+	public static Bitmap TTok0;
+	public static Bitmap TTok1;
+	public static Bitmap TTcheckbox0;
+	public static Bitmap TTcheckbox1;
+	
 	private GameplayAssets(){}
 	
 	public static void loadGameplayAssets(AssetManager am, String mapSetting) {
@@ -218,6 +224,11 @@ public class GameplayAssets {
 			hitIndicatorRightIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_right.png"), null, options);
 			hitIndicatorDownIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_down.png"), null, options);
 			hitIndicatorLeftIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_left.png"), null, options);
+			
+			TTok0 = BitmapFactory.decodeStream(am.open("images/tooltip_stuff/small_ok_button.png"), null, options);
+			TTok1 = BitmapFactory.decodeStream(am.open("images/tooltip_stuff/small_ok_button_armed.png"), null, options);
+			TTcheckbox0 = BitmapFactory.decodeStream(am.open("images/tooltip_stuff/checkbox.png"), null, options);
+			TTcheckbox1 = BitmapFactory.decodeStream(am.open("images/tooltip_stuff/checkbox_armed.png"), null, options);
 			
 			loadMapTiles(am, options, mapSetting);
 			
@@ -537,6 +548,22 @@ public class GameplayAssets {
 			hitIndicatorLeftIcon.recycle();
 			hitIndicatorLeftIcon = null;
 		}
-		
+
+		if(TTok0 != null) {
+			TTok0.recycle();
+			TTok0 = null;
+		}
+		if(TTok1 != null) {
+			TTok1.recycle();
+			TTok1 = null;
+		}
+		if(TTcheckbox0 != null) {
+			TTcheckbox0.recycle();
+			TTcheckbox0 = null;
+		}
+		if(TTcheckbox1 != null) {
+			TTcheckbox1.recycle();
+			TTcheckbox1 = null;
+		}
 	}
 }
