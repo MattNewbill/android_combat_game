@@ -17,8 +17,7 @@ public class HitIndicator {
 	private Map map;
 	private Bitmap indicator;
 
-	public HitIndicator(Unit attackingUnit, Ability currentAbility,
-			Unit defendingUnit, GPoint tile, Map map) {
+	public HitIndicator(Unit attackingUnit, Ability currentAbility,	Unit defendingUnit, GPoint tile, Map map) {
 		this.tile = tile.clone();
 		this.map = map;
 		

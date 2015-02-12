@@ -6,6 +6,8 @@ import combatgame.objects.Unit;
 
 public abstract class DeathMatch extends GameMode {
 
+	private static final long serialVersionUID = 1L;
+
 	public DeathMatch(AssetManager am, String path) {
 		super(am, path);
 	}

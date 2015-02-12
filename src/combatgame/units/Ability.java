@@ -1,5 +1,6 @@
 package combatgame.units;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,9 @@ import combatgame.objects.Map;
 import combatgame.objects.Unit;
 import combatgame.widgets.Button;
 
-public abstract class Ability {
+public abstract class Ability implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	protected int abilityCost;
 	protected int damage;
 	protected String type = null;
@@ -21,7 +23,7 @@ public abstract class Ability {
 	protected List<GPoint> tilesAttackable = new ArrayList<GPoint>();
 	protected List<AttackedTile> attackedTiles = new ArrayList<AttackedTile>();
 	
-	protected Button abilityButton;
+	protected transient Button abilityButton;
 	
 	
 	protected static LazyPool<AttackedTile> pool;
@@ -39,6 +41,7 @@ public abstract class Ability {
 	
 	public Ability() {}
 	
+	public abstract void loadButton();
 	public abstract List<GPoint> getTilesAttackable(Unit unit, Map map);
 	public abstract List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking, GPoint tileTouched, Map map);
 	public abstract boolean isValidTileToAttack(Unit unitWhoIsAttacking, GPoint tileToCheck, Map map);

@@ -9,6 +9,8 @@ import combatgame.util.Vision;
 
 public abstract class BasicAttack extends Ability {
 
+	private static final long serialVersionUID = 1L;
+
 	public BasicAttack() {
 		super();
 	}

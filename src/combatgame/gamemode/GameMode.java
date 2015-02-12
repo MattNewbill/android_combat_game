@@ -1,13 +1,16 @@
 package combatgame.gamemode;
 
+import java.io.Serializable;
+
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import combatgame.objects.Map;
 import combatgame.objects.Unit;
 
-public abstract class GameMode {
+public abstract class GameMode implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	protected Unit[] player1Units;
 	protected Unit[] player2Units;
 	
@@ -15,7 +18,7 @@ public abstract class GameMode {
 	protected String gamemodeLength;
 	protected String gamemodeDescription;
 	
-	protected Bitmap preview;
+	protected transient Bitmap preview;
 	
 	public static final int IN_PROGRESS = 0;
 	public static final int STALEMATE = 1;
@@ -48,5 +51,9 @@ public abstract class GameMode {
 	
 	public Bitmap getPreview() {
 		return preview;
+	}
+	
+	public void resume() {
+
 	}
 }

@@ -1,6 +1,10 @@
 package combatgame.objects;
 
-public class MapFeature {
+import java.io.Serializable;
+
+public class MapFeature implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private boolean isPassable;
 	private boolean isSeethrough;
 	private boolean isSlowing;

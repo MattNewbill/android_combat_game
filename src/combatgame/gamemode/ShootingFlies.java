@@ -9,6 +9,8 @@ import combatgame.units.recon.Recon;
 
 public class ShootingFlies extends DeathMatch {
 
+	private static final long serialVersionUID = 1L;
+	
 	public ShootingFlies(AssetManager am, String path) {
 		super(am, path);
 		gamemodeName = "Shooting Flies";

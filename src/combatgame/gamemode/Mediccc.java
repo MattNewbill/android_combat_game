@@ -8,6 +8,8 @@ import combatgame.units.sniper.Sniper;
 
 public class Mediccc extends DeathMatch {
 
+	private static final long serialVersionUID = 1L;
+	
 	public Mediccc(AssetManager am, String path) {
 		super(am, path);
 		gamemodeName = "Medic!!!!";

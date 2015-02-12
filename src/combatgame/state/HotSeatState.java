@@ -20,43 +20,30 @@ public class HotSeatState extends GameState {
 	private static final long serialVersionUID = 1L;
 
 	Map map;
+	String mapPath;
+	String tileSet;
+	GameMode gm;
 	
-	Paint paint;
+	transient Paint paint;
 	
 	boolean isGameOver = false;
 	
 	boolean switchTurns = false;
-	Paint switchTurnsFill;
-	Paint switchTurnsFont;
-	Button switchTurnsOKButton;
+	transient Paint switchTurnsFill;
+	transient Paint switchTurnsFont;
+	transient Button switchTurnsOKButton;
 	
 	boolean isExitDialogShowing = false;
-	Paint exitDialogPaint;
-	Button yesButton;
-	Button noButton;
+	transient Paint exitDialogPaint;
+	transient Button yesButton;
+	transient Button noButton;
 	
 	public HotSeatState(StateManager stateManager, String mapPath, String tileSet, GameMode gm) {
 		super(stateManager);
 		
-		paint = new Paint();
-		switchTurnsFill = new Paint(); switchTurnsFill.setColor(Color.BLACK);
-		switchTurnsFont = new Paint(); switchTurnsFont.setColor(Color.WHITE); switchTurnsFont.setTextAlign(Align.CENTER); switchTurnsFont.setTextSize(60); //TODO: scale this font size
-		
-		AssetManager am = this.stateManager.getAssetManager();
-		
-		//load gameplay assets and only the specific tiles for the map that the user chose
-		GameplayAssets.loadGameplayAssets(am, tileSet);
-		
-		//create map
-		map = new Map(this, am, mapPath, gm);
-		
-		switchTurnsOKButton = new Button(GameplayAssets.okIcon, GameplayAssets.okArmedIcon, Game.G_WIDTH / 2 - (GameplayAssets.okIcon.getWidth() / 2), Game.G_HEIGHT / 2 + 30); //TODO: scale placement of button
-		
-		yesButton = new Button(GameplayAssets.yesIcon, GameplayAssets.yesArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.yesIcon.getWidth() - 10, Game.G_HEIGHT / 2 + GameplayAssets.yesIcon.getHeight() / 2 + 30);
-		noButton = new Button(GameplayAssets.noIcon, GameplayAssets.noArmedIcon, Game.G_WIDTH / 2 + 10, Game.G_HEIGHT / 2 + GameplayAssets.noIcon.getHeight() / 2 + 30);
-		exitDialogPaint = new Paint();
-		exitDialogPaint.setColor(Color.BLACK);
-		exitDialogPaint.setAlpha(125);
+		this.mapPath = mapPath;
+		this.tileSet = tileSet;
+		this.gm = gm;
 	}
 
 	@Override
@@ -141,6 +128,31 @@ public class HotSeatState extends GameState {
 		//	Game.shouldScale(false);
 		Game.shouldScale(true); //TODO: change this
 		this.stateManager = stateManager;
+		
+		AssetManager am = this.stateManager.getAssetManager();
+		
+		//load gameplay assets and only the specific tiles for the map that the user chose
+		GameplayAssets.loadGameplayAssets(am, tileSet);
+		
+		//create map
+		if(map == null)
+			map = new Map(this, am, mapPath, gm);
+		else
+			gm.resume();
+		
+		map.resume(this, am, gm);
+		
+		paint = new Paint();
+		switchTurnsFill = new Paint(); switchTurnsFill.setColor(Color.BLACK);
+		switchTurnsFont = new Paint(); switchTurnsFont.setColor(Color.WHITE); switchTurnsFont.setTextAlign(Align.CENTER); switchTurnsFont.setTextSize(60); //TODO: scale this font size
+		
+		switchTurnsOKButton = new Button(GameplayAssets.okIcon, GameplayAssets.okArmedIcon, Game.G_WIDTH / 2 - (GameplayAssets.okIcon.getWidth() / 2), Game.G_HEIGHT / 2 + 30); //TODO: scale placement of button
+		
+		yesButton = new Button(GameplayAssets.yesIcon, GameplayAssets.yesArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.yesIcon.getWidth() - 10, Game.G_HEIGHT / 2 + GameplayAssets.yesIcon.getHeight() / 2 + 30);
+		noButton = new Button(GameplayAssets.noIcon, GameplayAssets.noArmedIcon, Game.G_WIDTH / 2 + 10, Game.G_HEIGHT / 2 + GameplayAssets.noIcon.getHeight() / 2 + 30);
+		exitDialogPaint = new Paint();
+		exitDialogPaint.setColor(Color.BLACK);
+		exitDialogPaint.setAlpha(125);
 	}
 
 	@Override

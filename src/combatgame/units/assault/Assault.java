@@ -7,9 +7,12 @@ import combatgame.util.Util;
 
 public class Assault extends Unit {
 	
+	private static final long serialVersionUID = 1L;
+
 	public Assault (int player_id, String name, boolean isPlayerOne) {
 		this.name = name;
 		this.player_id = player_id;
+		this.isPlayerOne = isPlayerOne;
 		this.unit_id = (int)System.currentTimeMillis() + Util.getRand(); //TODO: id system...
 		this.movementCost = 2;
 		this.visionRadius = 4;
@@ -27,6 +30,17 @@ public class Assault extends Unit {
 		this.abilities = new Ability[2];
 		abilities[0] = new RifleFire();
 		abilities[1] = new GrenadeAttack();
+		loadSprites();
+	}
+	
+	public void loadSprites() {
+		if(isPlayerOne)
+			this.sprites = GameplayAssets.assaultIconsP1;
+		else
+			this.sprites = GameplayAssets.assaultIconsP2;
+		
+		abilities[0].loadButton();
+		abilities[1].loadButton();
 	}
 	
 }

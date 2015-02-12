@@ -1,9 +1,12 @@
 package combatgame.units;
 
+import java.io.Serializable;
+
 import combatgame.graphics.GPoint;
 
-public class AttackedTile {
+public class AttackedTile implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	public GPoint tile;
 	public int damageTaken;
 	

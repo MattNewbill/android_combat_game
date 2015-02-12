@@ -7,6 +7,8 @@ import combatgame.units.assault.Assault;
 
 public class AssaultBattle extends DeathMatch{
 
+	private static final long serialVersionUID = 1L;
+
 	public AssaultBattle(AssetManager am, String path) {
 		super(am, path);
 		gamemodeName = "Assault Battle";

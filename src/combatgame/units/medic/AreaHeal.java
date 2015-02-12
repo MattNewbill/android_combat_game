@@ -13,9 +13,14 @@ import combatgame.widgets.Button;
 
 public class AreaHeal extends Ability {
 
+	private static final long serialVersionUID = 1L;
+	
 	public AreaHeal() {
 		this.damage = -15;
 		this.abilityCost = 5;
+	}
+	
+	public void loadButton() {
 		this.abilityButton = new Button(GameplayAssets.areaHealIcon, null, 0, 0);
 	}
 	

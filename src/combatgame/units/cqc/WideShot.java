@@ -12,6 +12,7 @@ import combatgame.widgets.Button;
 
 public class WideShot extends BasicAttack {
 
+	private static final long serialVersionUID = 1L;
 	private int indirect_damage;//damage to the left and right targets
 
 
@@ -19,6 +20,9 @@ public class WideShot extends BasicAttack {
 		this.damage = 50;
 		this.abilityCost = 5;
 		this.indirect_damage = 30;//damage to the left and right targets
+	}
+	
+	public void loadButton() {
 		this.abilityButton = new Button(GameplayAssets.wideShotIcon, null, 0, 0);
 	}
 	

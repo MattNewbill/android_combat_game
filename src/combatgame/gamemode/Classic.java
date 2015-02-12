@@ -10,6 +10,8 @@ import combatgame.units.sniper.Sniper;
 
 public class Classic extends DeathMatch {
 
+	private static final long serialVersionUID = 1L;
+
 	public Classic(AssetManager am, String path) {
 		super(am, path);
 		gamemodeName = "Classic";

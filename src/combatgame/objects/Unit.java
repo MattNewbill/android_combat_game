@@ -1,12 +1,17 @@
 package combatgame.objects;
 
+import java.io.Serializable;
+
 import combatgame.graphics.*;
 import combatgame.units.Ability;
 import android.graphics.Bitmap;
 
-public abstract class Unit {
+public abstract class Unit implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	protected String name;
 	protected int player_id = -1;
+	protected boolean isPlayerOne;
 	protected int unit_id = -1;
 	protected GPoint xyCoordinate;
 	protected int movementCost;
@@ -37,6 +42,8 @@ public abstract class Unit {
 	public static final int FACING_RIGHT = 1;
 	public static final int FACING_DOWN = 2;
 	public static final int FACING_LEFT = 3;
+	
+	public abstract void loadSprites();
 	
 	public String getName() {
 		return name;	}

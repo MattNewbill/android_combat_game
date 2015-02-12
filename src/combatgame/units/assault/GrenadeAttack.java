@@ -13,6 +13,7 @@ import combatgame.widgets.Button;
 
 public class GrenadeAttack extends Ability {
 
+	private static final long serialVersionUID = 1L;
 	int distance;
 	int splash;
 	
@@ -21,6 +22,9 @@ public class GrenadeAttack extends Ability {
 		this.abilityCost = 6;
 		this.distance = 3;
 		this.splash = 1;
+	}
+	
+	public void loadButton() {
 		this.abilityButton = new Button(GameplayAssets.throwGrenadeIcon, null, 0, 0);
 	}
 

@@ -106,6 +106,9 @@ public class GameplayAssets {
 	public static Bitmap hitIndicatorDownIcon;
 	public static Bitmap hitIndicatorLeftIcon;
 	
+	//are the assets loaded
+	public static boolean isLoaded = false;
+	
 	private GameplayAssets(){}
 	
 	public static void loadGameplayAssets(AssetManager am, String mapSetting) {
@@ -222,6 +225,8 @@ public class GameplayAssets {
 			loadMapTiles(am, options, mapSetting);
 			
 			shadeMapTiles();
+			
+			isLoaded = true;
 			
 		} catch(Exception e) {
 			e.printStackTrace();

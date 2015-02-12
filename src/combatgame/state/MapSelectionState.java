@@ -75,31 +75,33 @@ public class MapSelectionState extends State {
 		listView.render(g);
 		
 		//draw preview
-		Bitmap preview = selectedPartialMap.getPreview();
-		g.drawBitmap(preview, 810, 25, null);
+		if(selectedPartialMap != null) {
+			Bitmap preview = selectedPartialMap.getPreview();
+			g.drawBitmap(preview, 810, 25, null);
 		
-		//draw name and size
-		g.drawText(selectedPartialMap.getName(), 810, 25 + preview.getHeight() + 30, selectedMapNamePaint);
-		g.drawText("Size: " + selectedPartialMap.getSize(), 810, 25 + preview.getHeight() + 60, selectedMapSizePaint);
-		
-		//draw description
-		String[] description = selectedPartialMap.getDescription();
-		StringBuilder line = new StringBuilder("Description: ");
-		StringBuilder temp = new StringBuilder(line.toString());
-		int linesDrawn = 0;
-		for(int i = 0; i < description.length; i++) {
-			temp.append(description[i]).append(" ");
-			if(selectedMapDescriptionPaint.measureText(temp.toString()) + 810 > 1280) {
-				g.drawText(line.toString(), 810, 25 + preview.getHeight() + 85 + 25 * linesDrawn, selectedMapDescriptionPaint);
-				linesDrawn++;
-				line.delete(0, line.length()); temp.delete(0, temp.length());
-				line.append(description[i]).append(" "); temp.append(description[i]).append(" ");
+			//draw name and size
+			g.drawText(selectedPartialMap.getName(), 810, 25 + preview.getHeight() + 30, selectedMapNamePaint);
+			g.drawText("Size: " + selectedPartialMap.getSize(), 810, 25 + preview.getHeight() + 60, selectedMapSizePaint);
+			
+			//draw description
+			String[] description = selectedPartialMap.getDescription();
+			StringBuilder line = new StringBuilder("Description: ");
+			StringBuilder temp = new StringBuilder(line.toString());
+			int linesDrawn = 0;
+			for(int i = 0; i < description.length; i++) {
+				temp.append(description[i]).append(" ");
+				if(selectedMapDescriptionPaint.measureText(temp.toString()) + 810 > 1280) {
+					g.drawText(line.toString(), 810, 25 + preview.getHeight() + 85 + 25 * linesDrawn, selectedMapDescriptionPaint);
+					linesDrawn++;
+					line.delete(0, line.length()); temp.delete(0, temp.length());
+					line.append(description[i]).append(" "); temp.append(description[i]).append(" ");
+				}
+				else {
+					line.append(description[i]).append(" ");
+				}	
 			}
-			else {
-				line.append(description[i]).append(" ");
-			}	
+			g.drawText(line.toString(), 810, 25 + preview.getHeight() + 85 + 25 * linesDrawn, selectedMapDescriptionPaint);
 		}
-		g.drawText(line.toString(), 810, 25 + preview.getHeight() + 85 + 25 * linesDrawn, selectedMapDescriptionPaint);
 		
 	}
 

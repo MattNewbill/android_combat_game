@@ -11,19 +11,18 @@ import combatgame.state.GameState;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.Serializable;
+
 import android.content.res.AssetManager;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.ColorFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.util.Log;
 
-public class Map {
+public class Map implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	//gamestate that created us
 	GameState gamestate;
 	
@@ -35,14 +34,14 @@ public class Map {
 	Player thisPlayersTurn;
 	
 	//gamertag font
-	Paint gamertagFont;
+	transient Paint gamertagFont;
 	
 	//game over
 	protected boolean isGameOver = false;
 	protected Player winningPlayer = null;
 	protected String gameoverString = null;
-	protected Paint gameoverFont;
-	protected Paint fadePaint;
+	protected transient Paint gameoverFont;
+	protected transient Paint fadePaint;
 	protected int fadePaintAlpha = 0;
 	protected final int TIME_TILL_FADE = 5000;
 	protected final int ALPHA_STEP = 3;
@@ -80,19 +79,6 @@ public class Map {
 		player2 = new Player("Player 2", false, this, gm.getPlayer2Units());
 		thisPlayersTurn = player1;
 		
-		gamertagFont = new Paint();
-		gamertagFont.setColor(Color.BLACK);
-		gamertagFont.setTextSize(30);
-		gamertagFont.setTextAlign(Align.CENTER);
-		
-		gameoverFont = new Paint();
-		gameoverFont.setColor(Color.WHITE);
-		gameoverFont.setTextSize(60); //TODO: scale text for larger devices
-		gameoverFont.setTextAlign(Align.CENTER);
-		
-		fadePaint = new Paint();
-		fadePaint.setColor(Color.BLACK);
-		fadePaint.setAlpha(0);
 		try {
 			//read in map
 			BufferedReader reader = new BufferedReader(new InputStreamReader((am.open(filePath))));
@@ -383,6 +369,32 @@ public class Map {
 			player1.dispose();
 		if(player2 != null)
 			player2.dispose();
+		
+		gamertagFont = null;
+		gameoverFont = null;
+		fadePaint = null;
+	}
+	
+	public void resume(GameState gamestate, AssetManager am, GameMode gm) {
+		this.gamestate = gamestate;
+		this.gamemode = gm;
+		
+		player1.resume();
+		player2.resume();
+		
+		gamertagFont = new Paint();
+		gamertagFont.setColor(Color.BLACK);
+		gamertagFont.setTextSize(30);
+		gamertagFont.setTextAlign(Align.CENTER);
+		
+		gameoverFont = new Paint();
+		gameoverFont.setColor(Color.WHITE);
+		gameoverFont.setTextSize(60); //TODO: scale text for larger devices
+		gameoverFont.setTextAlign(Align.CENTER);
+		
+		fadePaint = new Paint();
+		fadePaint.setColor(Color.BLACK);
+		fadePaint.setAlpha(0);
 	}
 	
 	public MapTile getTile(GPoint tile) {

@@ -5,7 +5,7 @@ import combatgame.graphics.GPoint;
 import combatgame.graphics.Graphics2D;
 import combatgame.objects.Map;
 
-public class Notification {
+public class Notification{
 
 	private Map map;
 	private GPoint tile;

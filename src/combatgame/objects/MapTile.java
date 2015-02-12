@@ -1,6 +1,10 @@
 package combatgame.objects;
 
-public class MapTile {
+import java.io.Serializable;
+
+public class MapTile implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private MapFeature	feature;
 	private boolean hasUnit;
 	private int player_id;

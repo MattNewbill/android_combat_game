@@ -1,7 +1,10 @@
 package combatgame.graphics;
 
-public class GPoint {
+import java.io.Serializable;
 
+public class GPoint implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	public int row;
 	public int col;
 	

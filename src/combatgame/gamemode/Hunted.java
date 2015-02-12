@@ -9,6 +9,8 @@ import combatgame.units.sniper.Sniper;
 
 public class Hunted extends DeathMatch {
 
+	private static final long serialVersionUID = 1L;
+
 	public Hunted(AssetManager am, String path) {
 		super(am, path);
 		gamemodeName = "Hunted";

@@ -1,10 +1,9 @@
 package combatgame.objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import android.util.Log;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -19,16 +18,13 @@ import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.units.Ability;
 import combatgame.units.AttackedTile;
-import combatgame.units.assault.Assault;
-import combatgame.units.cqc.CQC;
-import combatgame.units.medic.Medic;
-import combatgame.units.recon.Recon;
-import combatgame.units.sniper.Sniper;
 import combatgame.util.*;
 import combatgame.widgets.Button;
 import combatgame.widgets.UnitInfoDrawableButton;
 
-public class Player {
+public class Player implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	//used for determining what base to spawn in/attack
 	boolean isPlayerOne;
@@ -65,31 +61,31 @@ public class Player {
 	private Map map;
 	
 	//hud icons
-	private UnitInfoDrawableButton unitInfoButton;
-	private Button moveButton;
-	private Button abilityButton;
-	private Button deselectButton;
-	private Button endTurnButton;
+	private transient UnitInfoDrawableButton unitInfoButton;
+	private transient Button moveButton;
+	private transient Button abilityButton;
+	private transient Button deselectButton;
+	private transient Button endTurnButton;
 	
-	private Button spawnUnitButton;
-	private Button respawnUnitButton;
+	private transient Button spawnUnitButton;
+	private transient Button respawnUnitButton;
 	
 	//damage indicators/notifications
-	private Paint indicatorPaint;
+	private transient Paint indicatorPaint;
 	private List<HealthIndicator> healthIndicators = new LinkedList<HealthIndicator>();
 	private List<HitIndicator> hitIndicators = new ArrayList<HitIndicator>();
 	private List<Notification> notifications = new ArrayList<Notification>();
 	
 	//movement hud icons
-	private Button movementButton;
-	private Button leftRotateButton;
-	private Button rightRotateButton;
-	private Button leftRotateSetupButton;
-	private Button rightRotateSetupButton;
+	private transient Button movementButton;
+	private transient Button leftRotateButton;
+	private transient Button rightRotateButton;
+	private transient Button leftRotateSetupButton;
+	private transient Button rightRotateSetupButton;
 	
 	//confirm end turn data
-	private Button yesButton;
-	private Button noButton;
+	private transient Button yesButton;
+	private transient Button noButton;
 	private boolean isEndingTurn = false;
 	
 	//determine presses vs scrolls
@@ -99,8 +95,8 @@ public class Player {
 	public static final int INELIGIBLE_TOUCH_DISTANCE = 10;
 	
 	//attack and heal overlays on the attackable tiles
-	private Paint attackOverlayPaint;
-	private Paint healOverlayPaint;
+	private transient Paint attackOverlayPaint;
+	private transient Paint healOverlayPaint;
 	
 	public Player(String gamertag, boolean isPlayerOne, Map map, Unit[] units) {
 		this.gamertag = gamertag;
@@ -112,77 +108,6 @@ public class Player {
 		for(int i = 0; i < units.length; i++) {
 			units[i].setPlayer_id(playerId);
 		}
-		
-		//indicator font
-		indicatorPaint = new Paint();
-		indicatorPaint.setTextSize(40);
-		indicatorPaint.setTextAlign(Align.CENTER);
-		indicatorPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-		
-		//overlays
-		attackOverlayPaint = new Paint();
-		attackOverlayPaint.setColor(Color.parseColor("#44FF0000"));
-		
-		healOverlayPaint = new Paint();
-		healOverlayPaint.setColor(Color.parseColor("#4400FF00"));
-		
-		//coordinates of each hud button
-		int width, height;
-		if(Game.isScaled()) {
-			width = Game.G_WIDTH; height = Game.G_HEIGHT;
-		}
-		else {
-			width = Game.P_WIDTH; height = Game.P_HEIGHT;
-		}
-		
-		int unitInfoButtonX = (width / 2) - (GameplayAssets.unitInfoIcon.getWidth()) - GameplayAssets.unitInfoIcon.getWidth() / 2;
-		int unitInfoButtonY = height - GameplayAssets.unitInfoIcon.getHeight();
-		int moveButtonX = (width / 2) - GameplayAssets.moveIcon.getWidth();
-		int moveButtonY = height - GameplayAssets.moveIcon.getHeight();
-		int abilityButtonX = width / 2;
-		int abilityButtonY = height - GameplayAssets.abilityIcon.getHeight();
-		int deselectButtonX = (width / 2) + GameplayAssets.deselectIcon.getWidth();
-		int deselectButtonY = height - GameplayAssets.deselectIcon.getHeight();
-		int endTurnButtonX = (width / 2) + GameplayAssets.endTurnIcon.getWidth() + GameplayAssets.endTurnIcon.getWidth();
-		int endTurnButtonY = height - GameplayAssets.endTurnIcon.getHeight();
-		
-		int rightRotateButtonX = moveButtonX;
-		int rightRotateButtonY = moveButtonY - GameplayAssets.rightRotateIcon.getHeight();
-		int leftRotateButtonX = moveButtonX;
-		int leftRotateButtonY = rightRotateButtonY - GameplayAssets.leftRotateIcon.getHeight();
-		int movementButtonX = moveButtonX;
-		int movementButtonY = leftRotateButtonY - GameplayAssets.movementIcons[1].getHeight();
-		
-		int spawnUnitButtonX = width / 2;
-		int spawnUnitButtonY = height - GameplayAssets.abilityIcon.getHeight();
-		int respawnUnitButtonX = (width / 2) + GameplayAssets.respawnUnitIcon.getWidth();
-		int respawnUnitButtonY = height - GameplayAssets.respawnUnitIcon.getHeight();
-		
-		Paint unitInfoPaint = new Paint();
-		unitInfoPaint.setColor(Color.BLACK);
-		unitInfoPaint.setTextSize(28); //TODO: scale according to device size
-		
-		//create buttons
-		unitInfoButton = new UnitInfoDrawableButton(unitInfoPaint, GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
-		moveButton = new Button(GameplayAssets.moveIcon, null, moveButtonX, moveButtonY);
-		abilityButton = new Button(GameplayAssets.abilityIcon, null, abilityButtonX, abilityButtonY);
-		deselectButton = new Button(GameplayAssets.deselectIcon, null, deselectButtonX, deselectButtonY);
-		endTurnButton = new Button(GameplayAssets.endTurnIcon, null, endTurnButtonX, endTurnButtonY);
-		
-		movementButton = new Button(GameplayAssets.movementIcons[1], null, movementButtonX, movementButtonY);
-		leftRotateButton = new Button(GameplayAssets.leftRotateIcon, null, leftRotateButtonX, leftRotateButtonY);
-		rightRotateButton = new Button(GameplayAssets.rightRotateIcon, null, rightRotateButtonX, rightRotateButtonY);
-		leftRotateSetupButton = new Button(GameplayAssets.leftRotateSetupIcon, null, leftRotateButtonX, leftRotateButtonY);
-		rightRotateSetupButton = new Button(GameplayAssets.rightRotateSetupIcon, null, rightRotateButtonX, rightRotateButtonY);
-		
-		spawnUnitButton = new Button(GameplayAssets.spawnUnitIcon, null, spawnUnitButtonX, spawnUnitButtonY);
-		respawnUnitButton = new Button(GameplayAssets.respawnUnitIcon, null, respawnUnitButtonX, respawnUnitButtonY);
-		
-		yesButton = new Button(GameplayAssets.yesIcon, GameplayAssets.yesArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.yesIcon.getWidth() - 10, Game.G_HEIGHT / 2 + GameplayAssets.yesIcon.getHeight() / 2 + 30);
-		noButton = new Button(GameplayAssets.noIcon, GameplayAssets.noArmedIcon, Game.G_WIDTH / 2 + 10, Game.G_HEIGHT / 2 + GameplayAssets.noIcon.getHeight() / 2 + 30);
-		
-		disableButtons();
-		endTurnButton.disable();
 	}
 	
 	public List<TouchEvent> update(List<TouchEvent> events) {
@@ -918,7 +843,103 @@ public class Player {
 	}
 	
 	public void dispose() {
+		indicatorPaint = null;
+		attackOverlayPaint = null;
+		healOverlayPaint = null;
 		
+		healthIndicators.clear();
+		hitIndicators.clear();
+		notifications.clear();
+	}
+	
+	public void resume() {
+		
+		//load unit sprites
+		for(int i = 0; i < units.length; i++)
+			units[i].loadSprites();
+		
+		//indicator font
+		indicatorPaint = new Paint();
+		indicatorPaint.setTextSize(40);
+		indicatorPaint.setTextAlign(Align.CENTER);
+		indicatorPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+		
+		//overlays
+		attackOverlayPaint = new Paint();
+		attackOverlayPaint.setColor(Color.parseColor("#44FF0000"));
+		
+		healOverlayPaint = new Paint();
+		healOverlayPaint.setColor(Color.parseColor("#4400FF00"));
+		
+		//coordinates of each hud button
+		int width, height;
+		if(Game.isScaled()) {
+			width = Game.G_WIDTH; height = Game.G_HEIGHT;
+		}
+		else {
+			width = Game.P_WIDTH; height = Game.P_HEIGHT;
+		}
+		
+		int unitInfoButtonX = (width / 2) - (GameplayAssets.unitInfoIcon.getWidth()) - GameplayAssets.unitInfoIcon.getWidth() / 2;
+		int unitInfoButtonY = height - GameplayAssets.unitInfoIcon.getHeight();
+		int moveButtonX = (width / 2) - GameplayAssets.moveIcon.getWidth();
+		int moveButtonY = height - GameplayAssets.moveIcon.getHeight();
+		int abilityButtonX = width / 2;
+		int abilityButtonY = height - GameplayAssets.abilityIcon.getHeight();
+		int deselectButtonX = (width / 2) + GameplayAssets.deselectIcon.getWidth();
+		int deselectButtonY = height - GameplayAssets.deselectIcon.getHeight();
+		int endTurnButtonX = (width / 2) + GameplayAssets.endTurnIcon.getWidth() + GameplayAssets.endTurnIcon.getWidth();
+		int endTurnButtonY = height - GameplayAssets.endTurnIcon.getHeight();
+		
+		int rightRotateButtonX = moveButtonX;
+		int rightRotateButtonY = moveButtonY - GameplayAssets.rightRotateIcon.getHeight();
+		int leftRotateButtonX = moveButtonX;
+		int leftRotateButtonY = rightRotateButtonY - GameplayAssets.leftRotateIcon.getHeight();
+		int movementButtonX = moveButtonX;
+		int movementButtonY = leftRotateButtonY - GameplayAssets.movementIcons[1].getHeight();
+		
+		int spawnUnitButtonX = width / 2;
+		int spawnUnitButtonY = height - GameplayAssets.abilityIcon.getHeight();
+		int respawnUnitButtonX = (width / 2) + GameplayAssets.respawnUnitIcon.getWidth();
+		int respawnUnitButtonY = height - GameplayAssets.respawnUnitIcon.getHeight();
+		
+		Paint unitInfoPaint = new Paint();
+		unitInfoPaint.setColor(Color.BLACK);
+		unitInfoPaint.setTextSize(28); //TODO: scale according to device size
+		
+		//create buttons
+		unitInfoButton = new UnitInfoDrawableButton(unitInfoPaint, GameplayAssets.unitInfoIcon, null, unitInfoButtonX, unitInfoButtonY);
+		moveButton = new Button(GameplayAssets.moveIcon, null, moveButtonX, moveButtonY);
+		abilityButton = new Button(GameplayAssets.abilityIcon, null, abilityButtonX, abilityButtonY);
+		deselectButton = new Button(GameplayAssets.deselectIcon, null, deselectButtonX, deselectButtonY);
+		endTurnButton = new Button(GameplayAssets.endTurnIcon, null, endTurnButtonX, endTurnButtonY);
+		
+		movementButton = new Button(GameplayAssets.movementIcons[1], null, movementButtonX, movementButtonY);
+		leftRotateButton = new Button(GameplayAssets.leftRotateIcon, null, leftRotateButtonX, leftRotateButtonY);
+		rightRotateButton = new Button(GameplayAssets.rightRotateIcon, null, rightRotateButtonX, rightRotateButtonY);
+		leftRotateSetupButton = new Button(GameplayAssets.leftRotateSetupIcon, null, leftRotateButtonX, leftRotateButtonY);
+		rightRotateSetupButton = new Button(GameplayAssets.rightRotateSetupIcon, null, rightRotateButtonX, rightRotateButtonY);
+		
+		spawnUnitButton = new Button(GameplayAssets.spawnUnitIcon, null, spawnUnitButtonX, spawnUnitButtonY);
+		respawnUnitButton = new Button(GameplayAssets.respawnUnitIcon, null, respawnUnitButtonX, respawnUnitButtonY);
+		
+		yesButton = new Button(GameplayAssets.yesIcon, GameplayAssets.yesArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.yesIcon.getWidth() - 10, Game.G_HEIGHT / 2 + GameplayAssets.yesIcon.getHeight() / 2 + 30);
+		noButton = new Button(GameplayAssets.noIcon, GameplayAssets.noArmedIcon, Game.G_WIDTH / 2 + 10, Game.G_HEIGHT / 2 + GameplayAssets.noIcon.getHeight() / 2 + 30);
+		
+		Player thisPlayersTurn = map.getCurrentPlayersTurn();
+		if(thisPlayersTurn == this && isSetupPhase) {
+			disableButtons();
+			endTurnButton.disable();
+		}
+		if(thisPlayersTurn == this && !isSetupPhase) {
+			disableButtons();
+		}
+		else {
+			disableButtons();
+			endTurnButton.disable();
+		}
+		selectedUnitIndex = -1;
+		currentAction = SELECTION;
 	}
 	
 	public boolean[][] constructLightMap(boolean[][] lightmap) {
@@ -967,6 +988,7 @@ public class Player {
 			healthIndicators.clear(); //remove any indicators if we had any
 			notifications.clear();
 			enemyUnitSelected = null;
+			endTurnButton.enable();
 			for(int i = 0; i < units.length; i++)
 				units[i].resetPoints();
 			

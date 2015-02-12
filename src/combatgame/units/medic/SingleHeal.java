@@ -13,9 +13,14 @@ import combatgame.widgets.Button;
 
 public class SingleHeal extends Ability {
 
+	private static final long serialVersionUID = 1L;
+
 	public SingleHeal() {
 		this.damage = -40;
 		this.abilityCost = 5;
+	}
+	
+	public void loadButton() {
 		this.abilityButton = new Button(GameplayAssets.singleHealIcon, null, 0, 0);
 	}
 
