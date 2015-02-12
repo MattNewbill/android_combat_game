@@ -3,6 +3,7 @@ package combatgame.graphics;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 public class GraphicsCPU implements Graphics2D {
 
@@ -27,6 +28,12 @@ public class GraphicsCPU implements Graphics2D {
 	@Override
 	public void drawRect(float left, float top, float right, float bottom, Paint paint) {
 		drawingCanvas.drawRect(left, top, right, bottom, paint);
+	}
+	
+	@Override
+	public void drawRoundRect(float left, float top, float right, float bottom, float rx, float ry, Paint paint) {
+		//drawingCanvas.drawRoundRect(left, top, right, bottom, rx, ry, paint);
+		drawingCanvas.drawRoundRect(new RectF(left, top, right, bottom), rx, ry, paint);
 	}
 
 	@Override

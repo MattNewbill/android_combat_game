@@ -113,6 +113,11 @@ public class Player implements Serializable {
 	public List<TouchEvent> update(List<TouchEvent> events) {
 		
 		//----------------------------------------
+		//--TOOLTIP ACTIVE--
+		//----------------------------------------
+		events = Tooltip.updateEvents(events);
+		
+		//----------------------------------------
 		//--SET UP PHASE--
 		//----------------------------------------
 		if(isSetupPhase) {
@@ -131,6 +136,8 @@ public class Player implements Serializable {
 	//only runs during the setup phase
 	//setup phase consists of unit placement
 	private List<TouchEvent> updateSetupPhase(List<TouchEvent> events) {
+		
+		Tooltip.showTooltip( isPlayerOne, "PLACE_UNIT_TT");
 		
 		//----------------------------------------
 		//--UPDATE BUTTON STATES--
@@ -829,6 +836,8 @@ public class Player implements Serializable {
 		//reset overlays
 		movementPoints = null;
 		attackableTiles = null;
+		
+		Tooltip.render(g);
 	}
 	
 	////////////////////////////////////////////
