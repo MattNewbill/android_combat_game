@@ -70,7 +70,7 @@ public class Tooltip
 	
 	public static void render( Graphics2D g)
 	{
-		g.drawRoundRect(0, 40, 1280, 400, 45, 45, painRectOut);
+/*		g.drawRoundRect(0, 40, 1280, 400, 45, 45, painRectOut);
 		g.drawRoundRect(10, 50, 1270, 390, 45, 45, painRectIn);
 		g.drawText(text0, 50, 100, painText);
 		g.drawText(text1, 50, 150, painText);
@@ -78,7 +78,7 @@ public class Tooltip
 		g.drawText(text3, 50, 250, painText);
 		g.drawBitmap(GameplayAssets.TTcheckbox1, 50, 287, null);
 		g.drawText(textCB, 150, 350, painTextCB);
-		g.drawBitmap(GameplayAssets.TTok0, 900, 275, null);
+		g.drawBitmap(GameplayAssets.TTok0, 900, 275, null); */
 	}
 	
 	public static List<TouchEvent> updateEvents(List<TouchEvent> events)
