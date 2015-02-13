@@ -1,5 +1,7 @@
 package combatgame.alerts;
 
+import java.io.Serializable;
+
 import android.graphics.Bitmap;
 
 import combatgame.assets.GameplayAssets;
@@ -11,11 +13,13 @@ import combatgame.units.Ability;
 import combatgame.units.recon.TrickShot;
 import combatgame.util.Util;
 
-public class HitIndicator {
+public class HitIndicator implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private GPoint tile;
 	private Map map;
-	private Bitmap indicator;
+	private transient Bitmap indicator;
+	private int direction;
 
 	public HitIndicator(Unit attackingUnit, Ability currentAbility,	Unit defendingUnit, GPoint tile, Map map) {
 		this.tile = tile.clone();
@@ -23,8 +27,37 @@ public class HitIndicator {
 		
 		//trick shot attack from recon class
 		if (TrickShot.ABILITY_TYPE.equals(currentAbility.getType())) {
-			int random_direction = Math.abs(Util.getRand() % 4);
-			switch (random_direction) {
+			direction = Math.abs(Util.getRand() % 4);
+			loadIndicator();
+		}
+		else {//regular attack
+			// determine which direction should the indicator be pointing
+			GPoint attackingTile = attackingUnit.getXYCoordinate();
+			GPoint defendingTile = defendingUnit.getXYCoordinate();
+			int rowOffset = attackingTile.row - defendingTile.row;
+			int colOffset = attackingTile.col - defendingTile.col;
+			if (Math.abs(rowOffset) > Math.abs(colOffset)) {// checks which
+															// distance is
+															// greatest (col or
+															// row)
+				if (rowOffset < 0)// this checks if it is above or below you
+									// (above is negative, below is pos)
+					direction = 0;
+				else
+					direction = 1;
+			} else {
+				if (colOffset < 0)// this checks if it is above or below you
+									// (above is negative, below is pos)
+					direction = 2;
+				else
+					direction = 3;
+			}
+			loadIndicator();
+		}
+	}
+	
+	public void loadIndicator() {
+		switch(direction) {
 			case 0:
 				indicator = GameplayAssets.hitIndicatorUpIcon;
 				break;
@@ -39,33 +72,9 @@ public class HitIndicator {
 				break;
 			default:
 				throw new IllegalArgumentException();
-			}
-
-		} else {//regular attack
-			// determine which direction should the indicator be pointing
-			GPoint attackingTile = attackingUnit.getXYCoordinate();
-			GPoint defendingTile = defendingUnit.getXYCoordinate();
-			int rowOffset = attackingTile.row - defendingTile.row;
-			int colOffset = attackingTile.col - defendingTile.col;
-			if (Math.abs(rowOffset) > Math.abs(colOffset)) {// checks which
-															// distance is
-															// greatest (col or
-															// row)
-				if (rowOffset < 0)// this checks if it is above or below you
-									// (above is negative, below is pos)
-					indicator = GameplayAssets.hitIndicatorUpIcon;
-				else
-					indicator = GameplayAssets.hitIndicatorDownIcon;
-			} else {
-				if (colOffset < 0)// this checks if it is above or below you
-									// (above is negative, below is pos)
-					indicator = GameplayAssets.hitIndicatorLeftIcon;
-				else
-					indicator = GameplayAssets.hitIndicatorRightIcon;
-			}
 		}
 	}
-
+	
 	public void render(Graphics2D g) {
 		g.drawBitmap(indicator,
 				tile.col * map.getTileWidthInPx() - map.getMapOffsetX(),

@@ -857,7 +857,6 @@ public class Player implements Serializable {
 		healOverlayPaint = null;
 		
 		healthIndicators.clear();
-		hitIndicators.clear();
 		notifications.clear();
 	}
 	
@@ -949,6 +948,9 @@ public class Player implements Serializable {
 		}
 		selectedUnitIndex = -1;
 		currentAction = SELECTION;
+		
+		for(int i = 0; i < hitIndicators.size(); i++)
+			hitIndicators.get(i).loadIndicator();
 	}
 	
 	public boolean[][] constructLightMap(boolean[][] lightmap) {
