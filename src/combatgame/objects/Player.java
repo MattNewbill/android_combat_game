@@ -108,6 +108,7 @@ public class Player implements Serializable {
 		for(int i = 0; i < units.length; i++) {
 			units[i].setPlayer_id(playerId);
 		}
+		Tooltip.reset();
 	}
 	
 	public List<TouchEvent> update(List<TouchEvent> events) {
@@ -969,6 +970,8 @@ public class Player implements Serializable {
 		
 		for(int i = 0; i < hitIndicators.size(); i++)
 			hitIndicators.get(i).loadIndicator();
+		
+		Tooltip.onResume();
 	}
 	
 	public boolean[][] constructLightMap(boolean[][] lightmap) {

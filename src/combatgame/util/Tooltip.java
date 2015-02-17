@@ -1,8 +1,4 @@
-
-
 package combatgame.util;
-
-import java.io.Serializable;
 import java.util.List;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,12 +8,8 @@ import combatgame.input.TouchEvent;
 import combatgame.widgets.Button;
 import combatgame.widgets.CheckBox;
 
-
-
-public class Tooltip implements Serializable
+public class Tooltip
 {
-	private static final long serialVersionUID = 1L;
-	
 	public static final int PLACE_UNIT = 1;
 	public static final int EDIT_UNIT = 2;
 	public static final int END_TURN = 3;
@@ -71,6 +63,38 @@ public class Tooltip implements Serializable
 	private static boolean TT_medic[] = {true,true};
 	private static int index;
 	
+	public static void reset()
+	{
+		TTon = false;
+		
+		TT_all[0] = true;
+		TT_place[0] = true;
+		TT_edit[0] = true;
+		TT_end[0] = true;
+		TT_first[0] = true;
+		TT_move[0] = true;
+		TT_damaged[0] = true;
+		TT_attack[0] = true;
+		TT_assault[0] = true;
+		TT_sniper[0] = true;
+		TT_recon[0] = true;
+		TT_juggernaut[0] = true;
+		TT_medic[0] = true;
+		
+		TT_all[0] = true;
+		TT_place[0] = true;
+		TT_edit[0] = true;
+		TT_end[0] = true;
+		TT_first[0] = true;
+		TT_move[0] = true;
+		TT_damaged[0] = true;
+		TT_attack[0] = true;
+		TT_assault[0] = true;
+		TT_sniper[0] = true;
+		TT_recon[0] = true;
+		TT_juggernaut[0] = true;
+		TT_medic[0] = true;
+	}
 	
 	public static void showTooltip ( boolean isPlayerOne, int tooltipName )
 	{
@@ -256,5 +280,11 @@ public class Tooltip implements Serializable
 			events.clear();
 		}
 		return events;
+	}
+	
+	public static void onResume()
+	{
+		okButton = new Button(GameplayAssets.TTok0,GameplayAssets.TTok1, 900, 275);
+		checkBox = new CheckBox(GameplayAssets.TTcheckbox0,GameplayAssets.TTcheckbox1, 50, 287);
 	}
 }
