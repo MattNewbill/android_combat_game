@@ -167,7 +167,7 @@ public class Tooltip
 					TT_damaged[index] = false;
 					TTon = true;
 					text1 = "Your unit has been attacked and lost HP (Health Points). The hit";
-					text2 = "indicator points in the direction of the attack. Your AR (Armor)";
+					text2 = "indicator shows the general direction of the attack. Your AR (Armor)";
 					text3 = "absorbed a portion of the damage. HP can be healed, AR cannot.";
 				}
 			}
@@ -233,8 +233,8 @@ public class Tooltip
 					TT_medic[index] = false;
 					TTon = true;
 					text1 = "The medic is the healer. Pistol Shot is a simple attack.";
-					text2 = "Single Heal heals one adjacent ally.";
-					text3 = "Area Heal heals all adjacent allies.";
+					text2 = "Single Heal heals one adjacent ally. Area Heal heals all";
+					text3 = "adjacent units. Be careful not to heal enemies.";
 				}
 			}
 		}
