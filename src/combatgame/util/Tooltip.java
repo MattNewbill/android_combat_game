@@ -81,19 +81,19 @@ public class Tooltip
 		TT_juggernaut[0] = true;
 		TT_medic[0] = true;
 		
-		TT_all[0] = true;
-		TT_place[0] = true;
-		TT_edit[0] = true;
-		TT_end[0] = true;
-		TT_first[0] = true;
-		TT_move[0] = true;
-		TT_damaged[0] = true;
-		TT_attack[0] = true;
-		TT_assault[0] = true;
-		TT_sniper[0] = true;
-		TT_recon[0] = true;
-		TT_juggernaut[0] = true;
-		TT_medic[0] = true;
+		TT_all[1] = true;
+		TT_place[1] = true;
+		TT_edit[1] = true;
+		TT_end[1] = true;
+		TT_first[1] = true;
+		TT_move[1] = true;
+		TT_damaged[1] = true;
+		TT_attack[1] = true;
+		TT_assault[1] = true;
+		TT_sniper[1] = true;
+		TT_recon[1] = true;
+		TT_juggernaut[1] = true;
+		TT_medic[1] = true;
 	}
 	
 	public static void showTooltip ( boolean isPlayerOne, int tooltipName )
