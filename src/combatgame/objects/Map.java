@@ -142,7 +142,7 @@ public class Map implements Serializable {
 		}
 		else {
 			//update current player's turn
-			thisPlayersTurn.update(events);
+			events = thisPlayersTurn.update(events);
 			
 			//check to see if someone has won yet
 			checkWinConditions(); //TODO: check gamemode for win conditions

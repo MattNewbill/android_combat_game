@@ -137,7 +137,7 @@ public class Player implements Serializable {
 	//setup phase consists of unit placement
 	private List<TouchEvent> updateSetupPhase(List<TouchEvent> events) {
 		
-		Tooltip.showTooltip( isPlayerOne, "PLACE_UNIT_TT");
+		Tooltip.showTooltip( isPlayerOne, Tooltip.PLACE_UNIT);
 		
 		//----------------------------------------
 		//--UPDATE BUTTON STATES--
@@ -145,16 +145,20 @@ public class Player implements Serializable {
 		if((spawnUnitIndex == -1 || selectedUnitIndex == -1) || currentAction == SPAWN_UNIT)
 			respawnUnitButton.disable();
 		else
-			if(respawnUnitButton.state == Button.DISABLED)
+			if(respawnUnitButton.state == Button.DISABLED){
 				respawnUnitButton.enable();
+				Tooltip.showTooltip( isPlayerOne, Tooltip.EDIT_UNIT);
+			}
 		
 		events = unitInfoButton.update(events);
 		events = moveButton.update(events);
 		events = spawnUnitButton.update(events);
 		events = respawnUnitButton.update(events);
 		if(spawnUnitIndex == units.length) {
-			if(endTurnButton.state == Button.DISABLED)
+			if(endTurnButton.state == Button.DISABLED){
 				endTurnButton.enable();
+				Tooltip.showTooltip( isPlayerOne, Tooltip.END_TURN);
+			}
 			events = endTurnButton.update(events);
 			if(endTurnButton.state == Button.ACTIVATED) {
 				endTurnButton.disarm();
@@ -238,6 +242,8 @@ public class Player implements Serializable {
 			return events;
 		}
 		
+		Tooltip.showTooltip( isPlayerOne, Tooltip.FIRST_TURN);
+		
 		//----------------------------------------
 		//--UPDATE BUTTON STATES--
 		//----------------------------------------
@@ -284,15 +290,27 @@ public class Player implements Serializable {
 				break;
 			case CHOOSE_MOVEMENT:
 				chooseMovementTurn(events);
+				Tooltip.showTooltip( isPlayerOne, Tooltip.MOVE_UNIT);
 				break;
 			case USE_MOVEMENT:
 				useMovement(events);
 				break;
 			case CHOOSE_ABILITY:
 				chooseAbilities(events);
+				if(units[selectedUnitIndex].getUnitType() == Unit.UnitType.ASSAULT)
+					Tooltip.showTooltip( isPlayerOne, Tooltip.ASSAULT_ATTACKS);
+				if(units[selectedUnitIndex].getUnitType() == Unit.UnitType.SNIPER)
+					Tooltip.showTooltip( isPlayerOne, Tooltip.SNIPER_ATTACKS);
+				if(units[selectedUnitIndex].getUnitType() == Unit.UnitType.RECON)
+					Tooltip.showTooltip( isPlayerOne, Tooltip.RECON_ATTACKS);
+				if(units[selectedUnitIndex].getUnitType() == Unit.UnitType.CQC)
+					Tooltip.showTooltip( isPlayerOne, Tooltip.JUGGERNAUT_ATTACKS);
+				if(units[selectedUnitIndex].getUnitType() == Unit.UnitType.MEDIC)
+					Tooltip.showTooltip( isPlayerOne, Tooltip.MEDIC_ATTACKS);
 				break;
 			case USE_ABILITY:
 				useAbility(events);
+				Tooltip.showTooltip( isPlayerOne, Tooltip.ATTACK_UNIT);
 				break;
 			default:
 				throw new IllegalArgumentException("no such action");
@@ -769,6 +787,7 @@ public class Player implements Serializable {
 		//---------------------------------------
 		for(int i = 0; i < hitIndicators.size(); i++) {
 			hitIndicators.get(i).render(g);
+			Tooltip.showTooltip( isPlayerOne, Tooltip.DAMAGED_UNIT);
 		}
 		for(int i = 0; i < healthIndicators.size(); i++) {
 			healthIndicators.get(i).render(g);
@@ -776,7 +795,6 @@ public class Player implements Serializable {
 		for(int i = 0; i < notifications.size(); i++) {
 			notifications.get(i).render(g);
 		}
-		
 		//---------------------------------------
 		//--Render our turn HUD at the very end
 		//---------------------------------------
