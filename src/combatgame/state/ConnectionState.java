@@ -2,8 +2,10 @@ package combatgame.state;
 
 import combatgame.graphics.Graphics2D;
 import combatgame.main.*;
+import combatgame.network.Internet;
 import combatgame.widgets.*;
 import combatgame.input.*;
+
 import java.util.List;
 
 import android.content.Context;
@@ -12,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class ConnectionState extends State {
 
@@ -54,6 +57,7 @@ public class ConnectionState extends State {
 		
 		if(internetButton.state == Button.ACTIVATED) {
 			//new game over the internet
+			Log.i("combatgame", Internet.getJSON("http://www.newbillity.com/apitest.php"));
 			isOnlineBattleFeatureNotAvailableDialogShowing = true;
 			internetButton.disarm();
 			//stateManager.setState(new InternetGameState(stateManager));
