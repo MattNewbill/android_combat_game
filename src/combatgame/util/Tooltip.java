@@ -14,8 +14,9 @@ public class Tooltip
 	public static final int EDIT_UNIT = 2;
 	public static final int END_TURN = 3;
 	public static final int FIRST_TURN = 4;
-	public static final int MOVE_UNIT = 5;
-	public static final int DAMAGED_UNIT = 6;
+	public static final int MOVE_ALL = 5;
+	public static final int MOVE_UNIT = 6;
+	public static final int DAMAGED_UNIT = 7;
 	public static final int ATTACK_UNIT = 10;
 	public static final int ASSAULT_ATTACKS = 11;
 	public static final int SNIPER_ATTACKS = 12;
@@ -53,6 +54,7 @@ public class Tooltip
 	private static boolean TT_edit[] = {true,true};
 	private static boolean TT_end[] = {true,true};
 	private static boolean TT_first[] = {true,true};
+	private static boolean TT_movement[] = {true,true};
 	private static boolean TT_move[] = {true,true};
 	private static boolean TT_damaged[] = {true,true};
 	private static boolean TT_attack[] = {true,true};
@@ -149,15 +151,26 @@ public class Tooltip
 					text3 = "it is done for that turn.";
 				}
 			}
+			else if(tooltipName==MOVE_ALL)
+			{
+				if(TT_movement[index])
+				{
+					TT_movement[index] = false;
+					TTon = true;
+					text1 = "A unit can only move in the direction it is facing.";
+					text2 = "If there is an obstacle directly in front of the unit, it cannot move.";
+					text3 = "Movement AP cost is different for each unit.";
+				}
+			}
 			else if(tooltipName==MOVE_UNIT)
 			{
 				if(TT_move[index])
 				{
 					TT_move[index] = false;
 					TTon = true;
-					text1 = "A unit can only move in the direction it is facing.";
-					text2 = "If there is an obstacle directly in front of the unit, it cannot move.";
-					text3 = "Movement AP cost is different for each unit.";
+					text1 = "Bushes can be moved through but are not see-through.";
+					text2 = "Hedgehogs can't be moved through but are see-through.";
+					text3 = "Rocks can't be moved through and are not see-through.";
 				}
 			}
 			else if(tooltipName==DAMAGED_UNIT)

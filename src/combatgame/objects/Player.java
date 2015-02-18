@@ -291,10 +291,11 @@ public class Player implements Serializable {
 				break;
 			case CHOOSE_MOVEMENT:
 				chooseMovementTurn(events);
-				Tooltip.showTooltip( isPlayerOne, Tooltip.MOVE_UNIT);
+				Tooltip.showTooltip( isPlayerOne, Tooltip.MOVE_ALL);
 				break;
 			case USE_MOVEMENT:
 				useMovement(events);
+				Tooltip.showTooltip( isPlayerOne, Tooltip.MOVE_UNIT);
 				break;
 			case CHOOSE_ABILITY:
 				chooseAbilities(events);
