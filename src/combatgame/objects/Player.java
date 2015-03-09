@@ -539,7 +539,7 @@ public class Player implements Serializable {
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
 	private void useMovement(List<TouchEvent> events) {
-		if(units[selectedUnitIndex].getPointsLeft() == 0) {
+		if(units[selectedUnitIndex].getPointsLeft()/units[selectedUnitIndex].getMovementCost() == 0) {
 			currentAction = SELECTION;
 			return;
 		}
