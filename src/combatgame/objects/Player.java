@@ -712,7 +712,7 @@ public class Player implements Serializable {
 						break;
 					}
 				}
-			}
+			} //end for loop
 			currentAction = SELECTION;
 		}
 	}
