@@ -11,6 +11,7 @@ import android.graphics.Paint.Align;
 import combatgame.alerts.APNotification;
 import combatgame.alerts.HealthIndicator;
 import combatgame.alerts.HitIndicator;
+import combatgame.alerts.MoveNotification;
 import combatgame.alerts.Notification;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.*;
@@ -538,11 +539,19 @@ public class Player implements Serializable {
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
 	private void useMovement(List<TouchEvent> events) {
-		if(units[selectedUnitIndex].getPointsLeft() == 0) {
+		if(units[selectedUnitIndex].getPointsLeft()/units[selectedUnitIndex].getMovementCost() == 0) {
 			currentAction = SELECTION;
 			return;
 		}
 		movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
+		
+		//check to see if path is blocked
+		if(movementPoints[1].length==0)
+		{
+			currentAction = SELECTION;
+			notifications.add(new MoveNotification(map, units[selectedUnitIndex].getXYCoordinate(), 0, indicatorPaint));
+		}
+		
 		GPoint tileTouched = getTileTouched(events);
 		if(tileTouched != null) {
 			//check to see if we selected a movement tile
