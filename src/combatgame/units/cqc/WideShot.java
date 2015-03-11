@@ -5,6 +5,7 @@ import java.util.List;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.GPoint;
 import combatgame.objects.Map;
+import combatgame.objects.MapTile;
 import combatgame.objects.Unit;
 import combatgame.units.AttackedTile;
 import combatgame.units.BasicAttack;
@@ -54,18 +55,58 @@ public class WideShot extends BasicAttack {
 		}
 		
 		AttackedTile tileInFrontofUnitAttacked = pool.newObject();
-		tileInFrontofUnitAttacked.tile = tileInFrontofUnit; tileInFrontofUnitAttacked.damageTaken = this.damage;
+		double tempDamage = damage;
+		MapTile mt = map.getTile(tileInFrontofUnit);
+		if(mt.hasUnit()){ //there is a unit on the tile
+			int unitId = mt.getUnit_id();
+			Unit defender = map.getUnit(unitId);
+			AttackingDirection dir = getAttackedDirection(UnitWhoIsAttacking, defender);
+			if(dir == AttackingDirection.BACK)
+				tempDamage = damage * BACK_DAMAGE_MODIFIER + damage;
+			else if(dir == AttackingDirection.SIDE)
+				tempDamage = damage * SIDE_DAMAGE_MODIFIER + damage;
+		}
+		
+		tileInFrontofUnitAttacked.tile = tileInFrontofUnit; tileInFrontofUnitAttacked.damageTaken = (int)tempDamage;
 		attackedTiles.add(tileInFrontofUnitAttacked);
+		
+		double tempIndirectDamage = indirect_damage;
 		
 		if(leftTile != null && Map.isValidTile(leftTile.row, leftTile.col, map)) {
 			AttackedTile leftTileAttacked = pool.newObject();
-			leftTileAttacked.tile = leftTile; leftTileAttacked.damageTaken = indirect_damage ;
+			
+			MapTile lt = map.getTile(leftTile);
+			if(lt.hasUnit()){ //there is a unit on the tile
+				int unitId = lt.getUnit_id();
+				Unit defender = map.getUnit(unitId);
+				AttackingDirection dir = getAttackedDirection(UnitWhoIsAttacking, defender);
+				if(dir == AttackingDirection.BACK)
+					tempIndirectDamage = indirect_damage * BACK_DAMAGE_MODIFIER + indirect_damage;
+				else if(dir == AttackingDirection.SIDE)
+					tempIndirectDamage = indirect_damage * SIDE_DAMAGE_MODIFIER + indirect_damage;
+			}
+			
+			leftTileAttacked.tile = leftTile; leftTileAttacked.damageTaken = (int)tempIndirectDamage ;
 			attackedTiles.add(leftTileAttacked);
 		}
 		
+		tempIndirectDamage = indirect_damage;
+		
 		if(rightTile != null && Map.isValidTile(rightTile.row, rightTile.col, map)){
 			AttackedTile rightTileAttacked = pool.newObject();
-			rightTileAttacked.tile = rightTile; rightTileAttacked.damageTaken = indirect_damage;
+			
+			MapTile rt = map.getTile(rightTile);
+			if(rt.hasUnit()){ //there is a unit on the tile
+				int unitId = rt.getUnit_id();
+				Unit defender = map.getUnit(unitId);
+				AttackingDirection dir = getAttackedDirection(UnitWhoIsAttacking, defender);
+				if(dir == AttackingDirection.BACK)
+					tempIndirectDamage = indirect_damage * BACK_DAMAGE_MODIFIER + indirect_damage;
+				else if(dir == AttackingDirection.SIDE)
+					tempIndirectDamage = indirect_damage * SIDE_DAMAGE_MODIFIER + indirect_damage;
+			}
+			
+			rightTileAttacked.tile = rightTile; rightTileAttacked.damageTaken = (int)tempIndirectDamage;
 			attackedTiles.add(rightTileAttacked);
 		}
 		return attackedTiles;

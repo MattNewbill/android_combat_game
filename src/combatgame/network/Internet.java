@@ -37,7 +37,7 @@ public class Internet {
     				builder.append(line);
     			}
     		} else {
-    			Log.e("sfg","Failed JSON object");
+    			Log.i("sfg","Failed JSON object");
     		}
     	}catch(ClientProtocolException e){
     		e.printStackTrace();

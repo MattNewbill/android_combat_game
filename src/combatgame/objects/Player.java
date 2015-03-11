@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
+import android.util.Log;
 import combatgame.alerts.APNotification;
 import combatgame.alerts.HealthIndicator;
 import combatgame.alerts.HitIndicator;
