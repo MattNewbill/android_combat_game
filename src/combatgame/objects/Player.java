@@ -4,13 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
+import android.util.Log;
 import combatgame.alerts.APNotification;
 import combatgame.alerts.HealthIndicator;
 import combatgame.alerts.HitIndicator;
+import combatgame.alerts.MoveNotification;
 import combatgame.alerts.Notification;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.*;
@@ -557,11 +560,19 @@ public class Player implements Serializable {
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
 	private void useMovement(List<TouchEvent> events) {
-		if(units[selectedUnitIndex].getPointsLeft() == 0) {
+		if(units[selectedUnitIndex].getPointsLeft()/units[selectedUnitIndex].getMovementCost() == 0) {
 			currentAction = SELECTION;
 			return;
 		}
 		movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
+		
+		//check to see if path is blocked
+		if(movementPoints[1].length==0)
+		{
+			currentAction = SELECTION;
+			notifications.add(new MoveNotification(map, units[selectedUnitIndex].getXYCoordinate(), 0, indicatorPaint));
+		}
+		
 		GPoint tileTouched = getTileTouched(events);
 		if(tileTouched != null) {
 			//check to see if we selected a movement tile
@@ -731,7 +742,7 @@ public class Player implements Serializable {
 						break;
 					}
 				}
-			}
+			} //end for loop
 			currentAction = SELECTION;
 		}
 	}

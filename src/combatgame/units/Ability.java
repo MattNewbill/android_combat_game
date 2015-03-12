@@ -14,6 +14,15 @@ import combatgame.widgets.Button;
 
 public abstract class Ability implements Serializable {
 
+	public static final double SIDE_DAMAGE_MODIFIER = .10;
+	public static final double BACK_DAMAGE_MODIFIER = .20;
+	
+	public static enum AttackingDirection {
+		SIDE,
+		BACK,
+		FRONT
+	}
+	
 	private static final long serialVersionUID = 1L;
 	protected int abilityCost;
 	protected int damage;
@@ -62,5 +71,38 @@ public abstract class Ability implements Serializable {
 	}
 	public String getType() {
 		return type;
+	}
+	
+	protected AttackingDirection getAttackedDirection(Unit attacker, Unit defender) {
+		int defenderDir = defender.getDirectionFacing();
+		switch(attacker.getDirectionFacing()) {
+			case Unit.FACING_UP:
+				if(defenderDir == Unit.FACING_LEFT || defenderDir == Unit.FACING_RIGHT)
+					return AttackingDirection.SIDE;
+				else if(defenderDir == Unit.FACING_UP)
+					return AttackingDirection.BACK;
+				break;
+			case Unit.FACING_DOWN:
+				if(defenderDir == Unit.FACING_LEFT || defenderDir == Unit.FACING_RIGHT)
+					return AttackingDirection.SIDE;
+				else if(defenderDir == Unit.FACING_DOWN)
+					return AttackingDirection.BACK;
+				break;
+			case Unit.FACING_RIGHT:
+				if(defenderDir == Unit.FACING_UP || defenderDir == Unit.FACING_DOWN)
+					return AttackingDirection.SIDE;
+				else if(defenderDir == Unit.FACING_RIGHT)
+					return AttackingDirection.BACK;
+				break;
+			case Unit.FACING_LEFT:
+				if(defenderDir == Unit.FACING_UP || defenderDir == Unit.FACING_DOWN)
+					return AttackingDirection.SIDE;
+				else if(defenderDir == Unit.FACING_LEFT)
+					return AttackingDirection.BACK;
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid direction facing");
+		}
+		return AttackingDirection.FRONT;
 	}
 }

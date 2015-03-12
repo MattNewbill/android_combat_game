@@ -4,6 +4,7 @@ import java.util.List;
 
 import combatgame.graphics.GPoint;
 import combatgame.objects.Map;
+import combatgame.objects.MapTile;
 import combatgame.objects.Unit;
 import combatgame.util.Vision;
 
@@ -31,7 +32,22 @@ public abstract class BasicAttack extends Ability {
 	public List<AttackedTile> getTilesAffected(Unit UnitWhoIsAttacking, GPoint tileTouched, Map map) {
 		attackedTiles.clear();
 		AttackedTile at = pool.newObject();
-		at.tile = tileTouched; at.damageTaken = damage;
+		
+		double tempDamage = damage;
+		
+		//check which direction the attacking and defending units are facing and give bonus damage if flanking
+		MapTile tile = map.getTile(tileTouched);
+		if(tile.hasUnit()){ //there is a unit on the tile
+			int unitId = tile.getUnit_id();
+			Unit defender = map.getUnit(unitId);
+			AttackingDirection dir = getAttackedDirection(UnitWhoIsAttacking, defender);
+			if(dir == AttackingDirection.BACK)
+				tempDamage = damage * BACK_DAMAGE_MODIFIER + damage;
+			else if(dir == AttackingDirection.SIDE)
+				tempDamage = damage * SIDE_DAMAGE_MODIFIER + damage;
+		}
+		
+		at.tile = tileTouched; at.damageTaken = (int)tempDamage;
 		attackedTiles.add(at);
 		return attackedTiles;
 	}

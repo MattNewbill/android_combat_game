@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.util.Log;
 
 public class Map implements Serializable {
 	
@@ -113,6 +114,7 @@ public class Map implements Serializable {
 		else
 			thisPlayersTurn = player1;
 		
+		//Log.i("combatgame", combatgame.network.JSONHelper.turnToJSON(348234L, this).toString());
 		isSwitchingTurns = true;
 		thisPlayersTurn.newTurn();
 	}
