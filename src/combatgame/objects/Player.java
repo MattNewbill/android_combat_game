@@ -449,6 +449,8 @@ public class Player implements Serializable {
 			else {
 				if(map.getTile(tile).getFeatureType() == MapFeature.PLAYER_TWO_BASE && !map.getTile(tile).hasUnit()) {
 					units[spawnUnitIndex].setXYCoordinate(tile, map);
+					int defaultDirection = getDefaultDirection(units[spawnUnitIndex].getXYCoordinate());
+					units[spawnUnitIndex].setDirectionFacing(defaultDirection);
 					selectedUnitIndex = spawnUnitIndex;
 					spawnUnitIndex++;
 					currentAction = SELECTION;
@@ -471,10 +473,10 @@ public class Player implements Serializable {
 		
 		int direction;
 		if(spacesLeftOfUnit > midVerticalPoint) { // face the unit left
-			direction = Unit.FACING_LEFT;
+			direction = Unit.FACING_RIGHT;
 		}
 		else {//face unit right
-			direction = Unit.FACING_RIGHT;
+			direction = Unit.FACING_LEFT;
 		}
 		
 		return direction;
