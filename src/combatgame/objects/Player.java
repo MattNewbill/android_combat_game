@@ -431,6 +431,8 @@ public class Player implements Serializable {
 			if(isPlayerOne) {
 				if(map.getTile(tile).getFeatureType() == MapFeature.PLAYER_ONE_BASE && !map.getTile(tile).hasUnit()) {
 					units[spawnUnitIndex].setXYCoordinate(tile, map);
+					int defaultDirection = getDefaultDirection(units[spawnUnitIndex].getXYCoordinate());
+					units[spawnUnitIndex].setDirectionFacing(defaultDirection);
 					selectedUnitIndex = spawnUnitIndex;
 					spawnUnitIndex++;
 					currentAction = SELECTION;
@@ -458,6 +460,23 @@ public class Player implements Serializable {
 		}
 	}
 	
+	private int getDefaultDirection(GPoint currentUnitPosition) {
+		int spacesLeftOfUnit = map.num_horizontal_tiles - currentUnitPosition.col;
+		int spacesAboveUnit = map.num_vertical_tiles - currentUnitPosition.row;
+		int midVerticalPoint = (int)Math.floor(map.num_vertical_tiles/2);
+		int midHorizonalPoint = (int)Math.floor(map.num_horizontal_tiles/2);
+		
+		int direction;
+		if(spacesLeftOfUnit > midVerticalPoint) { // face the unit left
+			direction = Unit.FACING_LEFT;
+		}
+		else {//face unit right
+			direction = Unit.FACING_RIGHT;
+		}
+		
+		return direction;
+	}
+
 	////////////////////////////////////////////
 	////PLAYER IS ATTEMPTING TO RE-SPAWN A UNIT
 	////////////////////////////////////////////
