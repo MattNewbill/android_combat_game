@@ -467,12 +467,12 @@ public class Player implements Serializable {
 	
 	private int getDefaultDirection(GPoint currentUnitPosition) {
 		int spacesRightOfUnit = map.num_horizontal_tiles - currentUnitPosition.col - 1;
-		int spacesLeftOfUnit = map.num_vertical_tiles - spacesRightOfUnit - 1;
+		int spacesLeftOfUnit = map.num_horizontal_tiles - spacesRightOfUnit - 1;
 		
 		int spacesBelowUnit = map.num_vertical_tiles - currentUnitPosition.row - 1;
 		int spacesAboveUnit = map.num_vertical_tiles - spacesBelowUnit - 1;
 		
-		int maxDistance = Math.max(spacesAboveUnit, Math.max(spacesBelowUnit, Math.max(spacesBelowUnit,spacesAboveUnit)));
+		int maxDistance = Math.max(spacesAboveUnit, Math.max(spacesBelowUnit, Math.max(spacesRightOfUnit,spacesLeftOfUnit)));
 		int direction = Unit.FACING_DOWN;//shouldn't ever default to this
 		
 		if(maxDistance == spacesRightOfUnit)
