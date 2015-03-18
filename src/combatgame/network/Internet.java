@@ -4,14 +4,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -46,6 +52,49 @@ public class Internet {
     	}
     	return builder.toString();
     }
+	
+	public static void postJSON(String wurl, JSONObject jsonobj) {
+		try {
+			DefaultHttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppostreq = new HttpPost(wurl);
+			StringEntity se = new StringEntity(jsonobj.toString());
+			se.setContentType("application/json;charset=UTF-8");
+			se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
+			httppostreq.setEntity(se);
+			HttpResponse httpresponse = httpclient.execute(httppostreq);
+			
+			HttpEntity resultentity = httpresponse.getEntity();
+			InputStream inputstream = resultentity.getContent();
+			Header contentencoding = httpresponse
+					.getFirstHeader("Content-Encoding");
+			if (contentencoding != null
+					&& contentencoding.getValue().equalsIgnoreCase("gzip")) {
+				inputstream = new GZIPInputStream(inputstream);
+			}
+			String resultstring = convertStreamToString(inputstream);
+			inputstream.close();
+			resultstring = resultstring.substring(1, resultstring.length() - 1);
+			Log.i("combatgame", resultstring + "\n\n" + httppostreq.toString());
+			JSONObject recvdjson = new JSONObject(resultstring);
+			Log.i("combatgame", recvdjson.toString(2));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static String convertStreamToString(InputStream is) {
+		String line = "";
+		StringBuilder total = new StringBuilder();
+		BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+		try {
+			while ((line = rd.readLine()) != null) {
+				total.append(line);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return total.toString();
+	}
 	
 //	public static ArduinoHelper parseJSON(String json) {
 //		try {

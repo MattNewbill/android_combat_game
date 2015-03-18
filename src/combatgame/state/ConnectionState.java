@@ -2,7 +2,6 @@ package combatgame.state;
 
 import combatgame.graphics.Graphics2D;
 import combatgame.main.*;
-import combatgame.network.Internet;
 import combatgame.widgets.*;
 import combatgame.input.*;
 
@@ -14,7 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 public class ConnectionState extends State {
 
@@ -28,11 +26,9 @@ public class ConnectionState extends State {
 	transient Button backButton;
 	
 	boolean isBluetoothFeatureNotAvailableDialogShowing = false;
-	boolean isOnlineBattleFeatureNotAvailableDialogShowing = false;
 	
 	transient Bitmap background;
 
-	private transient Button onlineBattleOkButton;
 	private transient Button bluetoothOkButton;
 	private transient Paint exitDialogPaint;
 	private transient Bitmap onlineSoon;
@@ -57,10 +53,8 @@ public class ConnectionState extends State {
 		
 		if(internetButton.state == Button.ACTIVATED) {
 			//new game over the internet
-			Log.i("combatgame", Internet.getJSON("http://www.newbillity.com/apitest.php"));
-			isOnlineBattleFeatureNotAvailableDialogShowing = true;
 			internetButton.disarm();
-			//stateManager.setState(new InternetGameState(stateManager));
+			stateManager.setState(new InternetGameState(stateManager));
 		}
 		else if(bluetoothButton.state == Button.ACTIVATED){
 			//new game over bluetooth
@@ -89,19 +83,6 @@ public class ConnectionState extends State {
 				backButton.enable();
 			}
 		}
-		
-		if(isOnlineBattleFeatureNotAvailableDialogShowing) {
-			events = onlineBattleOkButton.update(events);
-			if(onlineBattleOkButton.state == Button.ACTIVATED) {
-				onlineBattleOkButton.disarm();
-				isOnlineBattleFeatureNotAvailableDialogShowing = false;
-				internetButton.enable();
-				bluetoothButton.enable();
-				hotSeatButton.enable();
-				backButton.enable();
-			}
-		}
-		
 	}
 
 	@Override
@@ -131,15 +112,6 @@ public class ConnectionState extends State {
 			backButton.disable();
 			
 		}
-		if(isOnlineBattleFeatureNotAvailableDialogShowing){
-			g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, exitDialogPaint);
-			g.drawBitmap(onlineSoon, Game.G_WIDTH / 2 - onlineSoon.getWidth() / 2, Game.G_HEIGHT / 2 - onlineSoon.getHeight() / 2, null); //TODO: scale for larger devices
-			onlineBattleOkButton.render(g);
-			internetButton.disable();
-			bluetoothButton.disable();
-			hotSeatButton.disable();
-			backButton.disable();
-		}
 	}
 
 	@Override
@@ -163,8 +135,6 @@ public class ConnectionState extends State {
 			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
 			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			
-			Bitmap onlineBattleOkArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));
-			Bitmap onlineBattleOkDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
 			Bitmap bluetoothOkArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));;
 			Bitmap bluetoothOkDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
 			onlineSoon = BitmapFactory.decodeStream(am.open("images/menu/online_soon.png"));
@@ -178,16 +148,13 @@ public class ConnectionState extends State {
 			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (hotSeatBitmapDisarmed.getHeight() - 50) + (V_BUTTON_MARGIN * 2) + internetBitmapDisarmed.getHeight() + bluetoothBitmapDisarmed.getHeight());
 			int backButtonX = Game.G_HEIGHT - hotSeatButtonY - hotSeatBitmapDisarmed.getHeight();
 			int backButtonY = hotSeatButtonY;
-			int onlineBattleOkButtonX = Game.G_WIDTH/2 - onlineBattleOkArmed.getWidth()/2 ;
-			int onlineBattleOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight()- 150;
-			int bluetoothOkButtonX = Game.G_WIDTH/2 - onlineBattleOkArmed.getWidth()/2;
-			int bluetoothOkButtonY = Game.G_HEIGHT - onlineBattleOkArmed.getHeight() - 150;
+			int bluetoothOkButtonX = Game.G_WIDTH/2 - bluetoothOkArmed.getWidth()/2;
+			int bluetoothOkButtonY = Game.G_HEIGHT - bluetoothOkArmed.getHeight() - 150;
 			
 			internetButton = new Button(internetBitmapDisarmed, internetBitmapArmed, internetButtonX, internetButtonY);
 			bluetoothButton = new Button(bluetoothBitmapDisarmed, bluetoothBitmapArmed, bluetoothButtonX, bluetoothButtonY);
 			hotSeatButton = new Button(hotSeatBitmapDisarmed, hotSeatBitmapArmed, hotSeatButtonX, hotSeatButtonY);
 			backButton = new Button(backUnarmed, backArmed, backButtonX, backButtonY);
-			onlineBattleOkButton = new Button(onlineBattleOkDisarmed,onlineBattleOkArmed , onlineBattleOkButtonX, onlineBattleOkButtonY);
 			bluetoothOkButton = new Button(bluetoothOkDisarmed,bluetoothOkArmed , bluetoothOkButtonX, bluetoothOkButtonY);
 
 			
@@ -231,10 +198,6 @@ public class ConnectionState extends State {
 		if(bluetoothOkButton != null) {
 			bluetoothOkButton.recycle();
 			bluetoothOkButton = null;
-		}
-		if(onlineBattleOkButton != null) {
-			onlineBattleOkButton.recycle();
-			onlineBattleOkButton = null;
 		}
 		if(background != null) {
 			background.recycle();
