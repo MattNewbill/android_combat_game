@@ -8,11 +8,11 @@ import java.io.ObjectOutputStream;
 
 import combatgame.input.TouchHandler;
 import combatgame.state.*;
-
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.Display;
 import android.view.Window;
@@ -118,6 +118,13 @@ public class Game extends Activity implements StateManager {
 		setContentView(renderView);
 	}
 
+	@SuppressLint("NewApi")
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		currentState.keyEvent(event);
+		return super.dispatchKeyEvent(event);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -222,8 +229,8 @@ public class Game extends Activity implements StateManager {
 			    	case State.BLUETOOTH:
 			    		currentState = (BluetoothGameState) temp;
 			    		break;
-			    	case State.INTERNET:
-			    		currentState = (InternetGameState) temp;
+			    	case State.HOST_JOIN:
+			    		currentState = (HostJoinState) temp;
 			    		break;
 			    	case State.HOT_SEAT:
 			    		currentState = (HotSeatState) temp;
@@ -233,6 +240,9 @@ public class Game extends Activity implements StateManager {
 			    		break;
 			    	case State.GAMEMODE_SELECTION:
 			    		currentState = (GamemodeSelectionState) temp;
+			    		break;
+			    	case State.CREATE_ACCOUNT:
+			    		currentState = (CreateAccountState) temp;
 			    		break;
 		    		default:
 		    			throw new IllegalArgumentException("Invalid state");

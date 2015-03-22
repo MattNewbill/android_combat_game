@@ -1,6 +1,7 @@
 package combatgame.network;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,8 +10,8 @@ import java.util.zip.GZIPInputStream;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -20,40 +21,34 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 public class Internet {
 
 	//www.newbillity.com/apitest.php
 	
-	public static String getJSON(String address){
-    	StringBuilder builder = new StringBuilder();
-    	HttpClient client = new DefaultHttpClient();
-    	HttpGet httpGet = new HttpGet(address);
-    	try{
-    		HttpResponse response = client.execute(httpGet);
-    		StatusLine statusLine = response.getStatusLine();
-    		int statusCode = statusLine.getStatusCode();
-    		if(statusCode == 200){
-    			HttpEntity entity = response.getEntity();
-    			InputStream content = entity.getContent();
-    			BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-    			String line;
-    			while((line = reader.readLine()) != null){
-    				builder.append(line);
-    			}
-    		} else {
-    			Log.i("sfg","Failed JSON object");
-    		}
-    	}catch(ClientProtocolException e){
-    		e.printStackTrace();
-    	} catch (IOException e){
-    		e.printStackTrace();
-    	}
-    	return builder.toString();
-    }
+	public static String getJSON(String address) {
+		String responseString = "";
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpResponse response = httpclient.execute(new HttpGet(address));
+			StatusLine statusLine = response.getStatusLine();
+			if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				response.getEntity().writeTo(out);
+				responseString = out.toString();
+				out.close();
+			} else {
+				// Closes the connection.
+				response.getEntity().getContent().close();
+				throw new IOException(statusLine.getReasonPhrase());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return responseString;
+	}
 	
-	public static void postJSON(String wurl, JSONObject jsonobj) {
+	public static String postJSON(String wurl, JSONObject jsonobj) {
+		String resultString = "";
 		try {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httppostreq = new HttpPost(wurl);
@@ -71,15 +66,12 @@ public class Internet {
 					&& contentencoding.getValue().equalsIgnoreCase("gzip")) {
 				inputstream = new GZIPInputStream(inputstream);
 			}
-			String resultstring = convertStreamToString(inputstream);
+			resultString = convertStreamToString(inputstream);
 			inputstream.close();
-			resultstring = resultstring.substring(1, resultstring.length() - 1);
-			Log.i("combatgame", resultstring + "\n\n" + httppostreq.toString());
-			JSONObject recvdjson = new JSONObject(resultstring);
-			Log.i("combatgame", recvdjson.toString(2));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		return resultString;
 	}
 	
 	private static String convertStreamToString(InputStream is) {
