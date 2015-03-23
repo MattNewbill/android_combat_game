@@ -3,6 +3,7 @@ package combatgame.state;
 import java.io.Serializable;
 
 import android.content.Context;
+import android.view.KeyEvent;
 import combatgame.main.*;
 import combatgame.graphics.*;
 
@@ -14,10 +15,11 @@ public abstract class State implements Serializable {
 	public static final int ABOUT = 1;
 	public static final int CONNECTION = 2;
 	public static final int BLUETOOTH = 3;
-	public static final int INTERNET = 4;
+	public static final int HOST_JOIN = 4;
 	public static final int HOT_SEAT = 5;
 	public static final int MAP_SELECTION = 6;
 	public static final int GAMEMODE_SELECTION = 7;
+	public static final int CREATE_ACCOUNT = 8;
 	
 	transient StateManager stateManager;
 	
@@ -33,5 +35,6 @@ public abstract class State implements Serializable {
 		stateManager = null;
 	}
 	public abstract int getStateID();
+	public void keyEvent(KeyEvent event) {}
 	
 }

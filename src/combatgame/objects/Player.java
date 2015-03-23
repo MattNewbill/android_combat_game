@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
-import android.util.Log;
 import combatgame.alerts.APNotification;
 import combatgame.alerts.HealthIndicator;
 import combatgame.alerts.HitIndicator;

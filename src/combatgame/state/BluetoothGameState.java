@@ -1,7 +1,6 @@
 package combatgame.state;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import combatgame.main.*;
 import combatgame.assets.GameplayAssets;
 import combatgame.graphics.Graphics2D;
@@ -12,10 +11,6 @@ public class BluetoothGameState extends GameState {
 
 	public BluetoothGameState(StateManager stateManager) {
 		super(stateManager);
-		
-		AssetManager am = this.stateManager.getAssetManager();
-		
-		//GameplayAssets.loadGameplayAssets(am);
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class ConnectionState extends State {
 		if(internetButton.state == Button.ACTIVATED) {
 			//new game over the internet
 			internetButton.disarm();
-			stateManager.setState(new InternetGameState(stateManager));
+			stateManager.setState(new HostJoinState(stateManager));
 		}
 		else if(bluetoothButton.state == Button.ACTIVATED){
 			//new game over bluetooth
