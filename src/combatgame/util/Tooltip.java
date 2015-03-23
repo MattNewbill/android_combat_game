@@ -65,6 +65,16 @@ public class Tooltip
 	private static boolean TT_medic[] = {true,true};
 	private static int index;
 	
+	public static void turnOff(boolean isPlayerOne)
+	{
+		if(isPlayerOne)
+			index = 0;
+		else
+			index = 1;
+		
+		TT_all[index]=false;
+	}
+	
 	public static void reset()
 	{
 		TTon = false;
