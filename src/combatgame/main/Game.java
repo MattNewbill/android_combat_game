@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.content.Context;
@@ -118,7 +119,11 @@ public class Game extends Activity implements StateManager {
 		setContentView(renderView);
 	}
 
-	@SuppressLint("NewApi")
+	@Override
+	public View getCurrentFocus() {
+		return renderView;
+	}
+	
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		currentState.keyEvent(event);
@@ -240,9 +245,6 @@ public class Game extends Activity implements StateManager {
 			    		break;
 			    	case State.GAMEMODE_SELECTION:
 			    		currentState = (GamemodeSelectionState) temp;
-			    		break;
-			    	case State.CREATE_ACCOUNT:
-			    		currentState = (CreateAccountState) temp;
 			    		break;
 		    		default:
 		    			throw new IllegalArgumentException("Invalid state");

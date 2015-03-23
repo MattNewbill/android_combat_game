@@ -1,7 +1,10 @@
 package combatgame.widgets;
 
-import combatgame.graphics.Graphics2D;
+import java.util.List;
 
+import combatgame.graphics.Graphics2D;
+import combatgame.input.TouchEvent;
+import combatgame.util.Util;
 import android.graphics.Paint;
 
 public class EditText {
@@ -38,6 +41,22 @@ public class EditText {
 		defaultTextPaint.setTextSize(TEXT_SIZE);
 	}
 	
+	public boolean update(List<TouchEvent> events) {
+		for(int i = 0; i < events.size(); i++) {
+			if(events.get(i).type == TouchEvent.TOUCH_UP) {
+				if(shouldCenter) {
+					if(Util.isInBounds(events.get(i), (int)(x - (textPaint.measureText("W") * maxTextLength) / 2), y, (int)(textPaint.measureText("W") * maxTextLength), TEXT_SIZE + 10))
+						return true;
+				}
+				else {
+					if(Util.isInBounds(events.get(i), x, y, (int)(textPaint.measureText("W") * maxTextLength), TEXT_SIZE + 10))
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public void render(Graphics2D g) {			
 		if(shouldCenter) {
 			g.drawRect(x - (textPaint.measureText("W") * maxTextLength) / 2, y, x + (textPaint.measureText("W") * maxTextLength) / 2, y + TEXT_SIZE + 10, backgroundPaint);
@@ -62,13 +81,13 @@ public class EditText {
 	public void addCharacter(char c) {
 		if(text.length() < maxTextLength)
 			text.append(c);
-		focusedText = (text.toString() + "_");
+		setFocusedText();
 	}
 	
 	public void removeCharacter() {
 		if(text.length() > 0)
 			text = new StringBuilder(text.substring(0, text.length() - 1));
-		focusedText = (text + "_");
+		setFocusedText();
 	}
 	
 	public void setFocus(boolean focus) {
@@ -77,6 +96,15 @@ public class EditText {
 	
 	public String getText() {
 		return text.toString();
+	}
+	
+	public void clear() {
+		text = new StringBuilder("");
+		setFocusedText();
+	}
+	
+	private void setFocusedText() {
+		focusedText = (text.toString() + "_");
 	}
 	
 }

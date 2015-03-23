@@ -5,23 +5,33 @@ import java.util.List;
 import org.json.JSONObject;
 
 import combatgame.graphics.Graphics2D;
+import combatgame.input.KeyboardManager;
 import combatgame.input.TouchEvent;
 import combatgame.io.PreferencesHelper;
 import combatgame.main.*;
 import combatgame.network.Internet;
 import combatgame.widgets.Button;
+import combatgame.widgets.EditText;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.KeyEvent;
 
 public class HostJoinState extends State {
 
 	private static final long serialVersionUID = 1L;
 
+	private transient KeyboardManager km;
+	
 	private transient Bitmap background;
-	private transient Button hostButton, joinButton, backButton;
+	private transient Button hostButton, joinButton, createAccountButton, backButton;
+	private transient EditText textField;
+	
+	private boolean isCreatingAccount = false;
+	private boolean isHosting = false;
 	
 	public HostJoinState(StateManager stateManager) {
 		super(stateManager);
@@ -35,22 +45,57 @@ public class HostJoinState extends State {
 	@Override
 	public void update(float delta) {
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
-		events = hostButton.update(events);
-		events = joinButton.update(events);
+		
+		if(isCreatingAccount) {
+			textField.setFocus(km.hasFocus());
+			if(textField.update(events))
+				km.showKeyboard();
+			events = createAccountButton.update(events);
+		}
+		else {
+			events = hostButton.update(events);
+			events = joinButton.update(events);
+		}
 		events = backButton.update(events);
 		
 		if(hostButton.state == Button.ACTIVATED) {
 			hostButton.disarm();
-			//imm.showSoftInput(stateManager.getActivity().getCurrentFocus(), 0);
-			checkAccountStatus(true);
+			isHosting = true;
+			checkAccountStatus();
 		}
 		else if(joinButton.state == Button.ACTIVATED) {
 			joinButton.disarm();
-			checkAccountStatus(false);
+			isHosting = false;
+			checkAccountStatus();
+		}
+		else if(createAccountButton.state == Button.ACTIVATED) {
+			createAccountButton.disarm();
+			//hide keyboard
+			km.hideKeyboard();
+			if(!textField.getText().equals("")) {
+				//create new account
+				boolean status = createUser();
+				if(status) {
+					if(isHosting)
+						host();
+					else
+						join();
+				}
+				else {
+					//display account creation failed etc
+				}
+			}
 		}
 		else if(backButton.state == Button.ACTIVATED || stateManager.isBackPressed()) {
 			backButton.disarm();
-			stateManager.setState(new ConnectionState(stateManager));
+			if(isCreatingAccount) {
+				km.hideKeyboard();
+				isCreatingAccount = false;
+				textField.clear();
+			}
+			else {
+				stateManager.setState(new ConnectionState(stateManager));
+			}
 		}
 		
 	}
@@ -61,8 +106,14 @@ public class HostJoinState extends State {
 		g.drawBitmap(background, 0, 0, null);
 		
 		//render buttons
-		hostButton.render(g);
-		joinButton.render(g);
+		if(isCreatingAccount) {
+			textField.render(g);
+			createAccountButton.render(g);
+		}
+		else {
+			hostButton.render(g);
+			joinButton.render(g);
+		}
 		backButton.render(g);
 	}
 
@@ -81,6 +132,8 @@ public class HostJoinState extends State {
 			Bitmap hostBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/online_armed.png"));
 			Bitmap joinBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/solo.png"));
 			Bitmap joinBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/solo_armed.png"));
+			Bitmap createAccountButtonDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
+			Bitmap createAccountButtonArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			Bitmap backButtonDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
 			Bitmap backButtonArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			
@@ -88,12 +141,21 @@ public class HostJoinState extends State {
 			int internetButtonY = (int) (Game.G_HEIGHT / 2 - (hostBitmapDisarmed.getHeight() - 50));
 			int hotSeatButtonX = (Game.G_WIDTH / 2) - joinBitmapDisarmed.getWidth() / 2;
 			int hotSeatButtonY = (int) (Game.G_HEIGHT / 2 - (joinBitmapDisarmed.getHeight() - 50) + hostBitmapDisarmed.getHeight() + 10);
+			int createAccountButtonX = Game.G_WIDTH / 2 - createAccountButtonDisarmed.getWidth() / 2;
+			int createAccountButtonY = Game.G_HEIGHT / 2;
 			int backButtonX = 40;
 			int backButtonY = 555;
 			
 			hostButton = new Button(hostBitmapDisarmed, hostBitmapArmed, internetButtonX, internetButtonY);
 			joinButton = new Button(joinBitmapDisarmed, joinBitmapArmed, hotSeatButtonX, hotSeatButtonY);
+			createAccountButton = new Button(createAccountButtonDisarmed, createAccountButtonArmed, createAccountButtonX, createAccountButtonY);
 			backButton = new Button(backButtonDisarmed, backButtonArmed, backButtonX, backButtonY);
+			
+			textField = new EditText("Enter gamer tag", Game.G_WIDTH / 2, Game.G_HEIGHT / 2-100, true, 15, Color.WHITE, Color.BLACK, Color.GRAY);
+			
+			km = new KeyboardManager(stateManager.getActivity());
+			if(isCreatingAccount)
+				km.showKeyboard();
 			
 			background = BitmapFactory.decodeStream(am.open("images/menu/background.png"));
 		} catch(Exception e) {
@@ -101,6 +163,21 @@ public class HostJoinState extends State {
 		}
 	}
 
+
+	@Override
+	public void keyEvent(KeyEvent event) {
+		if(event.getAction() == KeyEvent.ACTION_DOWN) {
+			if(event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+				textField.removeCharacter();
+			}
+			else {
+				char c = (char)event.getUnicodeChar();
+				if(Character.isLetter(c) || Character.isDigit(c))
+					textField.addCharacter(c);
+			}
+		}
+	}
+	
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -121,16 +198,26 @@ public class HostJoinState extends State {
 			background.recycle();
 			background = null;
 		}
+		if(createAccountButton != null) {
+			createAccountButton.recycle();
+			createAccountButton = null;
+		}
+		if(km != null) {
+			km.destroy();
+			km = null;
+		}
+		textField = null;
 	}
 	
-	private void checkAccountStatus(boolean isHosting) {
+	private void checkAccountStatus() {
 		PreferencesHelper prefs = new PreferencesHelper(stateManager.getActivity());
 		long id = prefs.getID();
 		//id = 1L;
 		//no id on record
 		if(id == -1) {
 			Log.i("combatgame", "no id");
-			stateManager.setState(new CreateAccountState(stateManager));
+			isCreatingAccount = true;
+			km.showKeyboard();
 		}
 		else {
 			//query database with id to see if it's valid
@@ -143,20 +230,50 @@ public class HostJoinState extends State {
 				if(isValid) {
 					Log.i("combatgame", "valid");
 					if(isHosting)
-						//take us to game creation
-						;
+						host();
 					else
-						//take us to server browser
-						;
+						join();
 				}
 				else {
 					Log.i("combatgame", "not valid");
-					stateManager.setState(new CreateAccountState(stateManager));
+					isCreatingAccount = true;
+					km.showKeyboard();
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void host() {
+		Log.i("combatgame", "host");
+	}
+	
+	private void join() {
+		Log.i("combatgame", "join");
+	}
+	
+	private boolean createUser() {
+		boolean success = false;
+		try {
+			JSONObject user = new JSONObject();
+			user.put("name", textField.getText());
+			String URL = "http://www.newbillity.com/android_combat_game_web/public/users/create_user";
+			String resultString = Internet.postJSON(URL, user);
+			
+			JSONObject parsedResult = new JSONObject(resultString);
+			long id = parsedResult.getLong("user_id");
+			
+			PreferencesHelper prefs = new PreferencesHelper(stateManager.getActivity());
+			prefs.putNameAndID(textField.getText(), id);
+			
+			stateManager.setState(new HostJoinState(stateManager));
+			
+			success = true;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return success;
 	}
 	
 }
