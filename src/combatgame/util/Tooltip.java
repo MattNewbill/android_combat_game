@@ -200,9 +200,9 @@ public class Tooltip
 				{
 					TT_attack[index] = false;
 					TTon = true;
-					text1 = "A Unit can only attack enemies in its own view range. When hit,";
-					text2 = "a unit's AR (Armor) will absorb a portion of the damage. The rest of";
-					text3 = "the damage will be deducted from the unit's HP (Health Points).";
+					text1 = "A Unit can only attack enemies it can see. AR (Armor) will absorb";
+					text2 = "some damage. HP (Health Points) takes the rest. Attacking from";
+					text3 = "behind adds 20% damage. Attacking from the side adds 10%.";
 				}
 			}
 			else if(tooltipName==ASSAULT_ATTACKS)
