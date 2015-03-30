@@ -97,6 +97,7 @@ public class HostJoinState extends State {
 				}
 				else {
 					//display account creation failed etc
+					stateManager.setState(new HostJoinState(stateManager, true));
 				}
 			}
 		}
@@ -287,12 +288,11 @@ public class HostJoinState extends State {
 			String resultString = Internet.postJSON(CREATE_USER_URL, user);
 			
 			JSONObject parsedResult = new JSONObject(resultString);
-			long id = parsedResult.getLong("id");
+			Log.i("combatgame", resultString);
+			long id = parsedResult.getLong("user_id");
 			
 			PreferencesHelper prefs = new PreferencesHelper(stateManager.getActivity());
 			prefs.putNameAndID(textField.getText(), id);
-			
-			stateManager.setState(new HostJoinState(stateManager));
 			
 			success = true;
 		} catch(Exception e) {

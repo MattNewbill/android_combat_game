@@ -35,6 +35,7 @@ public class InternetGameState extends GameState {
 			BufferedReader reader = new BufferedReader(new InputStreamReader((am.open(MapSelectionState.mapPath+"/"+mapPath))));
 			String[] mapData = reader.readLine().split(" ");
 			tileSet = mapData[2];
+			reader.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -72,7 +73,7 @@ public class InternetGameState extends GameState {
 		
 		//create map
 		if(map == null)
-			map = new Map(this, am, mapPath, gm);
+			map = new Map(this, am, MapSelectionState.mapPath+"/"+mapPath, gm);
 		else
 			gm.resume();
 		

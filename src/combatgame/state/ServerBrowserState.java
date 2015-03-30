@@ -42,7 +42,9 @@ public class ServerBrowserState extends State {
 	private transient Paint loadingPaint;
 	
 	private boolean error = false;
+	private boolean noServers = false;
 	private String errorString = "Could not connect to server";
+	private String noServersString = "No servers found";
 	
 	public ServerBrowserState(StateManager stateManager) {
 		super(stateManager);
@@ -93,6 +95,8 @@ public class ServerBrowserState extends State {
 		//render error string if there is an error
 		if(error)
 			g.drawText(errorString, 700, Game.G_HEIGHT / 2 + 100, loadingPaint);
+		if(noServers)
+			g.drawText(noServersString, 700, Game.G_HEIGHT / 2 + 125, loadingPaint);
 		
 		//render list view
 		if(serverList != null)
@@ -202,7 +206,7 @@ public class ServerBrowserState extends State {
 			serverList.recycle();
 			serverList = null;
 		}
-		
+		Log.i("combatgame", response);
 		//parse response
 		try {
 			JSONObject jsonResponse = new JSONObject(response);
@@ -214,9 +218,10 @@ public class ServerBrowserState extends State {
 					stubsArray[i] = new GameStub(Long.toString(temp.getInt("host_player_id")), temp.getLong("id"), temp.getInt("map_id"), temp.getInt("game_mode_id"));
 				}
 				serverList = new ServerListView(stubsArray);
+				noServers = false;
 			}
 			else {
-				error = true;
+				noServers = true;
 			}
 		} catch(Exception e) {
 			error = true;
