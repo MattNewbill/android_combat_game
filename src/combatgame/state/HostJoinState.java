@@ -290,6 +290,7 @@ public class HostJoinState extends State {
 			JSONObject parsedResult = new JSONObject(resultString);
 			Log.i("combatgame", resultString);
 			long id = parsedResult.getLong("user_id");
+			Game.ID = id;
 			
 			PreferencesHelper prefs = new PreferencesHelper(stateManager.getActivity());
 			prefs.putNameAndID(textField.getText(), id);
