@@ -17,6 +17,8 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -24,6 +26,9 @@ public class HostJoinState extends State {
 
 	private static final long serialVersionUID = 1L;
 
+	private final String CREATE_USER_URL = "http://www.newbillity.com/android_combat_game_web/public/users/create_user";
+	private final String AUTHENTICATE_USER_URL = "http://www.newbillity.com/android_combat_game_web/public/users/get_is_valid_user_by_id/";
+	
 	private transient KeyboardManager km;
 	
 	private transient Bitmap background;
@@ -33,8 +38,17 @@ public class HostJoinState extends State {
 	private boolean isCreatingAccount = false;
 	private boolean isHosting = false;
 	
+	private boolean displayError = false;
+	private String error = "Could not connect to server";
+	private transient Paint errorPaint;
+	
 	public HostJoinState(StateManager stateManager) {
 		super(stateManager);
+	}
+	
+	public HostJoinState(StateManager stateManager, boolean error) {
+		super(stateManager);
+		displayError = error;
 	}
 
 	@Override
@@ -45,7 +59,7 @@ public class HostJoinState extends State {
 	@Override
 	public void update(float delta) {
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
-		
+
 		if(isCreatingAccount) {
 			textField.setFocus(km.hasFocus());
 			if(textField.update(events))
@@ -105,6 +119,10 @@ public class HostJoinState extends State {
 		//render background
 		g.drawBitmap(background, 0, 0, null);
 		
+		//render error message if there is one
+		if(displayError)
+			g.drawText(error, Game.G_WIDTH / 2, Game.G_HEIGHT / 2 + 300, errorPaint);
+		
 		//render buttons
 		if(isCreatingAccount) {
 			textField.render(g);
@@ -128,12 +146,12 @@ public class HostJoinState extends State {
 		AssetManager am = this.stateManager.getAssetManager();
 		
 		try {
-			Bitmap hostBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/online.png"));
-			Bitmap hostBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/online_armed.png"));
-			Bitmap joinBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/solo.png"));
-			Bitmap joinBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/solo_armed.png"));
-			Bitmap createAccountButtonDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
-			Bitmap createAccountButtonArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
+			Bitmap hostBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/host_350.png"));
+			Bitmap hostBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/host_350_armed.png"));
+			Bitmap joinBitmapDisarmed = BitmapFactory.decodeStream(am.open("images/menu/join_350.png"));
+			Bitmap joinBitmapArmed = BitmapFactory.decodeStream(am.open("images/menu/join_350_armed.png"));
+			Bitmap createAccountButtonDisarmed = BitmapFactory.decodeStream(am.open("images/menu/create_account.png"));
+			Bitmap createAccountButtonArmed = BitmapFactory.decodeStream(am.open("images/menu/create_account_armed.png"));
 			Bitmap backButtonDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
 			Bitmap backButtonArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			
@@ -158,6 +176,11 @@ public class HostJoinState extends State {
 				km.showKeyboard();
 			
 			background = BitmapFactory.decodeStream(am.open("images/menu/background.png"));
+			
+			errorPaint = new Paint();
+			errorPaint.setColor(Color.WHITE);
+			errorPaint.setTextSize(42);
+			errorPaint.setTextAlign(Align.CENTER);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -207,14 +230,14 @@ public class HostJoinState extends State {
 			km = null;
 		}
 		textField = null;
+		errorPaint = null;
 	}
 	
 	private void checkAccountStatus() {
 		PreferencesHelper prefs = new PreferencesHelper(stateManager.getActivity());
-		long id = prefs.getID();
-		//id = 1L;
+		Game.ID = prefs.getID();
 		//no id on record
-		if(id == -1) {
+		if(Game.ID == -1) {
 			Log.i("combatgame", "no id");
 			isCreatingAccount = true;
 			km.showKeyboard();
@@ -222,7 +245,7 @@ public class HostJoinState extends State {
 		else {
 			//query database with id to see if it's valid
 			Log.i("combatgame", "found id");
-			String query = "http://www.newbillity.com/android_combat_game_web/public/users/get_is_valid_user_by_id/"+id;
+			String query = AUTHENTICATE_USER_URL + Game.ID;
 			String response = Internet.getJSON(query);
 			try {
 				JSONObject parsedResponse = new JSONObject(response);
@@ -241,16 +264,19 @@ public class HostJoinState extends State {
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
+				displayError = true;
 			}
 		}
 	}
 	
 	private void host() {
 		Log.i("combatgame", "host");
+		stateManager.setState(new InternetMapSelectionState(stateManager));
 	}
 	
 	private void join() {
 		Log.i("combatgame", "join");
+		stateManager.setState(new ServerBrowserState(stateManager));
 	}
 	
 	private boolean createUser() {
@@ -258,11 +284,10 @@ public class HostJoinState extends State {
 		try {
 			JSONObject user = new JSONObject();
 			user.put("name", textField.getText());
-			String URL = "http://www.newbillity.com/android_combat_game_web/public/users/create_user";
-			String resultString = Internet.postJSON(URL, user);
+			String resultString = Internet.postJSON(CREATE_USER_URL, user);
 			
 			JSONObject parsedResult = new JSONObject(resultString);
-			long id = parsedResult.getLong("user_id");
+			long id = parsedResult.getLong("id");
 			
 			PreferencesHelper prefs = new PreferencesHelper(stateManager.getActivity());
 			prefs.putNameAndID(textField.getText(), id);

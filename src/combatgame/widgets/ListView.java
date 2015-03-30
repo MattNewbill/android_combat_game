@@ -3,9 +3,9 @@ package combatgame.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
-
 import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
@@ -85,7 +85,9 @@ public abstract class ListView {
 				subtitlePaint.setColor(Color.WHITE);
 			}
 			
-			g.drawBitmap(items.get(i).getThumbnail(), 20, i * ListViewRegion.HEIGHT + 10 - offset, null);
+			Bitmap thumbnail = items.get(i).getThumbnail();
+			if(thumbnail != null)
+				g.drawBitmap(thumbnail, 20, i * ListViewRegion.HEIGHT + 10 - offset, null);
 			
 			g.drawText(items.get(i).getTitle(), 130, i * ListViewRegion.HEIGHT + 45 - offset, titlePaint);
 			g.drawText(items.get(i).getSubtitle(), 130, i * ListViewRegion.HEIGHT + 85 - offset, subtitlePaint);			

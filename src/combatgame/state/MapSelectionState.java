@@ -21,17 +21,17 @@ import combatgame.widgets.MapListView;
 public class MapSelectionState extends State {
 
 	private static final long serialVersionUID = 1L;
-	transient Button nextButton;
-	transient Button backButton;
+	protected transient Button nextButton;
+	protected transient Button backButton;
 	
-	transient MapListView listView;
+	protected transient MapListView listView;
 	public static final String mapPath = "maps/geometry";
-	transient String selectedMap;
-	transient PartialMap selectedPartialMap;
+	protected transient String selectedMap;
+	protected transient PartialMap selectedPartialMap;
 	
-	transient Paint selectedMapNamePaint;
-	transient Paint selectedMapSizePaint;
-	transient Paint selectedMapDescriptionPaint;
+	protected transient Paint selectedMapNamePaint;
+	protected transient Paint selectedMapSizePaint;
+	protected transient Paint selectedMapDescriptionPaint;
 	
 	public MapSelectionState(StateManager stateManager) {
 		super(stateManager);

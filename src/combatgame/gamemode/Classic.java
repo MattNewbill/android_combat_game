@@ -1,6 +1,7 @@
 package combatgame.gamemode;
 
 import android.content.res.AssetManager;
+import combatgame.network.GamemodeIDs;
 import combatgame.objects.Unit;
 import combatgame.units.assault.Assault;
 import combatgame.units.cqc.CQC;
@@ -39,6 +40,11 @@ public class Classic extends DeathMatch {
 		units[3] = new Sniper(-1, "Sniper \u03B1", false);
 		units[4] = new Medic(-1, "Medic \u03B1", false);
 		return units;
+	}
+	
+	@Override
+	public int getID() {
+		return GamemodeIDs.CLASSIC;
 	}
 
 }

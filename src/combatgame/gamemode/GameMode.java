@@ -27,7 +27,8 @@ public abstract class GameMode implements Serializable {
 	
 	public GameMode(AssetManager am, String path) {
 		try {
-			preview = BitmapFactory.decodeStream(am.open("gamemodes/thumbnails/"+path));
+			if(am != null)
+				preview = BitmapFactory.decodeStream(am.open("gamemodes/thumbnails/"+path));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -36,6 +37,7 @@ public abstract class GameMode implements Serializable {
 	public abstract Unit[] getPlayer1Units();
 	public abstract Unit[] getPlayer2Units();
 	public abstract int checkWinConditions(Map map);
+	public abstract int getID();
 	
 	public String getName() {
 		return gamemodeName;

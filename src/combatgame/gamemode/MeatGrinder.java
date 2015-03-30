@@ -1,7 +1,7 @@
 package combatgame.gamemode;
 
 import android.content.res.AssetManager;
-
+import combatgame.network.GamemodeIDs;
 import combatgame.objects.Unit;
 import combatgame.units.cqc.CQC;
 
@@ -36,6 +36,11 @@ public class MeatGrinder extends DeathMatch {
 		units[3] = new CQC(-1, "Juggernaut \u03B4", false);
 		units[4] = new CQC(-1, "Juggernaut \u03B5", false);
 		return units;
+	}
+	
+	@Override
+	public int getID() {
+		return GamemodeIDs.MEAT_GRINDER;
 	}
 	
 }

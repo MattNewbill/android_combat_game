@@ -20,17 +20,17 @@ import combatgame.widgets.GamemodeListView;
 public class GamemodeSelectionState extends State {
 
 	private static final long serialVersionUID = 1L;
-	PartialMap map;
-	transient GameMode selectedGamemode;
+	protected PartialMap map;
+	protected transient GameMode selectedGamemode;
 	
-	transient GamemodeListView listview;
+	protected transient GamemodeListView listview;
 	
-	transient Button startButton;
-	transient Button backButton;
+	protected transient Button startButton;
+	protected transient Button backButton;
 	
-	transient Paint selectedGamemodeNamePaint;
-	transient Paint selectedGamemodeLengthPaint;
-	transient Paint selectedGamemodeDescriptionPaint;
+	protected transient Paint selectedGamemodeNamePaint;
+	protected transient Paint selectedGamemodeLengthPaint;
+	protected transient Paint selectedGamemodeDescriptionPaint;
 	
 	public GamemodeSelectionState(StateManager stateManager, PartialMap map) {
 		super(stateManager);

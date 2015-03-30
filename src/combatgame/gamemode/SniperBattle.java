@@ -1,6 +1,7 @@
 package combatgame.gamemode;
 
 import android.content.res.AssetManager;
+import combatgame.network.GamemodeIDs;
 import combatgame.objects.Unit;
 import combatgame.units.sniper.Sniper;
 
@@ -31,6 +32,11 @@ public class SniperBattle extends DeathMatch{
 		units[1] = new Sniper(-1, "Sniper \u03B2", false);
 		units[2] = new Sniper(-1, "Sniper \u03B3", false);
 		return units;
+	}
+	
+	@Override
+	public int getID() {
+		return GamemodeIDs.SNIPER_BATTLE;
 	}
 	
 }

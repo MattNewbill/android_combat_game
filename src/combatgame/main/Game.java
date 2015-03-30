@@ -28,6 +28,8 @@ import android.util.Log;
 
 public class Game extends Activity implements StateManager {
 
+	public static long ID = -1;
+	
 	State currentState;
 	RenderView renderView;
 	PowerManager.WakeLock wakeLock;
@@ -245,6 +247,21 @@ public class Game extends Activity implements StateManager {
 			    		break;
 			    	case State.GAMEMODE_SELECTION:
 			    		currentState = (GamemodeSelectionState) temp;
+			    		break;
+			    	case State.SERVER_BROWSER:
+			    		currentState = (ServerBrowserState) temp;
+			    		break;
+			    	case State.INTERNET_GAME:
+			    		currentState = (InternetGameState) temp;
+			    		break;
+			    	case State.INTERNET_GAMEMODE_SELECTION:
+			    		currentState = (InternetGamemodeSelectionState) temp;
+			    		break;
+			    	case State.LOBBY:
+			    		currentState = (LobbyState) temp;
+			    		break;
+			    	case State.INTERNET_MAP_SELECTION:
+			    		currentState = (InternetMapSelectionState) temp;
 			    		break;
 		    		default:
 		    			throw new IllegalArgumentException("Invalid state");

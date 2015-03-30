@@ -1,7 +1,7 @@
 package combatgame.gamemode;
 
 import android.content.res.AssetManager;
-
+import combatgame.network.GamemodeIDs;
 import combatgame.objects.Unit;
 import combatgame.units.assault.Assault;
 import combatgame.units.recon.Recon;
@@ -35,4 +35,8 @@ public class Hunted extends DeathMatch {
 		return units;
 	}
 	
+	@Override
+	public int getID() {
+		return GamemodeIDs.HUNTED;
+	}
 }

@@ -1,7 +1,7 @@
 package combatgame.gamemode;
 
 import android.content.res.AssetManager;
-
+import combatgame.network.GamemodeIDs;
 import combatgame.objects.Unit;
 import combatgame.units.cqc.CQC;
 import combatgame.units.medic.Medic;
@@ -37,4 +37,8 @@ public class ShootingFlies extends DeathMatch {
 		return units;
 	}
 	
+	@Override
+	public int getID() {
+		return GamemodeIDs.SHOOTING_FLIES;
+	}
 }

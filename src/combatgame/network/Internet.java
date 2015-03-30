@@ -22,8 +22,6 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 public class Internet {
-
-	//www.newbillity.com/apitest.php
 	
 	public static String getJSON(String address) {
 		String responseString = "";

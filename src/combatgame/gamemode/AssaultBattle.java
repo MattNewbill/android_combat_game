@@ -1,7 +1,7 @@
 package combatgame.gamemode;
 
 import android.content.res.AssetManager;
-
+import combatgame.network.GamemodeIDs;
 import combatgame.objects.Unit;
 import combatgame.units.assault.Assault;
 
@@ -32,6 +32,11 @@ public class AssaultBattle extends DeathMatch{
 		units[1] = new Assault(-1, "Assault \u03B2", false);
 		units[2] = new Assault(-1, "Assault \u03B3", false);
 		return units;
+	}
+	
+	@Override
+	public int getID() {
+		return GamemodeIDs.ASSAULT_BATTLE;
 	}
 	
 }
