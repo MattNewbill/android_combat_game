@@ -247,7 +247,7 @@ public class Map implements Serializable {
 	 * @param g Graphics object to render to
 	 * @param paint Paint object to use for colors
 	 */
-	public void render(Graphics2D g, Paint paint) {
+	public void render(Graphics2D g) {
 		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {

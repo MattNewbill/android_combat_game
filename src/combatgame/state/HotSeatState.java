@@ -91,7 +91,7 @@ public class HotSeatState extends GameState {
 
 	@Override
 	public void render(Graphics2D g, float delta) {
-		map.render(g, paint);
+		map.render(g);
 		switchTurns = map.isSwitchingTurns();
 		if(switchTurns) {
 			if(Game.isScaled()) {

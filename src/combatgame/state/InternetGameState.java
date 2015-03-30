@@ -2,12 +2,14 @@ package combatgame.state;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import combatgame.assets.GameplayAssets;
 import combatgame.gamemode.GameMode;
 import combatgame.graphics.Graphics2D;
+import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.main.StateManager;
 import combatgame.objects.Map;
@@ -48,12 +50,14 @@ public class InternetGameState extends GameState {
 
 	@Override
 	public void update(float delta) {
+		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
 		
+		map.update(events);
 	}
 
 	@Override
 	public void render(Graphics2D g, float delta) {
-		
+		map.render(g);
 	}
 
 	@Override
