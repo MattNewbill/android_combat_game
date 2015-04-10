@@ -26,13 +26,13 @@ import combatgame.widgets.UnitInfoDrawableButton;
 
 public class Player implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	protected static final long serialVersionUID = 1L;
 
 	//used for determining what base to spawn in/attack
 	boolean isPlayerOne;
 	
-	private String gamertag;
-	private int playerId;
+	protected String gamertag;
+	protected int playerId;
 	
 	//action
 	public static final int SELECTION = 0;
@@ -42,63 +42,63 @@ public class Player implements Serializable {
 	public static final int USE_ABILITY = 4;
 	public static final int SPAWN_UNIT = 5;
 	public static final int RESPAWN_UNIT = 6;
-	private int currentAction = SELECTION;
+	protected int currentAction = SELECTION;
 	
 	//movement state
-	private GPoint[][] movementPoints;
-	private List<GPoint> attackableTiles;
+	protected GPoint[][] movementPoints;
+	protected List<GPoint> attackableTiles;
 	
 	//gameplay state
-	private boolean isSetupPhase = true;
+	protected boolean isSetupPhase = true;
 	
 	//if the player has selected an ability to use, this is the one he is using
-	private Ability currentAbility;
+	protected Ability currentAbility;
 	
 	//gameplay objects
-	private Unit[] units;
-	private int selectedUnitIndex = -1;
-	private int spawnUnitIndex = 0; //index of next unit that needs to be spawned in (setup phase)
-	private Unit enemyUnitSelected = null; // enemy unit we currently have selected
+	protected Unit[] units;
+	protected int selectedUnitIndex = -1;
+	protected int spawnUnitIndex = 0; //index of next unit that needs to be spawned in (setup phase)
+	protected Unit enemyUnitSelected = null; // enemy unit we currently have selected
 	
-	private Map map;
+	protected Map map;
 	
 	//hud icons
-	private transient UnitInfoDrawableButton unitInfoButton;
-	private transient Button moveButton;
-	private transient Button abilityButton;
-	private transient Button deselectButton;
-	private transient Button endTurnButton;
+	protected transient UnitInfoDrawableButton unitInfoButton;
+	protected transient Button moveButton;
+	protected transient Button abilityButton;
+	protected transient Button deselectButton;
+	protected transient Button endTurnButton;
 	
-	private transient Button spawnUnitButton;
-	private transient Button respawnUnitButton;
+	protected transient Button spawnUnitButton;
+	protected transient Button respawnUnitButton;
 	
 	//damage indicators/notifications
-	private transient Paint indicatorPaint;
-	private List<HealthIndicator> healthIndicators = new LinkedList<HealthIndicator>();
-	private List<HitIndicator> hitIndicators = new ArrayList<HitIndicator>();
-	private List<Notification> notifications = new ArrayList<Notification>();
+	protected transient Paint indicatorPaint;
+	protected List<HealthIndicator> healthIndicators = new LinkedList<HealthIndicator>();
+	protected List<HitIndicator> hitIndicators = new ArrayList<HitIndicator>();
+	protected List<Notification> notifications = new ArrayList<Notification>();
 	
 	//movement hud icons
-	private transient Button movementButton;
-	private transient Button leftRotateButton;
-	private transient Button rightRotateButton;
-	private transient Button leftRotateSetupButton;
-	private transient Button rightRotateSetupButton;
+	protected transient Button movementButton;
+	protected transient Button leftRotateButton;
+	protected transient Button rightRotateButton;
+	protected transient Button leftRotateSetupButton;
+	protected transient Button rightRotateSetupButton;
 	
 	//confirm end turn data
-	private transient Button yesButton;
-	private transient Button noButton;
-	private boolean isEndingTurn = false;
+	protected transient Button yesButton;
+	protected transient Button noButton;
+	protected boolean isEndingTurn = false;
 	
 	//determine presses vs scrolls
-	private TouchEvent previousEvent;
-	private TouchEvent previousTouchDownEvent;
-	private GPoint previousTouchDownTile;
+	protected TouchEvent previousEvent;
+	protected TouchEvent previousTouchDownEvent;
+	protected GPoint previousTouchDownTile;
 	public static final int INELIGIBLE_TOUCH_DISTANCE = 10;
 	
 	//attack and heal overlays on the attackable tiles
-	private transient Paint attackOverlayPaint;
-	private transient Paint healOverlayPaint;
+	protected transient Paint attackOverlayPaint;
+	protected transient Paint healOverlayPaint;
 	
 	public Player(String gamertag, boolean isPlayerOne, Map map, Unit[] units) {
 		this.gamertag = gamertag;
@@ -138,7 +138,7 @@ public class Player implements Serializable {
 	
 	//only runs during the setup phase
 	//setup phase consists of unit placement
-	private List<TouchEvent> updateSetupPhase(List<TouchEvent> events) {
+	protected List<TouchEvent> updateSetupPhase(List<TouchEvent> events) {
 		
 		Tooltip.showTooltip( isPlayerOne, Tooltip.PLACE_UNIT);
 		
@@ -227,7 +227,7 @@ public class Player implements Serializable {
 		return events;
 	}
 	
-	private List<TouchEvent> updateTurnPhase(List<TouchEvent> events) {
+	protected List<TouchEvent> updateTurnPhase(List<TouchEvent> events) {
 		if(isEndingTurn) {
 			events = yesButton.update(events);
 			events = noButton.update(events);
@@ -423,7 +423,7 @@ public class Player implements Serializable {
 	////////////////////////////////////////////
 	////PLAYER IS ATTEMPTING TO SPAWN A UNIT
 	////////////////////////////////////////////
-	private void spawnUnit(List<TouchEvent> events) {
+	protected void spawnUnit(List<TouchEvent> events) {
 		disableButtons();
 		selectedUnitIndex = spawnUnitIndex;
 		
@@ -464,7 +464,7 @@ public class Player implements Serializable {
 		}
 	}
 	
-	private int getDefaultDirection(GPoint currentUnitPosition) {
+	protected int getDefaultDirection(GPoint currentUnitPosition) {
 		int spacesRightOfUnit = map.num_horizontal_tiles - currentUnitPosition.col - 1;
 		int spacesLeftOfUnit = map.num_horizontal_tiles - spacesRightOfUnit - 1;
 		
@@ -489,7 +489,7 @@ public class Player implements Serializable {
 	////////////////////////////////////////////
 	////PLAYER IS ATTEMPTING TO RE-SPAWN A UNIT
 	////////////////////////////////////////////
-	private void respawnUnit(List<TouchEvent> events) {
+	protected void respawnUnit(List<TouchEvent> events) {
 		GPoint tile = getTileTouched(events);
 		//only let player one spawn in player one's base
 		if(isPlayerOne) {
@@ -518,7 +518,7 @@ public class Player implements Serializable {
 	////////////////////////////////////////////
 	////PLAYER IS SELECTING UNIT
 	////////////////////////////////////////////
-	private void selection(List<TouchEvent> events) {
+	protected void selection(List<TouchEvent> events) {
 		//check what tile is pressed by the user
 		GPoint tileTouched = getTileTouched(events); //get the tile touched by the user
 		if(tileTouched != null) {
@@ -565,7 +565,7 @@ public class Player implements Serializable {
 	////////////////////////////////////////////
 	////PLAYER IS MOVING A SELECTED UNIT
 	////////////////////////////////////////////
-	private void useMovement(List<TouchEvent> events) {
+	protected void useMovement(List<TouchEvent> events) {
 		if(units[selectedUnitIndex].getPointsLeft()/units[selectedUnitIndex].getMovementCost() == 0) {
 			currentAction = SELECTION;
 			return;
@@ -612,7 +612,7 @@ public class Player implements Serializable {
 	////////////////////////////////////////////
 	////PLAYER IS ALLOWED TO ROTATE A SPAWNED UNIT DURING SETUP
 	////////////////////////////////////////////
-	private void chooseMovementSetup(List<TouchEvent> events) {
+	protected void chooseMovementSetup(List<TouchEvent> events) {
 		events = leftRotateSetupButton.update(events);
 		events = rightRotateSetupButton.update(events);
 		if(leftRotateSetupButton.state == Button.ACTIVATED) {
@@ -635,7 +635,7 @@ public class Player implements Serializable {
 	////////////////////////////////////////////
 	////PLAYER IS SELECTING HOW TO MOVE A SELECTED UNIT DURING ACTUAL TURN
 	////////////////////////////////////////////
-	private void chooseMovementTurn(List<TouchEvent> events) {
+	protected void chooseMovementTurn(List<TouchEvent> events) {
 		events = movementButton.update(events);
 		events = leftRotateButton.update(events);
 		events = rightRotateButton.update(events);
@@ -684,7 +684,7 @@ public class Player implements Serializable {
 	////////////////////////////////////////////
 	////PLAYER IS SELECTING A UNIT'S ABILITY TO USE
 	////////////////////////////////////////////
-	private void chooseAbilities(List<TouchEvent> events) {
+	protected void chooseAbilities(List<TouchEvent> events) {
 		Ability[] abilities = units[selectedUnitIndex].getAbilities();
 		for(int i = 0; i < abilities.length; i++) {
 			Button ability = abilities[i].getButton();
@@ -714,7 +714,7 @@ public class Player implements Serializable {
 	////////////////////////////////////////////
 	////PLAYER IS USING A UNIT'S ABILITY
 	////////////////////////////////////////////
-	private void useAbility(List<TouchEvent> events) {
+	protected void useAbility(List<TouchEvent> events) {
 		//get the tiles that can be attacked
 		attackableTiles = currentAbility.getTilesAttackable(units[selectedUnitIndex], map);
 		
@@ -1094,7 +1094,7 @@ public class Player implements Serializable {
 	}
 	
 	//disable the hud buttons (generally if no unit is selected)
-	private void disableButtons() {
+	protected void disableButtons() {
 		unitInfoButton.disable();
 		moveButton.disable();
 		abilityButton.disable();
@@ -1102,7 +1102,7 @@ public class Player implements Serializable {
 	}
 	
 	//enable the hud buttons (generally when a player has just selected one of their units)
-	private void enableButtons() {
+	protected void enableButtons() {
 		unitInfoButton.enable();
 		moveButton.enable();
 		abilityButton.enable();

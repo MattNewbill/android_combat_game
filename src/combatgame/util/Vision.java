@@ -30,7 +30,7 @@ public class Vision
 	
 	private static GPoint point;
 	private static LazyPool<GPoint> pool;
-	public static final int MAX_POOL_SIZE = 200;
+	public static final int MAX_POOL_SIZE = 300;
 	
 	static {
 		LazyPoolObjectFactory<GPoint> factory = new LazyPoolObjectFactory<GPoint>() {
