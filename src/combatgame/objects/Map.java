@@ -76,7 +76,7 @@ public class Map implements Serializable {
 		this.gamemode = gm;
 		//create players
 		player1 = new Player("Player 1", true, this, gm.getPlayer1Units());
-		player2 = new NPC("Player 2", false, this, gm.getPlayer2Units());
+		player2 = new Player("Player 2", false, this, gm.getPlayer2Units());
 		thisPlayersTurn = player1;
 		
 		try {
