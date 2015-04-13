@@ -25,14 +25,8 @@ public class ConnectionState extends State {
 	transient Button internetButton;
 	transient Button backButton;
 	
-	boolean isSingleFeatureNotAvailableDialogShowing = false;
-	
 	transient Bitmap background;
-
-	private transient Button singleOkButton;
 	private transient Paint exitDialogPaint;
-	private transient Bitmap onlineSoon;
-	private transient Bitmap singleSoon;
 	
 	public ConnectionState(StateManager sm) {
 		super(sm);
@@ -72,17 +66,9 @@ public class ConnectionState extends State {
 			stateManager.setState(new MainMenuState(stateManager));
 		}
 		
-		if(isSingleFeatureNotAvailableDialogShowing) {
-			events = singleOkButton.update(events);
-			if(singleOkButton.state == Button.ACTIVATED) {
-				singleOkButton.disarm();
-				isSingleFeatureNotAvailableDialogShowing = false;
-				internetButton.enable();
-				singleButton.enable();
-				hotSeatButton.enable();
-				backButton.enable();
-			}
-		}
+
+				
+		
 	}
 
 	@Override
@@ -102,16 +88,7 @@ public class ConnectionState extends State {
 		//draw back button
 		backButton.render(g);
 		
-		if(isSingleFeatureNotAvailableDialogShowing){
-			g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, exitDialogPaint);
-			g.drawBitmap(singleSoon, Game.G_WIDTH / 2 - singleSoon.getWidth() / 2, Game.G_HEIGHT / 2 - singleSoon.getHeight() / 2, null); //TODO: scale for larger devices
-			singleOkButton.render(g);
-			internetButton.disable();
-			singleButton.disable();
-			hotSeatButton.disable();
-			backButton.disable();
-			
-		}
+		
 	}
 
 	@Override
@@ -135,13 +112,6 @@ public class ConnectionState extends State {
 			Bitmap backUnarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
 			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
 			
-			Bitmap singleOkArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"));;
-			Bitmap singleOkDisarmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"));
-			onlineSoon = BitmapFactory.decodeStream(am.open("images/menu/online_soon.png"));
-			singleSoon = BitmapFactory.decodeStream(am.open("images/menu/single_soon.png"));
-			
-			
-			
 			int singleButtonX = (Game.G_WIDTH / 2) - singleBitmapDisarmed.getWidth() / 2;
 			int singleButtonY = (int) (Game.G_HEIGHT / 2 - (singleBitmapDisarmed.getHeight() - 50));
 			int hotSeatButtonX = (Game.G_WIDTH / 2) - hotSeatBitmapDisarmed.getWidth() / 2;
@@ -150,16 +120,12 @@ public class ConnectionState extends State {
 			int internetButtonY = (int) (Game.G_HEIGHT / 2 - (internetBitmapDisarmed.getHeight() - 50) + (V_BUTTON_MARGIN * 2) + singleBitmapDisarmed.getHeight() + hotSeatBitmapDisarmed.getHeight());
 			int backButtonX = Game.G_HEIGHT - internetButtonY - internetBitmapDisarmed.getHeight();
 			int backButtonY = internetButtonY;
-			int singleOkButtonX = Game.G_WIDTH/2 - singleOkArmed.getWidth()/2;
-			int singleOkButtonY = Game.G_HEIGHT - singleOkArmed.getHeight() - 150;
 			
 			internetButton = new Button(internetBitmapDisarmed, internetBitmapArmed, internetButtonX, internetButtonY);
 			singleButton = new Button(singleBitmapDisarmed, singleBitmapArmed, singleButtonX, singleButtonY);
 			hotSeatButton = new Button(hotSeatBitmapDisarmed, hotSeatBitmapArmed, hotSeatButtonX, hotSeatButtonY);
 			backButton = new Button(backUnarmed, backArmed, backButtonX, backButtonY);
-			singleOkButton = new Button(singleOkDisarmed,singleOkArmed , singleOkButtonX, singleOkButtonY);
-
-			
+		
 			exitDialogPaint = new Paint();
 			exitDialogPaint.setColor(Color.BLACK);
 			exitDialogPaint.setAlpha(125);
@@ -188,18 +154,6 @@ public class ConnectionState extends State {
 		if(backButton != null) {
 			backButton.recycle();
 			backButton = null;
-		}
-		if(onlineSoon != null) {
-			onlineSoon.recycle();
-			onlineSoon = null;
-		}
-		if(singleSoon != null) {
-			singleSoon.recycle();
-			singleSoon = null;
-		}
-		if(singleOkButton != null) {
-			singleOkButton.recycle();
-			singleOkButton = null;
 		}
 		if(background != null) {
 			background.recycle();
