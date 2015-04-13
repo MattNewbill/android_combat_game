@@ -263,6 +263,15 @@ public class Game extends Activity implements StateManager {
 			    	case State.INTERNET_MAP_SELECTION:
 			    		currentState = (InternetMapSelectionState) temp;
 			    		break;
+			    	case State.NPC_STATE:
+			    		currentState = (NpcState) temp;
+			    		break;
+			    	case State.NPC_MAP:
+			    		currentState = (MapStateNPC) temp;
+			    		break;
+			    	case State.NPC_GAMEMODE:
+			    		currentState = (GamemodeStateNPC) temp;
+			    		break;
 		    		default:
 		    			throw new IllegalArgumentException("Invalid state");
 			    }

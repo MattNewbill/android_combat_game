@@ -58,8 +58,8 @@ public class ConnectionState extends State {
 		}
 		else if(singleButton.state == Button.ACTIVATED){
 			//new game single player
-			isSingleFeatureNotAvailableDialogShowing = true;
 			singleButton.disarm();
+			stateManager.setState(new MapStateNPC(stateManager));/////////////////////
 			//stateManager.setState(new SingleGameState(stateManager));
 		}
 		else if(hotSeatButton.state == Button.ACTIVATED) {

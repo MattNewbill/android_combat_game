@@ -25,6 +25,9 @@ public abstract class State implements Serializable {
 	public static final int INTERNET_GAMEMODE_SELECTION = 11;
 	public static final int LOBBY = 12;
 	public static final int INTERNET_MAP_SELECTION = 13;
+	public static final int NPC_STATE = 14;
+	public static final int NPC_MAP = 15;
+	public static final int NPC_GAMEMODE = 16;
 	
 	transient StateManager stateManager;
 	

@@ -48,7 +48,7 @@ public class NpcState extends GameState {
 
 	@Override
 	public int getStateID() {
-		return State.HOT_SEAT;
+		return State.NPC_STATE;
 	}
 	
 	@Override
@@ -71,6 +71,10 @@ public class NpcState extends GameState {
 			}
 			else {
 				if(switchTurns) {
+					
+					if( map.getPlayer2() == map.getCurrentPlayersTurn() )
+						events.clear();
+					
 					events = switchTurnsOKButton.update(events);
 					events.clear();
 					if(switchTurnsOKButton.state == Button.ACTIVATED) {
@@ -94,15 +98,16 @@ public class NpcState extends GameState {
 		map.render(g);
 		switchTurns = map.isSwitchingTurns();
 		if(switchTurns) {
-			if(Game.isScaled()) {
+				
+			if(map.getPlayer1() == map.getCurrentPlayersTurn()){
 				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, switchTurnsFill);
 				g.drawText(map.getCurrentPlayersTurn().getGamertag() + "'s turn", Game.G_WIDTH / 2, Game.G_HEIGHT / 2, switchTurnsFont);
+				switchTurnsOKButton.render(g);
 			}
-			else {
-				g.drawRect(0, 0, Game.P_WIDTH, Game.P_HEIGHT, switchTurnsFill);
-				g.drawText(map.getCurrentPlayersTurn().getGamertag() + "'s turn", Game.P_WIDTH / 2, Game.P_HEIGHT / 2, switchTurnsFont);
+			else{
+				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, switchTurnsFill);
+				g.drawText("Computer is moving", Game.G_WIDTH / 2, Game.G_HEIGHT / 2, switchTurnsFont);
 			}
-			switchTurnsOKButton.render(g);
 		}
 		
 		if(isExitDialogShowing) {
@@ -136,7 +141,7 @@ public class NpcState extends GameState {
 		
 		//create map
 		if(map == null)
-			map = new Map(this, am, mapPath, gm);
+			map = new MapNPC(this, am, mapPath, gm);
 		else
 			gm.resume();
 		
