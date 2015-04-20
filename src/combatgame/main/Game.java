@@ -233,9 +233,6 @@ public class Game extends Activity implements StateManager {
 			    	case State.CONNECTION:
 			    		currentState = (ConnectionState) temp;
 			    		break;
-			    	case State.BLUETOOTH:
-			    		currentState = (BluetoothGameState) temp;
-			    		break;
 			    	case State.HOST_JOIN:
 			    		currentState = (HostJoinState) temp;
 			    		break;

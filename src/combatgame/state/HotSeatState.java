@@ -167,5 +167,10 @@ public class HotSeatState extends GameState {
 	public void gameover() {
 		isGameOver = true;
 	}
+	
+	@Override
+	public boolean getCheckWin(){
+		return true;
+	}
 
 }

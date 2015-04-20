@@ -14,7 +14,6 @@ public abstract class State implements Serializable {
 	public static final int MAIN_MENU = 0;
 	public static final int ABOUT = 1;
 	public static final int CONNECTION = 2;
-	public static final int BLUETOOTH = 3;
 	public static final int HOST_JOIN = 4;
 	public static final int HOT_SEAT = 5;
 	public static final int MAP_SELECTION = 6;

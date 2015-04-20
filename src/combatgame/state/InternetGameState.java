@@ -88,5 +88,10 @@ public class InternetGameState extends GameState {
 	public int getStateID() {
 		return INTERNET_GAME;
 	}
+	
+	@Override
+	public boolean getCheckWin(){
+		return true;
+	}
 
 }
