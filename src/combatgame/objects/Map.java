@@ -249,6 +249,41 @@ public class Map implements Serializable {
 	 */
 	public void render(Graphics2D g) {
 		//render map
+		renderMap(g);
+		
+		renderPlayers(g);
+		
+		//draw player gamer tag top, center of screen
+		if(Game.isScaled()) { //TODO: scale player font for devices
+			g.drawBitmap(GameplayAssets.playerBanner, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 26, gamertagFont);
+		}
+		else {
+			g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 26, gamertagFont);
+		}
+		
+		//draw the game over text
+		if(isGameOver) {
+			if(gameoverString == null) {
+				if(winningPlayer == null)
+					gameoverString = "Stalemate";
+				else
+					gameoverString = winningPlayer.getGamertag() + " wins!";
+			}
+			if(Game.isScaled()) {
+				g.drawText(gameoverString, Game.G_WIDTH / 2, Game.G_HEIGHT / 2, gameoverFont);
+				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, fadePaint);
+			}
+			else {
+				g.drawText(gameoverString, Game.P_WIDTH / 2, Game.P_HEIGHT / 2, gameoverFont);
+				g.drawRect(0, 0, Game.P_WIDTH, Game.P_HEIGHT, fadePaint);
+			}
+		}
+	}
+	
+	private void renderMap(Graphics2D g) {
+		//render map
 		for(int row = 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
 				//check our map to see which tile we need to draw
@@ -298,7 +333,9 @@ public class Map implements Serializable {
 				}
 			}
 		}
-		
+	}
+	
+	protected void renderPlayers(Graphics2D g) {
 		//render "enemy" units if they are visible
 		if(thisPlayersTurn == player1) //if it's player1's turn then the "enemy" is player2
 			player2.renderVisibleUnits(g, lightmap);
@@ -307,34 +344,6 @@ public class Map implements Serializable {
 		
 		//render current player
 		thisPlayersTurn.render(g);
-		
-		//draw player gamer tag top, center of screen
-		if(Game.isScaled()) { //TODO: scale player font for devices
-			g.drawBitmap(GameplayAssets.playerBanner, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
-			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 26, gamertagFont);
-		}
-		else {
-			g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
-			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 26, gamertagFont);
-		}
-		
-		//draw the game over text
-		if(isGameOver) {
-			if(gameoverString == null) {
-				if(winningPlayer == null)
-					gameoverString = "Stalemate";
-				else
-					gameoverString = winningPlayer.getGamertag() + " wins!";
-			}
-			if(Game.isScaled()) {
-				g.drawText(gameoverString, Game.G_WIDTH / 2, Game.G_HEIGHT / 2, gameoverFont);
-				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, fadePaint);
-			}
-			else {
-				g.drawText(gameoverString, Game.P_WIDTH / 2, Game.P_HEIGHT / 2, gameoverFont);
-				g.drawRect(0, 0, Game.P_WIDTH, Game.P_HEIGHT, fadePaint);
-			}
-		}
 	}
 	
 	public boolean isTileOnScreen(int row, int col) {

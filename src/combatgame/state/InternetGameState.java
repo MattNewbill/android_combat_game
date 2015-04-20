@@ -12,6 +12,7 @@ import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.main.StateManager;
+import combatgame.objects.InternetMap;
 import combatgame.objects.Map;
 
 public class InternetGameState extends GameState {
@@ -25,12 +26,15 @@ public class InternetGameState extends GameState {
 	String tileSet;
 	GameMode gm;
 	
+	boolean isPlayerOne;
+	
 	public InternetGameState(StateManager stateManager, long gameID, String mapPath, GameMode gm, boolean isPlayerOne) {
 		super(stateManager);
 		
 		this.gameID = gameID;
 		this.mapPath = mapPath;
 		this.gm = gm;
+		this.isPlayerOne = isPlayerOne;
 		
 		AssetManager am = stateManager.getAssetManager();
 		try {
@@ -77,7 +81,7 @@ public class InternetGameState extends GameState {
 		
 		//create map
 		if(map == null)
-			map = new Map(this, am, MapSelectionState.mapPath+"/"+mapPath, gm);
+			map = new InternetMap(this, am, MapSelectionState.mapPath+"/"+mapPath, gm, isPlayerOne);
 		else
 			gm.resume();
 		
