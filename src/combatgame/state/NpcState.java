@@ -27,6 +27,7 @@ public class NpcState extends GameState {
 	transient Paint paint;
 	
 	boolean isGameOver = false;
+	boolean checkWin = false;
 	
 	boolean switchTurns = false;
 	transient Paint switchTurnsFill;
@@ -49,6 +50,11 @@ public class NpcState extends GameState {
 	@Override
 	public int getStateID() {
 		return State.NPC_STATE;
+	}
+	
+	@Override
+	public boolean getCheckWin(){
+		return checkWin;
 	}
 	
 	@Override
@@ -80,6 +86,7 @@ public class NpcState extends GameState {
 					if(switchTurnsOKButton.state == Button.ACTIVATED) {
 						switchTurnsOKButton.disarm();
 						switchTurns = false;
+						checkWin = true;
 						map.doneSwitchingTurns();
 					}
 				}
@@ -99,6 +106,8 @@ public class NpcState extends GameState {
 		switchTurns = map.isSwitchingTurns();
 		if(switchTurns) {
 				
+			checkWin = false;
+			
 			if(map.getPlayer1() == map.getCurrentPlayersTurn()){
 				g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, switchTurnsFill);
 				g.drawText(map.getCurrentPlayersTurn().getGamertag() + "'s turn", Game.G_WIDTH / 2, Game.G_HEIGHT / 2, switchTurnsFont);

@@ -26,7 +26,7 @@ import combatgame.widgets.UnitInfoDrawableButton;
 
 public class Player implements Serializable {
 
-	protected static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	//used for determining what base to spawn in/attack
 	boolean isPlayerOne;

@@ -12,7 +12,7 @@ import combatgame.units.AttackedTile;
 import combatgame.util.*;
 
 public class NPC  extends Player {
-	protected static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	protected int rando;
 	protected boolean endturnplz, didsomething;

@@ -24,14 +24,14 @@ public class Map implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	//gamestate that created us
-	GameState gamestate;
+	protected GameState gamestate;
 	
 	//game mode
-	GameMode gamemode;
+	protected GameMode gamemode;
 	
 	//players
-	Player player1, player2;
-	Player thisPlayersTurn;
+	protected Player player1, player2;
+	protected Player thisPlayersTurn;
 	
 	//gamertag font
 	transient Paint gamertagFont;
@@ -157,7 +157,7 @@ public class Map implements Serializable {
 		}
 	}
 	
-	private void clearLightMap() {
+	protected void clearLightMap() {
 		for(int row= 0; row < num_vertical_tiles; row++) {
 			for(int col = 0; col < num_horizontal_tiles; col++) {
 				lightmap[row][col] = false;
@@ -165,7 +165,7 @@ public class Map implements Serializable {
 		}
 	}
 	
-	private void checkWinConditions() {
+	protected void checkWinConditions() {
 		int victory = gamemode.checkWinConditions(this);
 		
 		//both teams wiped out, stalemate
@@ -188,7 +188,7 @@ public class Map implements Serializable {
 	 * Updates the scroll offset for the map depending on the user input
 	 * @param events List of TouchEvents to determine scroll distance
 	 */
-	private void updateMap(List<TouchEvent> events) {
+	protected void updateMap(List<TouchEvent> events) {
 		//update scroll data
 		for(int i = 0; i < events.size(); i++) {
 			if(events.get(i).type == TouchEvent.TOUCH_DRAGGED) {
@@ -412,7 +412,7 @@ public class Map implements Serializable {
 		checkOffsetBounds();
 	}
 	
-	private void checkOffsetBounds() { //TODO: see if we need to change this to P_WIDTH depending on whether things are scaled or not
+	protected void checkOffsetBounds() { //TODO: see if we need to change this to P_WIDTH depending on whether things are scaled or not
 		if(mapOffsetX < -MAX_OUT_OF_BOUNDS) {
 			mapOffsetX = -MAX_OUT_OF_BOUNDS;
 		}
