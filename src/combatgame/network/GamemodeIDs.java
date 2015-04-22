@@ -6,11 +6,13 @@ public class GamemodeIDs {
 
 	public static final int ASSAULT_BATTLE = 0;
 	public static final int CLASSIC = 1;
-	public static final int HUNTED = 2;
-	public static final int MEAT_GRINDER = 3;
-	public static final int MEDICCC = 4;
-	public static final int SHOOTING_FLIES = 5;
-	public static final int SNIPER_BATTLE = 6;
+	public static final int MEAT_GRINDER = 2;
+	public static final int SNIPER_BATTLE = 3;
+	public static final int SPOTTER = 4;
+	public static final int FIGHT_1V1 = 5;
+	public static final int CONVOY = 6;
+	public static final int RECONNAISSANCE = 7;
+	                        
 	
 	public static GameMode getGamemodeFromID(int id) {
 		switch(id) {
@@ -18,16 +20,18 @@ public class GamemodeIDs {
 				return new AssaultBattle(null, "");
 			case CLASSIC:
 				return new Classic(null, "");
-			case HUNTED:
-				return new Hunted(null, "");
 			case MEAT_GRINDER:
 				return new MeatGrinder(null, "");
-			case MEDICCC:
-				return new Mediccc(null, "");
-			case SHOOTING_FLIES:
-				return new ShootingFlies(null, "");
 			case SNIPER_BATTLE:
 				return new SniperBattle(null, "");
+			case SPOTTER:
+				return new Spotter(null, "");
+			case FIGHT_1V1:
+				return new Fight1v1(null, "");
+			case CONVOY:
+				return new Convoy(null, "");
+			case RECONNAISSANCE:
+				return new Reconnaissance(null, "");
 			default:
 				return new Classic(null, "");
 		}
@@ -39,16 +43,18 @@ public class GamemodeIDs {
 				return "Assault Battle";
 			case CLASSIC:
 				return "Classic";
-			case HUNTED:
-				return "Hunted";
 			case MEAT_GRINDER:
 				return "Meat Grinder";
-			case MEDICCC:
-				return "Mediccc";
-			case SHOOTING_FLIES:
-				return "Shooting Flies";
 			case SNIPER_BATTLE:
 				return "Sniper Battle";
+			case SPOTTER:
+				return "Spotter";
+			case FIGHT_1V1:
+				return "1v1";
+			case CONVOY:
+				return "Convoy";
+			case RECONNAISSANCE:
+				return "Reconnaissance";
 			default:
 				return "Classic";
 		}

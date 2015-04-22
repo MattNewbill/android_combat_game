@@ -17,12 +17,15 @@ public class GamemodeListView extends ListView {
 		
 		//set gamemodes
 		gamemodes.add(new Classic(am, "classic.png"));
+		gamemodes.add(new Reconnaissance(am, "reconnaissance.png"));
+		gamemodes.add(new Spotter(am, "spotter.png"));
+		gamemodes.add(new Convoy(am, "convoy.png"));
 		gamemodes.add(new SniperBattle(am, "sniper_battle.png"));
 		gamemodes.add(new AssaultBattle(am, "assault_battle.png"));
-		gamemodes.add(new Hunted(am, "hunted.png"));
-		gamemodes.add(new ShootingFlies(am, "shooting_flies.png"));
 		gamemodes.add(new MeatGrinder(am, "meat_grinder.png"));
-		gamemodes.add(new Mediccc(am, "mediccc.png"));
+		gamemodes.add(new Fight1v1(am, "fight1v1.png"));
+		
+		
 		
 		//set listview regions
 		for(int i = 0; i < gamemodes.size(); i++) {
