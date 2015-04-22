@@ -11,9 +11,9 @@ public class MapIDs {
 	public static final int FOREST = 2;
 	public static final int HIDE_AND_SEEK = 3;
 	public static final int LONG_WAY_AROUND = 4;
-	public static final int NO_MANS_LAND = 5;
-	public static final int SCATTERED = 6;
-	public static final int SURROUNDED = 7;
+	public static final int NINJA_COVER = 5;
+	public static final int NO_MANS_LAND = 6;
+	public static final int SCATTERED = 7;
 	
 	public static String getMapNameFromID(int id) {
 		switch(id) {
@@ -27,12 +27,12 @@ public class MapIDs {
 				return "Hide and Seek";
 			case LONG_WAY_AROUND:
 				return "Long Way Around";
+			case NINJA_COVER:
+				return "Ninja Cover";	
 			case NO_MANS_LAND:
 				return "No Man's Land";
 			case SCATTERED:
 				return "Scattered";
-			case SURROUNDED:
-				return "Surrounded";
 			default:
 				return "Alpha Map";
 		}
@@ -59,12 +59,12 @@ public class MapIDs {
 			return HIDE_AND_SEEK;
 		else if(temp.equals("Long Way Around"))
 			return LONG_WAY_AROUND;
+		else if(temp.equals("Ninja Cover"))
+			return NINJA_COVER;
 		else if(temp.equals("No Man's Land"))
 			return NO_MANS_LAND;
 		else if(temp.equals("Scattered"))
 			return SCATTERED;
-		else if(temp.equals("Surrounded"))
-			return SURROUNDED;
 		else
 			return ALPHA_MAP;
 	}
