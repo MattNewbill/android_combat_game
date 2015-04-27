@@ -37,34 +37,38 @@ public class NPC  extends Player {
 	}
 	
 	protected void updateSetupPhase() {
-		List<GPoint> base= new ArrayList<GPoint>();
+		List<GPoint> base = new ArrayList<GPoint>();
 		
 		for(int row = 0; row < map.getNum_vertical_tiles(); row++) {
 			for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
 				if(!isPlayerOne && map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE)
-					base.add(new GPoint(row,col));
+					if(!map.getTile(row, col).hasUnit())
+						base.add(new GPoint(row,col));
 			}
 		}
 		
-		while(spawnUnitIndex < units.length)
+		if(spawnUnitIndex < units.length)
 		{
 			rando = (int)(Math.random()*base.size()); 
 			spawnUnit(base.get(rando));
-			base.remove(rando);
+			base.clear();
 		}
-		
-		base.clear();
-		isSetupPhase = false;
-		map.switchTurn();
+		else
+		{
+			isSetupPhase = false;
+			map.switchTurn();
+		}
 	}
 	
 	protected void updateTurnPhase() {
 		
 		endturnplz = true;
 		
+		respondToHits();
+		
 		for(int i = 0; i < units.length; i++)
 		{
-			if( (units[i].getPointsLeft()>=units[i].movementCost) && (!units[i].isDead) )
+			if( (units[i].getPointsLeft()>=units[i].abilities[0].getCost()) && (!units[i].isDead) )
 			{	
 				endturnplz = false;
 				
@@ -147,6 +151,55 @@ public class NPC  extends Player {
 			}
 			vis.clear();
 			return itarget;
+		}
+		
+		protected void respondToHits()
+		{
+			for(int u = 0; u < units.length; u++)
+				for(int i = 0; i < hitIndicators.size(); i++ )
+					if(units[u].getXYCoordinate().equals(hitIndicators.get(i).getXY()))
+						rotateToHits(units[u], hitIndicators.get(i));
+		}
+		
+		protected void rotateToHits(Unit U, HitIndicator I)
+		{
+			//unit 0 up, 1 right, 2 down, 3 left
+			
+			while( !(U.getDirectionFacing() == I.getDirection()) )
+			{
+				if(U.getDirectionFacing()==0)
+				{
+					if(I.getDirection()==3)
+						U.rotateLeft();
+					else
+						U.rotateRight();
+				}
+				else if(U.getDirectionFacing()==1)
+				{
+					if(I.getDirection()==0)
+						U.rotateLeft();
+					else
+						U.rotateRight();
+				}
+				else if(U.getDirectionFacing()==2)
+				{
+					if(I.getDirection()==1)
+						U.rotateLeft();
+					else
+						U.rotateRight();
+				}
+				else if(U.getDirectionFacing()==3)
+				{
+					if(I.getDirection()==2)
+						U.rotateLeft();
+					else
+						U.rotateRight();
+				}
+				else
+					return;//error
+				
+				U.usePoints(U.getRotationCost());
+			}
 		}
 		
 		protected void defaultAction(Unit U)
@@ -232,4 +285,16 @@ public class NPC  extends Player {
 			}
 			
 		}
+		
+/*		@Override
+		public void render(Graphics2D g) {}
+		
+		@Override
+		public boolean[][] constructLightMap(boolean[][] lightmap) {
+			for(int row = 0; row < map.getNum_vertical_tiles(); row++)
+				for(int col = 0; col < map.getNum_horizontal_tiles(); col++)
+						lightmap[row][col] = false;
+			return lightmap;
+		}
+*/
 }

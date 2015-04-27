@@ -44,13 +44,13 @@ public class HitIndicator implements Serializable {
 									// (above is negative, below is pos)
 					direction = 0;
 				else
-					direction = 1;
+					direction = 2;
 			} else {
 				if (colOffset < 0)// this checks if it is above or below you
 									// (above is negative, below is pos)
-					direction = 2;
-				else
 					direction = 3;
+				else
+					direction = 1;
 			}
 			loadIndicator();
 		}
@@ -61,13 +61,13 @@ public class HitIndicator implements Serializable {
 			case 0:
 				indicator = GameplayAssets.hitIndicatorUpIcon;
 				break;
-			case 1:
+			case 2:
 				indicator = GameplayAssets.hitIndicatorDownIcon;
 				break;
-			case 2:
+			case 3:
 				indicator = GameplayAssets.hitIndicatorLeftIcon;
 				break;
-			case 3:
+			case 1:
 				indicator = GameplayAssets.hitIndicatorRightIcon;
 				break;
 			default:
@@ -81,4 +81,11 @@ public class HitIndicator implements Serializable {
 				tile.row * map.getTileHeightInPx() - map.getMapOffsetY(), null);
 	}
 
+	public GPoint getXY(){
+		return tile;
+	}
+	
+	public int getDirection(){
+		return direction;
+	}
 }
