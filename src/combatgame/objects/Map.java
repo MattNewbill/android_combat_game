@@ -113,7 +113,6 @@ public class Map implements Serializable {
 		else
 			thisPlayersTurn = player1;
 		
-		//Log.i("combatgame", combatgame.network.JSONHelper.turnToJSON(348234L, this).toString());
 		isSwitchingTurns = true;
 		thisPlayersTurn.newTurn();
 	}

@@ -126,4 +126,8 @@ public class Button {
 			}
 		}
 	}
+	
+	public boolean isEnabled() {
+		return state != DISABLED;
+	}
 }

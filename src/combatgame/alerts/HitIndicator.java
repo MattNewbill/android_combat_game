@@ -16,11 +16,18 @@ import combatgame.util.Util;
 public class HitIndicator implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private GPoint tile;
+	public GPoint tile;
 	private Map map;
 	private transient Bitmap indicator;
-	private int direction;
+	public int direction;
 
+	public HitIndicator(GPoint tile, int direction, Map map) {
+		this.tile = tile;
+		this.direction = direction;
+		this.map = map;
+		loadIndicator();
+	}
+	
 	public HitIndicator(Unit attackingUnit, Ability currentAbility,	Unit defendingUnit, GPoint tile, Map map) {
 		this.tile = tile.clone();
 		this.map = map;

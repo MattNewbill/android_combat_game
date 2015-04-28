@@ -64,6 +64,8 @@ public class HostJoinState extends State {
 			textField.setFocus(km.hasFocus());
 			if(textField.update(events))
 				km.showKeyboard();
+			else if(events.size() > 0)
+				km.hideKeyboard();
 			events = createAccountButton.update(events);
 		}
 		else {

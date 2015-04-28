@@ -67,9 +67,8 @@ public abstract class ListView {
 		//make sure we aren't going out of bounds
 		if(offset < 0)
 			offset = 0;
-		else if(offset > ListViewRegion.HEIGHT * (items.size() / (Game.G_HEIGHT / ListViewRegion.HEIGHT))) {
-			offset = ListViewRegion.HEIGHT * (items.size() / (Game.G_HEIGHT / ListViewRegion.HEIGHT));
-		}
+		else if(offset > ((items.size() - (Game.G_HEIGHT / ListViewRegion.HEIGHT)) * ListViewRegion.HEIGHT) && offset > 0)
+			offset = (items.size() - (Game.G_HEIGHT / ListViewRegion.HEIGHT)) * ListViewRegion.HEIGHT;
 			
 	}
 	

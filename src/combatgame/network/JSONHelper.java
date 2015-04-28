@@ -1,15 +1,18 @@
 package combatgame.network;
 
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import combatgame.alerts.HitIndicator;
 import combatgame.objects.Map;
 import combatgame.objects.Player;
 import combatgame.objects.Unit;
 
 public class JSONHelper {
 
-	public static JSONObject turnToJSON(long gameID, Map map) {
+	public static JSONObject turnToJSON(long gameID, Map map, int turnNumber) {
 		JSONObject turn = new JSONObject();
 		JSONObject wrapper = new JSONObject();
 		
@@ -24,14 +27,11 @@ public class JSONHelper {
 		//write data to turn object
 		try {
 			wrapper.put("game_id",  gameID);
-			wrapper.put("player1", p1JSON);
-			wrapper.put("player2", p2JSON);
-			if(map.getCurrentPlayersTurn() == p1)
-				wrapper.put("is_player_ones_turn", true);
-			else
-				wrapper.put("is_player_ones_turn", false);
+			wrapper.put("host_user", p1JSON);
+			wrapper.put("client_user", p2JSON);
+			wrapper.put("turn_number", turnNumber);
 			
-			turn.put("turn", wrapper);
+			turn.put("Turn", wrapper);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -41,8 +41,10 @@ public class JSONHelper {
 	
 	private static JSONObject writePlayerToJSON(Player player) {
 		Unit[] pUnits = player.getUnits();
+		List<HitIndicator> pHitIndicators = player.getHitIndicators();
 		JSONObject pJSON = new JSONObject();
 		JSONArray pUnitsJSON = new JSONArray();
+		JSONArray pHitIndicatorsJSON = new JSONArray();
 		try {
 			for(int i = 0; i < pUnits.length; i++) {
 				//write each unit to their own JSON object
@@ -56,8 +58,8 @@ public class JSONHelper {
 					pUnitJSON.put("row", pUnits[i].getXYCoordinate().row);
 					pUnitJSON.put("col", pUnits[i].getXYCoordinate().col);
 				}
-				pUnitJSON.put("health", pUnits[i].getHealth());
-				pUnitJSON.put("armor", pUnits[i].getArmor());
+				pUnitJSON.put("hp", pUnits[i].getHealth());
+				pUnitJSON.put("arm", pUnits[i].getArmor());
 				pUnitJSON.put("is_dead", pUnits[i].isDead());
 				pUnitJSON.put("direction_facing", pUnits[i].getDirectionFacing());
 				
@@ -65,15 +67,22 @@ public class JSONHelper {
 				pUnitsJSON.put(pUnitJSON);
 			}
 			pJSON.put("units", pUnitsJSON);
+			
+			for(int i = 0; i < pHitIndicators.size(); i++) {
+				JSONObject pHitIndicatorJSON = new JSONObject();
+				pHitIndicatorJSON.put("row", pHitIndicators.get(i).tile.row);
+				pHitIndicatorJSON.put("col", pHitIndicators.get(i).tile.col);
+				pHitIndicatorJSON.put("direction", pHitIndicators.get(i).direction);
+				
+				//add each indicator to the "indicators" JSON object
+				pHitIndicatorsJSON.put(pHitIndicatorJSON);
+			}
+			pJSON.put("hit_indicators", pHitIndicatorsJSON);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 		return pJSON;
-	}
-	
-	public static void JSONToTurn(JSONObject object) {
-		
 	}
 	
 }

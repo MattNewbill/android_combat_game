@@ -45,6 +45,14 @@ public abstract class Unit implements Serializable {
 	
 	public abstract void loadSprites();
 	
+	public void inject(GPoint tile, int hp, int armor, boolean isDead, int directionFacing) {
+		this.xyCoordinate = tile;
+		this.health = hp;
+		this.armor = armor;
+		this.isDead = isDead;
+		this.directionFacing = directionFacing;
+	}
+	
 	public String getName() {
 		return name;	}
 	

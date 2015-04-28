@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -29,7 +32,7 @@ public class Player implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	//used for determining what base to spawn in/attack
-	boolean isPlayerOne;
+	protected boolean isPlayerOne;
 	
 	protected String gamertag;
 	protected int playerId;
@@ -111,6 +114,45 @@ public class Player implements Serializable {
 			units[i].setPlayer_id(playerId);
 		}
 		Tooltip.reset();
+		
+	}
+	
+	public List<TouchEvent> notMyTurnUpdate(List<TouchEvent> events) {
+		if(isSetupPhase) {
+			//disableButtons();
+			respawnUnitButton.disable();
+			spawnUnitButton.disable();
+		}
+		else {
+			moveButton.disable();
+			endTurnButton.disable();
+			movementButton.disable();
+			abilityButton.disable();
+			
+			//update the unit info button's text
+			if(selectedUnitIndex != -1)
+				unitInfoButton.updateEnemyTextInfo(units[selectedUnitIndex]);
+			if(enemyUnitSelected != null)
+				unitInfoButton.updateEnemyTextInfo(enemyUnitSelected);
+			
+			events = unitInfoButton.update(events);
+			events = deselectButton.update(events);
+			
+			selectionNotMyTurn(events);
+			
+			if(unitInfoButton.state == Button.ACTIVATED) {
+				map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
+				unitInfoButton.disarm();
+			}
+			//deselected the current unit
+			if(deselectButton.state == Button.ACTIVATED) {
+				deselectButton.disarm();
+				selectedUnitIndex = -1; //deselect the unit
+				enemyUnitSelected = null;
+				disableButtons(); //disable hud buttons
+			}
+		}
+		return events;
 	}
 	
 	public List<TouchEvent> update(List<TouchEvent> events) {
@@ -124,6 +166,10 @@ public class Player implements Serializable {
 		//--SET UP PHASE--
 		//----------------------------------------
 		if(isSetupPhase) {
+			if(!spawnUnitButton.isEnabled() && spawnUnitIndex != units.length)
+				spawnUnitButton.enable();
+			if(!respawnUnitButton.isEnabled() && spawnUnitIndex != units.length)
+				respawnUnitButton.enable();
 			events = updateSetupPhase(events);
 		}
 		//----------------------------------------
@@ -513,6 +559,51 @@ public class Player implements Serializable {
 		}
 		if(spawnUnitIndex == units.length)
 			spawnUnitButton.disable();
+	}
+	
+	protected void selectionNotMyTurn(List<TouchEvent> events) {
+		//check what tile is pressed by the user
+		GPoint tileTouched = getTileTouched(events); //get the tile touched by the user
+		if(tileTouched != null) {
+			GPoint tile = null;
+			boolean isUnitSelected = false;
+			for(int i = 0; i < units.length; i++) { //loop through our units to see if we touched one
+				tile = units[i].getXYCoordinate();
+				if(tile != null && tile.equals(tileTouched) && !units[i].isDead()) { //if we did touch it, set that unit as the currently selected unit
+					movementPoints = null;
+					selectedUnitIndex = i;
+					isUnitSelected = true;
+					enemyUnitSelected = null;
+					unitInfoButton.enable();
+					deselectButton.enable();
+					break;
+				}
+			}
+			//check to see if we selected an enemy unit that was visible
+			boolean[][] lightmap = map.getLightmap();
+			for(int row = 0; row < lightmap.length; row++) {
+				for(int col = 0; col < lightmap[0].length; col++) {
+					if(lightmap[row][col] && tileTouched.row == row && tileTouched.col == col) {
+						if(map.getTile(row, col).hasUnit() && map.getTile(row, col).getPlayer_id() != playerId) {
+							enemyUnitSelected = map.getUnit(map.getTile(row, col).getUnit_id());
+							unitInfoButton.disable();
+							moveButton.disable();
+							abilityButton.disable();
+							deselectButton.enable();
+							isUnitSelected = true;
+							selectedUnitIndex = -1;
+							break;
+						}
+					}
+				}
+			}
+			//if none of our units were selected then we deselect the currently selected unit
+			if(!isUnitSelected) {
+				selectedUnitIndex = -1;
+				enemyUnitSelected = null;
+				disableButtons();
+			}
+		}
 	}
 	
 	////////////////////////////////////////////
@@ -1036,7 +1127,7 @@ public class Player implements Serializable {
 	//our turn has just now started
 	public void newTurn() {
 		//if it's the setup phase then scroll to our base
-		if(isSetupPhase)
+		if(isSetupPhase) {
 			for(int row = 0; row < map.getNum_vertical_tiles(); row++) {
 				for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
 					if(isPlayerOne) {
@@ -1052,6 +1143,7 @@ public class Player implements Serializable {
 						}
 				}
 			}
+		}
 		//otherwise scroll to the selected unit (if there is no selected unit, pick a new unit to be selected and scroll to him), reset action points
 		else {
 			healthIndicators.clear(); //remove any indicators if we had any
@@ -1091,6 +1183,41 @@ public class Player implements Serializable {
 	}
 	public String getGamertag() {
 		return gamertag;
+	}
+	public List<HitIndicator> getHitIndicators() {
+		return hitIndicators;
+	}
+	
+	public void injectTurn(JSONObject player) {
+		try {
+			JSONArray unitArrayJSON = player.getJSONArray("units");
+			JSONArray hitIndicatorArrayJSON = player.getJSONArray("hit_indicators");
+			
+			for(int i = 0; i < unitArrayJSON.length(); i++) {
+				JSONObject obj = unitArrayJSON.getJSONObject(i);
+				String name = obj.getString("name");
+				for(int k = 0; k < units.length; k++) {
+					if(units[i].getName().equals(name)) {
+						GPoint tile = new GPoint(obj.getInt("row"), obj.getInt("col"));
+						int hp = obj.getInt("hp");
+						int armor = obj.getInt("arm");
+						boolean isDead = obj.getBoolean("is_dead");
+						int directionFacing = obj.getInt("direction_facing");
+						units[i].inject(tile, hp, armor, isDead, directionFacing);
+						break;
+					}
+				}
+			}
+			
+			hitIndicators.clear();
+			for(int i = 0; i < hitIndicatorArrayJSON.length(); i++) {
+				JSONObject obj = hitIndicatorArrayJSON.getJSONObject(i);
+				GPoint tile = new GPoint(obj.getInt("row"), obj.getInt("col"));
+				hitIndicators.add(new HitIndicator(tile, obj.getInt("direction"), map));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//disable the hud buttons (generally if no unit is selected)
