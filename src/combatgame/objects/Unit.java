@@ -45,7 +45,9 @@ public abstract class Unit implements Serializable {
 	
 	public abstract void loadSprites();
 	
-	public void inject(int hp, int armor, boolean isDead, int directionFacing) {
+	public void inject(Map map, int hp, int armor, boolean isDead, int directionFacing) {
+		if(isDead && !this.isDead)
+			map.getTile(this.xyCoordinate).clearUnit();
 		this.health = hp;
 		this.armor = armor;
 		this.isDead = isDead;
@@ -66,10 +68,12 @@ public abstract class Unit implements Serializable {
 		return this.unit_id;	}
 	
 	public void setXYCoordinate(GPoint xyCoordinate, Map map) {
-		if(this.xyCoordinate != null)
-			map.getTile(this.xyCoordinate).clearUnit();
-		this.xyCoordinate = xyCoordinate;
-		map.getTile(xyCoordinate).setUnit(unit_id, player_id);;
+		if(!isDead) {
+			if(this.xyCoordinate != null)
+				map.getTile(this.xyCoordinate).clearUnit();
+			this.xyCoordinate = xyCoordinate;
+			map.getTile(xyCoordinate).setUnit(unit_id, player_id);
+		}
 	}
 	
 	public GPoint getXYCoordinate() {

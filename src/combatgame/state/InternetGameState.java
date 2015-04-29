@@ -64,7 +64,7 @@ public class InternetGameState extends GameState {
 
 	@Override
 	public void gameover() {
-		
+		isGameOver = true;
 	}
 
 	@Override
@@ -89,6 +89,10 @@ public class InternetGameState extends GameState {
 			else {
 				map.update(events);
 			}
+		}
+		else {
+			setGameInactive();
+			stateManager.setState(new MainMenuState(stateManager));
 		}
 	}
 

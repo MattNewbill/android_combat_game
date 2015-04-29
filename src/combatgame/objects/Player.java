@@ -212,6 +212,7 @@ public class Player implements Serializable {
 			if(endTurnButton.state == Button.ACTIVATED) {
 				endTurnButton.disarm();
 				isSetupPhase = false;
+				currentAction = SELECTION;
 				map.switchTurn();
 			}
 		}
@@ -403,6 +404,7 @@ public class Player implements Serializable {
 			//TODO: add a "are you sure you want to finish your turn" dialog thingy
 			isEndingTurn = true;
 			endTurnButton.disarm();
+			currentAction = SELECTION;
 		}	
 		return events;
 	}
@@ -1194,6 +1196,8 @@ public class Player implements Serializable {
 				String name = JSONHelper.jsonStringToName(obj.getString("name"));
 				for(int k = 0; k < units.length; k++) {
 					if(units[i].getName().equals(name)) {
+						int dead = obj.getInt("is_dead");
+						boolean isDead = dead != 0 ? true : false;
 						int row = obj.getInt("row");
 						int col = obj.getInt("col");
 						GPoint tile = null;
@@ -1203,10 +1207,8 @@ public class Player implements Serializable {
 						}
 						int hp = obj.getInt("hp");
 						int armor = obj.getInt("armor");
-						int dead = obj.getInt("is_dead");
-						boolean isDead = dead != 0 ? true : false;
 						int directionFacing = obj.getInt("direction_facing");
-						units[i].inject(hp, armor, isDead, directionFacing);
+						units[i].inject(map, hp, armor, isDead, directionFacing);
 						break;
 					}
 				}

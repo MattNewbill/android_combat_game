@@ -74,7 +74,7 @@ public class InternetMap extends Map {
 			}
 			
 			//check to see if someone has won yet
-			checkWinConditions(); //TODO: check gamemode for win conditions
+			checkWinConditions();
 			
 			//update map scroll
 			updateMap(events);
@@ -126,6 +126,29 @@ public class InternetMap extends Map {
 		
 		if((isPlayerOne && thisPlayersTurn == player1) || (!isPlayerOne && thisPlayersTurn == player2))
 			thisPlayersTurn.newTurn();
+	}
+	
+	@Override
+	protected void checkWinConditions() {
+		int victory = gamemode.checkWinConditions(this);
+		
+		//both teams wiped out, stalemate
+		if(victory == GameMode.STALEMATE) {
+			isGameOver = true;
+		}
+		//player 2 wins
+		else if(victory == GameMode.PLAYER_2_WINS) {
+			isGameOver = true;
+			winningPlayer = player2;
+		}
+		//player 1 wins
+		else if(victory == GameMode.PLAYER_1_WINS) {
+			isGameOver = true;
+			winningPlayer = player1;
+		}
+		
+		if(isGameOver)
+			sendTurnAsJSON();
 	}
 	
 	private void sendTurnAsJSON() {
