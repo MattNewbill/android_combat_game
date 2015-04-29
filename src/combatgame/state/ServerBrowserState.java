@@ -63,6 +63,7 @@ public class ServerBrowserState extends State {
 		
 		events = backButton.update(events);
 		events = joinButton.update(events);
+		events = refreshButton.update(events);
 		if(serverList != null) {
 			serverList.update(events);
 			selectedServer = serverList.getSelectedGame();
@@ -75,6 +76,10 @@ public class ServerBrowserState extends State {
 		else if(backButton.state == Button.ACTIVATED || stateManager.isBackPressed()) {
 			stateManager.setState(new HostJoinState(stateManager));
 		}
+		else if(refreshButton.state == Button.ACTIVATED) {
+			refreshButton.disarm();
+			refreshList();
+		}
 	}
 
 	@Override
@@ -82,7 +87,7 @@ public class ServerBrowserState extends State {
 		
 		//render "loading" string
 		if(firstRender) {
-			g.drawText(loading, 25, Game.G_HEIGHT / 2 - 100, loadingPaint);
+			g.drawText(loading, 320, Game.G_HEIGHT / 2 - 100, loadingPaint);
 			firstRender = false;
 		}
 		
@@ -94,9 +99,9 @@ public class ServerBrowserState extends State {
 		
 		//render error string if there is an error
 		if(error)
-			g.drawText(errorString, 700, Game.G_HEIGHT / 2 + 100, loadingPaint);
+			g.drawText(errorString, Game.G_WIDTH - 261, Game.G_HEIGHT / 2 + 50, loadingPaint);
 		if(noServers)
-			g.drawText(noServersString, 700, Game.G_HEIGHT / 2 + 125, loadingPaint);
+			g.drawText(noServersString, Game.G_WIDTH - 261, Game.G_HEIGHT / 2 + 75, loadingPaint);
 		
 		//render list view
 		if(serverList != null)
@@ -105,6 +110,7 @@ public class ServerBrowserState extends State {
 		//render join and render buttons
 		joinButton.render(g);
 		backButton.render(g);
+		refreshButton.render(g);
 	}
 
 	@Override
@@ -123,18 +129,24 @@ public class ServerBrowserState extends State {
 			Bitmap joinArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/join_250_armed.png"));
 			Bitmap back = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button.png"));
 			Bitmap backArmed = BitmapFactory.decodeStream(am.open("images/interface_buttons/back_button_armed.png"));
+			Bitmap refresh = BitmapFactory.decodeStream(am.open("images/menu/refresh_servers.png"));
+			Bitmap refreshArmed = BitmapFactory.decodeStream(am.open("images/menu/refresh_servers_armed.png"));
 			
 			int joinButtonX = Game.G_WIDTH - join.getWidth() - 25;
 			int joinButtonY = Game.G_HEIGHT - join.getHeight() - 15;
 			int backButtonX = joinButtonX - back.getWidth() - 10;
 			int backButtonY = joinButtonY;
+			int refreshButtonX = backButtonX;
+			int refreshButtonY = Game.G_HEIGHT - join.getHeight() - refresh.getHeight() - 30;
 			
 			joinButton = new Button(join, joinArmed, joinButtonX, joinButtonY);
 			backButton = new Button(back, backArmed, backButtonX, backButtonY);
+			refreshButton = new Button(refresh, refreshArmed, refreshButtonX, refreshButtonY);
 			
 			loadingPaint = new Paint();
 			loadingPaint.setColor(Color.WHITE);
 			loadingPaint.setTextSize(42);
+			loadingPaint.setTextAlign(Paint.Align.CENTER);
 			
 			selectedServerPaint = new Paint();
 			selectedServerPaint.setTextSize(42);

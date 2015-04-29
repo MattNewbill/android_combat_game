@@ -21,6 +21,7 @@ import combatgame.assets.GameplayAssets;
 import combatgame.graphics.*;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
+import combatgame.network.JSONHelper;
 import combatgame.units.Ability;
 import combatgame.units.AttackedTile;
 import combatgame.util.*;
@@ -126,7 +127,6 @@ public class Player implements Serializable {
 		else {
 			moveButton.disable();
 			endTurnButton.disable();
-			movementButton.disable();
 			abilityButton.disable();
 			
 			//update the unit info button's text
@@ -664,8 +664,7 @@ public class Player implements Serializable {
 		movementPoints = Movement.getMovement(map, units[selectedUnitIndex]);
 		
 		//check to see if path is blocked
-		if(movementPoints[1].length==0)
-		{
+		if(movementPoints[1].length == 0) {
 			currentAction = SELECTION;
 			notifications.add(new MoveNotification(map, units[selectedUnitIndex].getXYCoordinate(), 0, indicatorPaint));
 		}
@@ -1188,22 +1187,26 @@ public class Player implements Serializable {
 		return hitIndicators;
 	}
 	
-	public void injectTurn(JSONObject player) {
+	public void injectTurn(JSONArray unitArrayJSON, JSONArray hitIndicatorArrayJSON) {
 		try {
-			JSONArray unitArrayJSON = player.getJSONArray("units");
-			JSONArray hitIndicatorArrayJSON = player.getJSONArray("hit_indicators");
-			
 			for(int i = 0; i < unitArrayJSON.length(); i++) {
 				JSONObject obj = unitArrayJSON.getJSONObject(i);
-				String name = obj.getString("name");
+				String name = JSONHelper.jsonStringToName(obj.getString("name"));
 				for(int k = 0; k < units.length; k++) {
 					if(units[i].getName().equals(name)) {
-						GPoint tile = new GPoint(obj.getInt("row"), obj.getInt("col"));
+						int row = obj.getInt("row");
+						int col = obj.getInt("col");
+						GPoint tile = null;
+						if(row != -1 && col != -1) {
+							tile = new GPoint(row, col);
+							units[i].setXYCoordinate(tile, map);
+						}
 						int hp = obj.getInt("hp");
-						int armor = obj.getInt("arm");
-						boolean isDead = obj.getBoolean("is_dead");
+						int armor = obj.getInt("armor");
+						int dead = obj.getInt("is_dead");
+						boolean isDead = dead != 0 ? true : false;
 						int directionFacing = obj.getInt("direction_facing");
-						units[i].inject(tile, hp, armor, isDead, directionFacing);
+						units[i].inject(hp, armor, isDead, directionFacing);
 						break;
 					}
 				}

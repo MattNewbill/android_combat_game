@@ -4,16 +4,20 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import combatgame.assets.GameplayAssets;
 import combatgame.gamemode.GameMode;
 import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
 import combatgame.main.Game;
 import combatgame.main.StateManager;
+import combatgame.network.Internet;
 import combatgame.objects.InternetMap;
 import combatgame.objects.Map;
 import combatgame.widgets.Button;
@@ -22,6 +26,7 @@ public class InternetGameState extends GameState {
 
 	private static final long serialVersionUID = 1L;
 
+	private final String IS_ACTIVE_URL = "http://www.newbillity.com/android_combat_game_web/public/games/set_is_active";
 	long gameID;
 	
 	Map map;
@@ -73,6 +78,7 @@ public class InternetGameState extends GameState {
 				events = noButton.update(events);
 				if(yesButton.state == Button.ACTIVATED) {
 					yesButton.disarm();
+					setGameInactive();
 					stateManager.setState(new MainMenuState(stateManager));
 				}
 				if(noButton.state == Button.ACTIVATED) {
@@ -136,6 +142,19 @@ public class InternetGameState extends GameState {
 	@Override
 	public boolean getCheckWin(){
 		return true;
+	}
+	
+	private void setGameInactive() {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("game_id", gameID);
+			obj.put("is_active", false);
+			
+			String response = Internet.postJSON(IS_ACTIVE_URL, obj);
+			Log.i("combatgame", "Set game active response: " + response);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

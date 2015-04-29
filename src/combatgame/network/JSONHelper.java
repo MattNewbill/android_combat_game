@@ -30,8 +30,9 @@ public class JSONHelper {
 			wrapper.put("host_user", p1JSON);
 			wrapper.put("client_user", p2JSON);
 			wrapper.put("turn_number", turnNumber);
+			wrapper.put("is_host_turn", true);
 			
-			turn.put("Turn", wrapper);
+			turn.put("turn", wrapper);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -49,7 +50,7 @@ public class JSONHelper {
 			for(int i = 0; i < pUnits.length; i++) {
 				//write each unit to their own JSON object
 				JSONObject pUnitJSON = new JSONObject();
-				pUnitJSON.put("name", pUnits[i].getName());
+				pUnitJSON.put("name", nameToJSONString(pUnits[i].getName()));
 				if(pUnits[i].getXYCoordinate() == null) {
 					pUnitJSON.put("row", -1);
 					pUnitJSON.put("col", -1);
@@ -59,7 +60,7 @@ public class JSONHelper {
 					pUnitJSON.put("col", pUnits[i].getXYCoordinate().col);
 				}
 				pUnitJSON.put("hp", pUnits[i].getHealth());
-				pUnitJSON.put("arm", pUnits[i].getArmor());
+				pUnitJSON.put("armor", pUnits[i].getArmor());
 				pUnitJSON.put("is_dead", pUnits[i].isDead());
 				pUnitJSON.put("direction_facing", pUnits[i].getDirectionFacing());
 				
@@ -83,6 +84,47 @@ public class JSONHelper {
 		}
 		
 		return pJSON;
+	}
+	
+	public static String nameToJSONString(String name) {
+		if(name.endsWith("\u03B1")) {
+			return name.substring(0, name.length() - 1) + "Alpha";
+		}
+		else if(name.endsWith("\u03B2")) {
+			return name.substring(0, name.length() - 1) + "Bravo";
+		}
+		else if(name.endsWith("\u03B3")) {
+			return name.substring(0, name.length() - 1) + "Charlie";
+		}
+		else if(name.endsWith("\u03B4")) {
+			return name.substring(0, name.length() - 1) + "Delta";
+		}
+		else if(name.endsWith("\u03B4")) {
+			return name.substring(0, name.length() - 1) + "Epsilon";
+		}
+		else {
+			return name;
+		}
+	}
+	public static String jsonStringToName(String json) {
+		if(json.endsWith("Alpha")) {
+			return json.substring(0, json.length() - 5) + "\u03B1";
+		}
+		else if(json.endsWith("Bravo")) {
+			return json.substring(0, json.length() - 5) + "\u03B2";
+		}
+		else if(json.endsWith("Charlie")) {
+			return json.substring(0, json.length() - 7) + "\u03B3";
+		}
+		else if(json.endsWith("Delta")) {
+			return json.substring(0, json.length() - 5) + "\u03B4";
+		}
+		else if(json.endsWith("Epsilon")) {
+			return json.substring(0, json.length() - 7) + "\u03B5";
+		}
+		else {
+			return json;
+		}
 	}
 	
 }

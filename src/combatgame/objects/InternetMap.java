@@ -2,9 +2,11 @@ package combatgame.objects;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.res.AssetManager;
+import android.util.Log;
 import combatgame.gamemode.GameMode;
 import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
@@ -127,29 +129,34 @@ public class InternetMap extends Map {
 	}
 	
 	private void sendTurnAsJSON() {
-		boolean isP1Turn = false;
-		if(thisPlayersTurn == player1)
-			isP1Turn = true;
+		turnNumber++;
+		//if(thisPlayersTurn == player1)
+		//	isP1Turn = true;
 		
 		JSONObject turn = JSONHelper.turnToJSON(gameID, this, turnNumber);
-		Internet.postJSON(turnPostURL, turn);
+		String response = Internet.postJSON(turnPostURL, turn);
+		Log.i("combatgame", response);
 	}
 	
 	private void getTurnAsJSON() {
 		try {
 			JSONObject getTurn = new JSONObject();
 			getTurn.put("game_id", gameID);
-			String result = Internet.postJSON(turnGetURL, getTurn);
+			String response = Internet.postJSON(turnGetURL, getTurn);
 			
-			JSONObject turn = new JSONObject(result);
-			boolean isP1Turn = turn.getBoolean("isP1Turn");
+			JSONObject turn = new JSONObject(response);
+			//Log.i("combatgame", turn.toString(3));
+			int number = turn.getInt("turn_number");
 			
-			if((thisPlayersTurn == player1 && !isP1Turn) || (thisPlayersTurn == player2 && isP1Turn)) {
-				JSONObject p1 = turn.getJSONObject("Player1");
-				JSONObject p2 = turn.getJSONObject("Player2");
+			if(number == (turnNumber+1)) {
+				turnNumber++;
+				JSONArray p1Units = turn.getJSONArray("host_units");
+				JSONArray p1Indicators = turn.getJSONArray("host_hit_indicators");
+				JSONArray p2Units = turn.getJSONArray("client_units");
+				JSONArray p2Indicators = turn.getJSONArray("client_hit_indicators");
 				
-				player1.injectTurn(p1);
-				player2.injectTurn(p2);
+				player1.injectTurn(p1Units, p1Indicators);
+				player2.injectTurn(p2Units, p2Indicators);
 				
 				switchTurn();
 			}
