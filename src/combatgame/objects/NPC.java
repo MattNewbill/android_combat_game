@@ -81,6 +81,8 @@ public class NPC  extends Player {
 		{
 			if(!units[i].isDead)
 			{
+				strategize(units[i]);
+				
 				if( units[i].getPointsLeft()>=units[i].abilities[0].getCost() )
 				{	
 					endturnplz = false;
@@ -97,10 +99,18 @@ public class NPC  extends Player {
 						sniperAction(units[i],i);
 					else if(units[i].getUnitType()==Unit.UnitType.PRESIDENT)
 						presidentAction(units[i],i);
-	
 				}
 				else if( (units[i].getPointsLeft()>=units[i].getMovementCost()) && UnitNoCombat[i] )
+				{
 					useMovement(units[i]);
+					
+					if( units[i].getPointsLeft() > 0 )
+					{
+						rando = (int)(Math.random()*5);
+						if(rando == 0)
+							randomRotate(units[i]);
+					}
+				}
 			}
 		}
 		if(endturnplz)
@@ -237,11 +247,11 @@ public class NPC  extends Player {
 		
 		GPoint itarget = null;
 		
-		rando = (int)(Math.random()*10);
+		rando = (int)(Math.random()*24);
 		if(rando == 0)
-		vis = A.getTilesAttackable(U, map);
+			vis = A.getTilesAttackable(U, map);
 		else
-		vis = Vision.getSprintVision(map, U, 3);
+			vis = Vision.getSprintVision(map, U, 3);
 		
 		for(int i = 0; i < vis.size(); i++)
 		{
@@ -436,13 +446,7 @@ public class NPC  extends Player {
 		
 		if(movementPoints[1].length==0)
 		{
-			rando = (int)(Math.random()*2); 
-			if(rando == 0)
-				U.rotateLeft();
-			else
-				U.rotateRight();
-			
-			U.usePoints(U.getRotationCost());
+			randomRotate(U);
 		}
 		else
 		{
@@ -450,6 +454,40 @@ public class NPC  extends Player {
 			U.usePoints(U.getMovementCost());
 		}
 		
+	}
+	
+	protected void randomRotate(Unit U)
+	{
+		didsomething = true;
+		rando = (int)(Math.random()*2); 
+		if(rando == 0)
+			U.rotateLeft();
+		else
+			U.rotateRight();
+		
+		U.usePoints(U.getRotationCost());
+	}
+	
+	protected void strategize(Unit U)
+	{
+		rando = (int)(Math.random()*30);
+		if(rando == 0)
+		{
+			U.rotateLeft();
+			target = findTarget(U.abilities[0], U);
+			if(target != null)
+				U.usePoints(U.getRotationCost());
+			else
+			{
+				U.rotateRight();
+				U.rotateRight();
+				target = findTarget(U.abilities[0], U);
+				if(target != null)
+					U.usePoints(U.getRotationCost());
+				else
+					U.rotateLeft();
+			}
+		}
 	}
 	
 	@Override
