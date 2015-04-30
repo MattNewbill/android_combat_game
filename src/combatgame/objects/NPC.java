@@ -260,8 +260,11 @@ public class NPC  extends Player {
 			{
 				if(map.getTile(tilesAffected.get(j).tile).hasUnit())
 				{
-					New_units++;
-					New_damage += tilesAffected.get(j).damageTaken;
+					if(map.getTile(tilesAffected.get(j).tile).getPlayer_id() != playerId)
+					{
+						New_units++;
+						New_damage += tilesAffected.get(j).damageTaken;
+					}
 				}
 			}
 			
