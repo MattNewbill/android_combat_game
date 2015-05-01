@@ -2,6 +2,7 @@ package combatgame.state;
 
 import java.util.List;
 
+import android.util.Log;
 import combatgame.input.TouchEvent;
 import combatgame.main.StateManager;
 import combatgame.objects.PartialMap;
@@ -21,7 +22,7 @@ public class GamemodeStateNPC extends GamemodeSelectionState {
 	}
 	
 	@Override
-	public void update(float delta) {
+	public void update(float delta) {		
 		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
 		
 		events = startButton.update(events);

@@ -192,7 +192,7 @@ public class Map implements Serializable {
 		for(int i = 0; i < events.size(); i++) {
 			if(events.get(i).type == TouchEvent.TOUCH_DRAGGED) {
 				//check for map scrolling
-				if(previousEvent.type == TouchEvent.TOUCH_DRAGGED) {
+				if(previousEvent != null && previousEvent.type == TouchEvent.TOUCH_DRAGGED) {
 					//scroll on the x axis
 					if(Math.abs(events.get(i).x - previousEvent.x) > Math.abs(events.get(i).y - previousEvent.y)) {
 						//fling scrolling, x axis
@@ -252,15 +252,7 @@ public class Map implements Serializable {
 		
 		renderPlayers(g);
 		
-		//draw player gamer tag top, center of screen
-		if(Game.isScaled()) { //TODO: scale player font for devices
-			g.drawBitmap(GameplayAssets.playerBanner, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
-			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 26, gamertagFont);
-		}
-		else {
-			g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
-			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 26, gamertagFont);
-		}
+		renderPlayerBanners(g);
 		
 		//draw the game over text
 		if(isGameOver) {
@@ -331,6 +323,18 @@ public class Map implements Serializable {
 					}
 				}
 			}
+		}
+	}
+	
+	protected void renderPlayerBanners(Graphics2D g) {
+		//draw player gamer tag top, center of screen
+		if(Game.isScaled()) { //TODO: scale player font for devices
+			g.drawBitmap(GameplayAssets.playerBanner, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 26, gamertagFont);
+		}
+		else {
+			g.drawBitmap(GameplayAssets.playerBanner, Game.P_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+			g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.P_WIDTH / 2, 26, gamertagFont);
 		}
 	}
 	

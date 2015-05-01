@@ -68,6 +68,7 @@ public class GameplayAssets {
 	
 	//player banner
 	public static Bitmap playerBanner;
+	public static Bitmap playerBannerEnemy;
 	
 	//map tiles
 	public static Bitmap[] terrainSprites = new Bitmap[10];
@@ -202,6 +203,7 @@ public class GameplayAssets {
 			respawnUnitIcon = BitmapFactory.decodeStream(am.open("sprites/hud/re-spawn_unit_icon.png"), null, options);
 			
 			playerBanner = BitmapFactory.decodeStream(am.open("sprites/hud/player_banner.png"), null, options);
+			playerBannerEnemy = BitmapFactory.decodeStream(am.open("sprites/hud/player_banner_enemy.png"), null, options);
 			
 			okIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button.png"), null, options);
 			okArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/ok_button_armed.png"), null, options);
@@ -407,6 +409,11 @@ public class GameplayAssets {
 		if(playerBanner != null) {
 			playerBanner.recycle();
 			playerBanner = null;
+		}
+		
+		if(playerBannerEnemy != null) {
+			playerBannerEnemy .recycle();
+			playerBannerEnemy = null;
 		}
 		
 		for(int i = 0; i < terrainSprites.length; i++) {

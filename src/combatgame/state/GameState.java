@@ -13,5 +13,9 @@ public abstract class GameState extends State {
 	public abstract void gameover();
 
 	public abstract boolean getCheckWin();
+	
+	public StateManager getStateManager() {
+		return stateManager;
+	}
 
 }

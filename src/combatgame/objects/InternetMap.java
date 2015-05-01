@@ -6,12 +6,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.res.AssetManager;
+import android.os.AsyncTask;
 import android.util.Log;
+import combatgame.assets.GameplayAssets;
 import combatgame.gamemode.GameMode;
 import combatgame.graphics.Graphics2D;
 import combatgame.input.TouchEvent;
+import combatgame.main.Game;
 import combatgame.network.Internet;
 import combatgame.network.JSONHelper;
+import combatgame.network.OnCompletion;
+import combatgame.network.PostAsync;
+import combatgame.network.PostWrapper;
 import combatgame.state.GameState;
 
 public class InternetMap extends Map {
@@ -27,6 +33,8 @@ public class InternetMap extends Map {
 	
 	public final long TIME_BETWEEN_TURN_CHECK = 10000;
 	private long startTime;
+	
+	private AsyncTask<PostWrapper, Void, String> currentNetworkThread;
 	
 	public InternetMap(GameState gamestate, AssetManager am, String filePath, GameMode gm, long gameID, boolean isPlayerOne) {
 		super(gamestate, am, filePath, gm);
@@ -112,6 +120,17 @@ public class InternetMap extends Map {
 	}
 	
 	@Override
+	protected void renderPlayerBanners(Graphics2D g) {
+		//draw player gamer tag top, center of screen
+		if((isPlayerOne && thisPlayersTurn == player1) || (!isPlayerOne && thisPlayersTurn != player1))
+			g.drawBitmap(GameplayAssets.playerBanner, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+		else if((isPlayerOne && thisPlayersTurn != player1) || (!isPlayerOne && thisPlayersTurn == player1))
+			g.drawBitmap(GameplayAssets.playerBannerEnemy, Game.G_WIDTH / 2 - GameplayAssets.playerBanner.getWidth() / 2, 0, null);
+		
+		g.drawText(thisPlayersTurn.getGamertag()+"'s turn", Game.G_WIDTH / 2, 26, gamertagFont);
+	}
+	
+	@Override
 	public void switchTurn() {
 		if(thisPlayersTurn == player1) {
 			thisPlayersTurn = player2;
@@ -163,26 +182,65 @@ public class InternetMap extends Map {
 	
 	private void getTurnAsJSON() {
 		try {
-			JSONObject getTurn = new JSONObject();
+			final JSONObject getTurn = new JSONObject();
 			getTurn.put("game_id", gameID);
-			String response = Internet.postJSON(turnGetURL, getTurn);
 			
-			JSONObject turn = new JSONObject(response);
-			//Log.i("combatgame", turn.toString(3));
-			int number = turn.getInt("turn_number");
+			if(currentNetworkThread != null)
+				currentNetworkThread.cancel(true);
 			
-			if(number == (turnNumber+1)) {
-				turnNumber++;
-				JSONArray p1Units = turn.getJSONArray("host_units");
-				JSONArray p1Indicators = turn.getJSONArray("host_hit_indicators");
-				JSONArray p2Units = turn.getJSONArray("client_units");
-				JSONArray p2Indicators = turn.getJSONArray("client_hit_indicators");
-				
-				player1.injectTurn(p1Units, p1Indicators);
-				player2.injectTurn(p2Units, p2Indicators);
-				
-				switchTurn();
-			}
+			gamestate.getStateManager().getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					currentNetworkThread = new PostAsync(new OnCompletion() {
+						@Override
+						public void onComplete(String response) {
+							try {
+								JSONObject turn = new JSONObject(response);
+								int number = turn.getInt("turn_number");
+								
+								if(number == (turnNumber+1)) {
+									turnNumber++;
+									JSONArray p1Units = turn.getJSONArray("host_units");
+									JSONArray p1Indicators = turn.getJSONArray("host_hit_indicators");
+									JSONArray p2Units = turn.getJSONArray("client_units");
+									JSONArray p2Indicators = turn.getJSONArray("client_hit_indicators");
+									
+									player1.injectTurn(p1Units, p1Indicators);
+									player2.injectTurn(p2Units, p2Indicators);
+									
+									switchTurn();
+								}
+							}catch(Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}).execute(new PostWrapper(turnGetURL, getTurn));
+				}
+			});
+			
+//			gamestate.getStateManager().getActivity().runOnUiThread(new Runnable() {
+//				@Override
+//				public void run() {
+//					currentNetworkThread.execute(new PostWrapper(turnGetURL, getTurn));
+//				}
+//			});
+//			String response = Internet.postJSON(turnGetURL, getTurn);
+//			
+//			JSONObject turn = new JSONObject(response);
+//			int number = turn.getInt("turn_number");
+//			
+//			if(number == (turnNumber+1)) {
+//				turnNumber++;
+//				JSONArray p1Units = turn.getJSONArray("host_units");
+//				JSONArray p1Indicators = turn.getJSONArray("host_hit_indicators");
+//				JSONArray p2Units = turn.getJSONArray("client_units");
+//				JSONArray p2Indicators = turn.getJSONArray("client_hit_indicators");
+//				
+//				player1.injectTurn(p1Units, p1Indicators);
+//				player2.injectTurn(p2Units, p2Indicators);
+//				
+//				switchTurn();
+//			}
 			
 		} catch(Exception e) {
 			e.printStackTrace();
