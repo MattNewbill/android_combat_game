@@ -11,7 +11,8 @@ import combatgame.units.Ability;
 import combatgame.units.AttackedTile;
 import combatgame.util.*;
 
-public class NPC  extends Player {
+public class NPC  extends Player 
+{
 	private static final long serialVersionUID = 1L;
 	
 	protected int rando;
@@ -19,17 +20,21 @@ public class NPC  extends Player {
 	protected List<GPoint> vis;
 	protected GPoint target;
 	protected boolean[] UnitNoCombat;
+	protected boolean[] respondedToHits;
 
-	public NPC(String gamertag, boolean isPlayerOne, Map map, Unit[] units) {
+	public NPC(String gamertag, boolean isPlayerOne, Map map, Unit[] units) 
+	{
 		super(gamertag, isPlayerOne, map, units);
 		Tooltip.turnOff(isPlayerOne);
 		vis= new ArrayList<GPoint>();
 		newTurn = true;
 		UnitNoCombat = new boolean[units.length];
+		respondedToHits = new boolean[units.length];
 	}
 	
 	@Override
-	public List<TouchEvent> update(List<TouchEvent> events) {
+	public List<TouchEvent> update(List<TouchEvent> events) 
+	{
 		
 		if(isSetupPhase)
 			updateSetupPhase();
@@ -39,17 +44,24 @@ public class NPC  extends Player {
 		return events;
 	}
 	
-	protected void updateSetupPhase() {
+	protected void updateSetupPhase() 
+	{
+		// spawns one unit per frame
+		
 		List<GPoint> base = new ArrayList<GPoint>();
 		
-		for(int row = 0; row < map.getNum_vertical_tiles(); row++) {
-			for(int col = 0; col < map.getNum_horizontal_tiles(); col++) {
+		// gets possible spawn points
+		for(int row = 0; row < map.getNum_vertical_tiles(); row++) 
+		{
+			for(int col = 0; col < map.getNum_horizontal_tiles(); col++) 
+			{
 				if(!isPlayerOne && map.getTile(row, col).getFeatureType() == MapFeature.PLAYER_TWO_BASE)
 					if(!map.getTile(row, col).hasUnit())
 						base.add(new GPoint(row,col));
 			}
 		}
 		
+		// if more units to spawn, pick a random valid spawn point and spawn
 		if(spawnUnitIndex < units.length)
 		{
 			rando = (int)(Math.random()*base.size()); 
@@ -58,12 +70,14 @@ public class NPC  extends Player {
 		}
 		else
 		{
+			// if everything spawned, switch turn
 			isSetupPhase = false;
 			map.switchTurn();
 		}
 	}
 	
-	protected void updateTurnPhase() {
+	protected void updateTurnPhase() 
+	{
 		
 		if(newTurn)
 		{
@@ -72,6 +86,7 @@ public class NPC  extends Player {
 			for(int i = 0; i < UnitNoCombat.length; i++)
 				UnitNoCombat[i] = true;
 			
+			// rotate based on hit indicators
 			respondToHits();
 		}
 		
@@ -81,8 +96,10 @@ public class NPC  extends Player {
 		{
 			if(!units[i].isDead)
 			{
+				// cheat peek
 				strategize(units[i]);
 				
+				// if points left for an attack
 				if( units[i].getPointsLeft()>=units[i].abilities[0].getCost() )
 				{	
 					endturnplz = false;
@@ -100,10 +117,12 @@ public class NPC  extends Player {
 					else if(units[i].getUnitType()==Unit.UnitType.PRESIDENT)
 						presidentAction(units[i],i);
 				}
+				// else if points left for move and unit has not been in combat. exploring
 				else if( (units[i].getPointsLeft()>=units[i].getMovementCost()) && UnitNoCombat[i] )
 				{
 					useMovement(units[i]);
 					
+					// 1/5 chance of random rotate while exploring
 					if( units[i].getPointsLeft() > 0 )
 					{
 						rando = (int)(Math.random()*5);
@@ -116,13 +135,16 @@ public class NPC  extends Player {
 		if(endturnplz)
 		{
 			newTurn = true;
-			hitIndicators.clear(); //remove any hit indicators
+			hitIndicators.clear(); // remove any hit indicators
 			map.switchTurn();
 		}
 	}
 	
-	protected void spawnUnit(GPoint T) {	
-		if(T != null) {
+	protected void spawnUnit(GPoint T) 
+	{	
+		if(T != null) 
+		{
+			// spawns unit with random direction
 			units[spawnUnitIndex].setXYCoordinate(T, map);
 			units[spawnUnitIndex].setDirectionFacing(((int)(Math.random()*4)));
 			spawnUnitIndex++;
@@ -131,6 +153,8 @@ public class NPC  extends Player {
 
 	protected void assaultAction(Unit U, int I)
 	{
+		// assault tries grenade, or rifle fire, or basic movement movement
+		
 		didsomething = false;
 		
 		if(U.pointsLeft >= U.abilities[1].getCost())
@@ -148,6 +172,8 @@ public class NPC  extends Player {
 
 	protected void reconAction(Unit U, int I)
 	{
+		// recon tries trick shot and then runs away, or does normal attack, or basic movement
+		
 		didsomething = false;
 		
 		if(U.pointsLeft >= U.abilities[1].getCost())
@@ -177,6 +203,8 @@ public class NPC  extends Player {
 
 	protected void medicAction(Unit U, int I)
 	{
+		// medic tries single heal, or area heal, or pistol shot, or basic movement
+		
 		didsomething = false;
 		
 		if(U.pointsLeft >= U.abilities[1].getCost())
@@ -201,6 +229,8 @@ public class NPC  extends Player {
 
 	protected void cqcAction(Unit U, int I)
 	{
+		// cqc tries concentrated shot, or wide shot, or basic movement
+		
 		didsomething = false;
 		
 		if(U.pointsLeft >= U.abilities[1].getCost())
@@ -218,6 +248,8 @@ public class NPC  extends Player {
 	
 	protected void sniperAction(Unit U, int I)
 	{
+		// sniper tries charged shot, or quick shot, or basic movement
+		
 		didsomething = false;
 		
 		if(U.pointsLeft >= U.abilities[1].getCost())
@@ -235,11 +267,40 @@ public class NPC  extends Player {
 	
 	protected void presidentAction(Unit U, int I)
 	{
+		// president not implemented so just basic movement
+		
 		useMovement(U);
 	}
 
+	protected GPoint findTarget(Ability A, Unit U)
+	{
+		// searches attackable tiles and picks the target with the least hp
+		
+		GPoint itarget = null;
+		vis = A.getTilesAttackable(U, map);
+		
+		for(int i = 0; i < vis.size(); i++)
+		{
+			if(map.getTile(vis.get(i)).hasUnit())
+				if(map.getTile(vis.get(i)).getPlayer_id() != playerId)
+				{
+					if(itarget == null)
+						itarget = new GPoint(vis.get(i));
+					
+					if(map.getUnit(map.getTile(itarget).getUnit_id()).health > map.getUnit(map.getTile(vis.get(i)).getUnit_id()).health)
+						itarget = new GPoint(vis.get(i));
+				}
+		}
+		vis.clear();
+		return itarget;
+	}
+	
 	protected GPoint findGrenadeTarget(Ability A, Unit U)
 	{
+		// searches for an attackable spot that would hit the most enemies for the most damage
+		// must hit at least 2 enemies
+		// 1/24 chance to see aoe
+		
 		int Cur_units = 0;
 		int Cur_damage = 0;
 		int New_units = 0;
@@ -289,6 +350,8 @@ public class NPC  extends Player {
 
 	protected GPoint findHealTarget(Ability A, Unit U, int HP)
 	{
+		// searches for a target with less than the specified HP
+		
 		GPoint itarget = null;
 		vis = A.getTilesAttackable(U, map);
 		
@@ -312,38 +375,118 @@ public class NPC  extends Player {
 		return itarget;
 	}
 	
-	protected GPoint findTarget(Ability A, Unit U)
+	protected void defaultAction(Unit U, Ability A, int I)
 	{
-		GPoint itarget = null;
-		vis = A.getTilesAttackable(U, map);
+		// basic action. searches for a target and attacks with selected ability
 		
-		for(int i = 0; i < vis.size(); i++)
+		target = findTarget(A, U);
+		if(target != null)
 		{
-			if(map.getTile(vis.get(i)).hasUnit())
-				if(map.getTile(vis.get(i)).getPlayer_id() != playerId)
-				{
-					if(itarget == null)
-						itarget = new GPoint(vis.get(i));
-					
-					if(map.getUnit(map.getTile(itarget).getUnit_id()).health > map.getUnit(map.getTile(vis.get(i)).getUnit_id()).health)
-						itarget = new GPoint(vis.get(i));
-				}
+			useAbility(U, A, target);
+			didsomething = true;
+			UnitNoCombat[I] = false;
 		}
-		vis.clear();
-		return itarget;
+	}
+	
+	protected void grenadeAction(Unit U, Ability A, int I)
+	{
+		// assault searches for grenade target throw
+		
+		target = findGrenadeTarget(A, U);
+		if(target != null)
+		{
+			useAbility(U, A, target);
+			didsomething = true;
+			UnitNoCombat[I] = false;
+		}
+	}
+	
+	protected void healAction(Unit U, Ability A, int I, int HP)
+	{
+		// medic searches for target to heal
+		
+		target = findHealTarget(A, U, HP);
+		if(target != null)
+		{
+			useAbility(U, A, target);
+			didsomething = true;
+		}
+	}
+	
+	protected void useAbility(Unit U, Ability A, GPoint T)
+	{
+		// uses the selected ability on the selected target
+		// code copied from player class
+		
+		// decrement action points
+		U.usePoints(A.getCost());
+		
+		// get the tiles that were affected by the attack
+		List<AttackedTile> tilesAffected = A.getTilesAffected(U,T, map);
+		
+		for(int j = 0; j < tilesAffected.size(); j++) {
+			MapTile tile = map.getTile(tilesAffected.get(j).tile);
+			
+			if(tile.hasUnit()){// there is a unit on the tile
+				int unitId = tile.getUnit_id();
+				Unit unit = map.getUnit(unitId);
+				
+				// reduce unit health by attack dmg
+				if(unit != null) {
+					DamageDealt damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
+					healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), 30, damageDone.healthDamage, indicatorPaint, false));
+					if(damageDone.isAttack && damageDone.armorDamage < 0) {
+						healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), 0, damageDone.armorDamage, indicatorPaint, true));
+					}
+					if(U != unit && damageDone.isAttack) //don't send indicator for heals
+						map.sendHitIndicator(new HitIndicator(U, A, unit, tilesAffected.get(j).tile, map), unit);
+				}
+			}
+		}
+	}
+	
+	protected void useMovement(Unit U)
+	{
+		//if movement forward is possible, move forward 1 square
+		//otherwise, rotate left or right
+		
+		movementPoints = Movement.getMovement(map, U);
+		
+		if(movementPoints[1].length==0)
+		{
+			randomRotate(U);
+		}
+		else
+		{
+			U.setXYCoordinate(movementPoints[1][0], map);
+			U.usePoints(U.getMovementCost());
+		}
+		
 	}
 	
 	protected void respondToHits()
 	{
+		// if a unit is on the same square as a hit indicator, have the unit face where it came from
+		// each unit only responds to at most 1 indicator so it doesnt waste rotations
+		
+		for(int u = 0; u < units.length; u++)
+			respondedToHits[u] = false;
+		
 		for(int u = 0; u < units.length; u++)
 			for(int i = 0; i < hitIndicators.size(); i++ )
 				if(units[u].getXYCoordinate().equals(hitIndicators.get(i).getXY()))
-					rotateToHits(units[u], hitIndicators.get(i));
+					if(!respondedToHits[u])
+					{
+						rotateToHits(units[u], hitIndicators.get(i));
+						respondedToHits[u] = true;
+					}
 	}
 	
 	protected void rotateToHits(Unit U, HitIndicator I)
 	{
-		//unit 0 up, 1 right, 2 down, 3 left
+		// rotate unit to face indicator direction
+		
+		// 0 up, 1 right, 2 down, 3 left
 		
 		while( !(U.getDirectionFacing() == I.getDirection()) )
 		{
@@ -382,85 +525,10 @@ public class NPC  extends Player {
 		}
 	}
 	
-	protected void grenadeAction(Unit U, Ability A, int I)
-	{
-		target = findGrenadeTarget(A, U);
-		if(target != null)
-		{
-			useAbility(U, A, target);
-			didsomething = true;
-			UnitNoCombat[I] = false;
-		}
-	}
-	
-	protected void healAction(Unit U, Ability A, int I, int HP)
-	{
-		target = findHealTarget(A, U, HP);
-		if(target != null)
-		{
-			useAbility(U, A, target);
-			didsomething = true;
-		}
-	}
-	
-	protected void defaultAction(Unit U, Ability A, int I)
-	{
-		target = findTarget(A, U);
-		if(target != null)
-		{
-			useAbility(U, A, target);
-			didsomething = true;
-			UnitNoCombat[I] = false;
-		}
-	}
-
-	protected void useAbility(Unit U, Ability A, GPoint T)
-	{
-		//decrement action points
-		U.usePoints(A.getCost());
-		
-		//get the tiles that were affected by the attack
-		List<AttackedTile> tilesAffected = A.getTilesAffected(U,T, map);
-		
-		for(int j = 0; j < tilesAffected.size(); j++) {
-			MapTile tile = map.getTile(tilesAffected.get(j).tile);
-			
-			if(tile.hasUnit()){//there is a unit on the tile
-				int unitId = tile.getUnit_id();
-				Unit unit = map.getUnit(unitId);
-				
-				//reduce unit health by attack dmg
-				if(unit != null) {
-					DamageDealt damageDone = unit.takeDamage(tilesAffected.get(j).damageTaken, map);
-					healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), 30, damageDone.healthDamage, indicatorPaint, false));
-					if(damageDone.isAttack && damageDone.armorDamage < 0) {
-						healthIndicators.add(new HealthIndicator(map, new GPoint(tilesAffected.get(j).tile.row, tilesAffected.get(j).tile.col), 0, damageDone.armorDamage, indicatorPaint, true));
-					}
-					if(U != unit && damageDone.isAttack) //don't send indicator for heals
-						map.sendHitIndicator(new HitIndicator(U, A, unit, tilesAffected.get(j).tile, map), unit);
-				}
-			}
-		}
-	}
-	
-	protected void useMovement(Unit U)
-	{
-		movementPoints = Movement.getMovement(map, U);
-		
-		if(movementPoints[1].length==0)
-		{
-			randomRotate(U);
-		}
-		else
-		{
-			U.setXYCoordinate(movementPoints[1][0], map);
-			U.usePoints(U.getMovementCost());
-		}
-		
-	}
-	
 	protected void randomRotate(Unit U)
 	{
+		// random rotate while exploring
+		
 		didsomething = true;
 		rando = (int)(Math.random()*2); 
 		if(rando == 0)
@@ -473,6 +541,11 @@ public class NPC  extends Player {
 	
 	protected void strategize(Unit U)
 	{
+		// cheat peek. 1/30 chance to look left and right to see if there are any enemies there
+		// without spending points. Then rotate using points if enemies found
+		// helps prevent the npc from just walking straight across the map
+		// seaching simulator
+		
 		rando = (int)(Math.random()*30);
 		if(rando == 0)
 		{
@@ -494,10 +567,13 @@ public class NPC  extends Player {
 	}
 	
 	@Override
-	public void render(Graphics2D g) {}
+	public void render(Graphics2D g) {} // dont render during npc's turn
 	
 	@Override
-	public boolean[][] constructLightMap(boolean[][] lightmap) {
+	public boolean[][] constructLightMap(boolean[][] lightmap)
+	{
+		//dont light anything during npc's turn
+		
 			for(int row = 0; row < map.getNum_vertical_tiles(); row++)
 				for(int col = 0; col < map.getNum_horizontal_tiles(); col++)
 						lightmap[row][col] = false;

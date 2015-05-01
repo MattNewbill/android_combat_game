@@ -2,6 +2,8 @@ package combatgame.state;
 
 import java.util.List;
 
+import android.util.Log;
+
 import combatgame.input.TouchEvent;
 import combatgame.main.StateManager;
 import combatgame.widgets.Button;
@@ -27,14 +29,18 @@ public class MapStateNPC extends MapSelectionState {
 		events = backButton.update(events);
 		listView.update(events);
 		
-		String temp = listView.getSelectedItem();
-		if(!temp.equals(selectedMap)) {
-			selectedMap = temp;
+		
+		//---was giving null partial map bug---
+		//String temp = listView.getSelectedItem();
+		//if(!temp.equals(selectedMap)) {
+		//	selectedMap = temp;
 			selectedPartialMap = listView.getSelectedMap();
-		}
+		//}
 		
 		if(nextButton.state == Button.ACTIVATED) {
 			nextButton.disarm();
+
+				
 			stateManager.setState(new GamemodeStateNPC(stateManager, selectedPartialMap));
 		}
 		else if(backButton.state == Button.ACTIVATED) {
