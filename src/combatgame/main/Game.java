@@ -29,6 +29,7 @@ import android.util.Log;
 public class Game extends Activity implements StateManager {
 
 	public static long ID = -1;
+	public static String NAME = "";
 	
 	State currentState;
 	RenderView renderView;

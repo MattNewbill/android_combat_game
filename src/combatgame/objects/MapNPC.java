@@ -8,7 +8,7 @@ public class MapNPC extends Map {
 	private static final long serialVersionUID = 1L;
 	
 	public MapNPC(GameState gamestate, AssetManager am, String filePath, GameMode gm) {
-		super(gamestate, am, filePath, gm);
+		super(gamestate, am, filePath, gm, true);
 		player2 = new NPC("Computer", false, this, gm.getPlayer2Units());
 	}
 	

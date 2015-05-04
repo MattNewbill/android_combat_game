@@ -33,23 +33,29 @@ public class InternetGameState extends GameState {
 	String mapPath;
 	String tileSet;
 	GameMode gm;
+	String player1Name, player2Name;
 	
 	boolean isPlayerOne;
 	
 	boolean isGameOver = false;
+	boolean timeout = false;
+	boolean lostConnection = false;
 	
 	boolean isExitDialogShowing = false;
 	transient Paint exitDialogPaint;
 	transient Button yesButton;
 	transient Button noButton;
+	transient Button okButton;
 	
-	public InternetGameState(StateManager stateManager, long gameID, String mapPath, GameMode gm, boolean isPlayerOne) {
+	public InternetGameState(StateManager stateManager, String player1Name, String player2Name, long gameID, String mapPath, GameMode gm, boolean isPlayerOne) {
 		super(stateManager);
 		
 		this.gameID = gameID;
 		this.mapPath = mapPath;
 		this.gm = gm;
 		this.isPlayerOne = isPlayerOne;
+		this.player1Name = player1Name;
+		this.player2Name = player2Name;
 		
 		AssetManager am = stateManager.getAssetManager();
 		try {
@@ -68,9 +74,26 @@ public class InternetGameState extends GameState {
 	}
 
 	@Override
+	public void timeout() {
+		timeout = true;
+	}
+	
+	@Override
+	public void lostConnection() {
+		lostConnection = true;
+	}
+	
+	@Override
 	public void update(float delta) {
-		if(!isGameOver) {
-			List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
+		List<TouchEvent> events = stateManager.getTouchHandler().getTouchEvents();
+		if((timeout || lostConnection) && !isExitDialogShowing) {
+			events = okButton.update(events);
+			if(okButton.state == Button.ACTIVATED) {
+				okButton.disarm();
+				stateManager.setState(new MainMenuState(stateManager));
+			}
+		}
+		else if(!isGameOver) {
 			if(!isExitDialogShowing)
 				isExitDialogShowing = stateManager.isBackPressed();
 			if(isExitDialogShowing) {
@@ -102,9 +125,19 @@ public class InternetGameState extends GameState {
 		
 		if(isExitDialogShowing) {
 			g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, exitDialogPaint);
-			g.drawBitmap(GameplayAssets.exitDialogIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null); //TODO: scale for larger devices
+			g.drawBitmap(GameplayAssets.exitDialogIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null);
 			yesButton.render(g);
 			noButton.render(g);
+		}
+		else if(timeout) {
+			g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, exitDialogPaint);
+			g.drawBitmap(GameplayAssets.timeoutIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null);
+			okButton.render(g);
+		}
+		else if(lostConnection) {
+			g.drawRect(0, 0, Game.G_WIDTH, Game.G_HEIGHT, exitDialogPaint);
+			g.drawBitmap(GameplayAssets.lostConnectionIcon, Game.G_WIDTH / 2 - GameplayAssets.exitDialogIcon.getWidth() / 2, Game.G_HEIGHT / 2 - GameplayAssets.exitDialogIcon.getHeight() / 2, null);
+			okButton.render(g);
 		}
 	}
 
@@ -125,7 +158,7 @@ public class InternetGameState extends GameState {
 		
 		//create map
 		if(map == null)
-			map = new InternetMap(this, am, MapSelectionState.mapPath+"/"+mapPath, gm, gameID, isPlayerOne);
+			map = new InternetMap(this, am, player1Name, player2Name, MapSelectionState.mapPath+"/"+mapPath, gm, gameID, isPlayerOne);
 		else
 			gm.resume();
 		
@@ -133,6 +166,7 @@ public class InternetGameState extends GameState {
 		
 		yesButton = new Button(GameplayAssets.yesIcon, GameplayAssets.yesArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.yesIcon.getWidth() - 10, Game.G_HEIGHT / 2 + GameplayAssets.yesIcon.getHeight() / 2 + 30);
 		noButton = new Button(GameplayAssets.noIcon, GameplayAssets.noArmedIcon, Game.G_WIDTH / 2 + 10, Game.G_HEIGHT / 2 + GameplayAssets.noIcon.getHeight() / 2 + 30);
+		okButton = new Button(GameplayAssets.okIcon, GameplayAssets.okArmedIcon, Game.G_WIDTH / 2 - GameplayAssets.okIcon.getWidth() / 2, Game.G_HEIGHT / 2 + GameplayAssets.okIcon.getHeight() / 2 + 30);
 		exitDialogPaint = new Paint();
 		exitDialogPaint.setColor(Color.BLACK);
 		exitDialogPaint.setAlpha(125);
@@ -146,6 +180,14 @@ public class InternetGameState extends GameState {
 	@Override
 	public boolean getCheckWin(){
 		return true;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		GameplayAssets.dispose();
+		if(map != null)
+			map.dispose();
 	}
 	
 	private void setGameInactive() {

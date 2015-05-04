@@ -42,6 +42,8 @@ public class HostJoinState extends State {
 	private String error = "Could not connect to server";
 	private transient Paint errorPaint;
 	
+	private boolean checkUser = false;
+	
 	public HostJoinState(StateManager stateManager) {
 		super(stateManager);
 	}
@@ -88,20 +90,7 @@ public class HostJoinState extends State {
 			createAccountButton.disarm();
 			//hide keyboard
 			km.hideKeyboard();
-			if(!textField.getText().equals("")) {
-				//create new account
-				boolean status = createUser();
-				if(status) {
-					if(isHosting)
-						host();
-					else
-						join();
-				}
-				else {
-					//display account creation failed etc
-					stateManager.setState(new HostJoinState(stateManager, true));
-				}
-			}
+			checkUser = true;
 		}
 		else if(backButton.state == Button.ACTIVATED || stateManager.isBackPressed()) {
 			backButton.disarm();
@@ -115,8 +104,30 @@ public class HostJoinState extends State {
 			}
 		}
 		
+		if(checkUser) {
+			checkForValidUser();
+			checkUser = false;
+		}
+		
 	}
 
+	private void checkForValidUser() {
+		if(!textField.getText().equals("")) {
+			//create new account
+			boolean status = createUser();
+			if(status) {
+				if(isHosting)
+					host();
+				else
+					join();
+			}
+			else {
+				//display account creation failed etc
+				stateManager.setState(new HostJoinState(stateManager, true));
+			}
+		}
+	}
+	
 	@Override
 	public void render(Graphics2D g, float delta) {
 		//render background
@@ -196,6 +207,10 @@ public class HostJoinState extends State {
 			if(event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
 				textField.removeCharacter();
 			}
+			else if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+				km.hideKeyboard();
+				checkUser = true;
+			}
 			else {
 				char c = (char)event.getUnicodeChar();
 				if(Character.isLetter(c) || Character.isDigit(c))
@@ -239,6 +254,7 @@ public class HostJoinState extends State {
 	private void checkAccountStatus() {
 		PreferencesHelper prefs = new PreferencesHelper(stateManager.getActivity());
 		Game.ID = prefs.getID();
+		Game.NAME = prefs.getName();
 		//no id on record
 		if(Game.ID == -1) {
 			Log.i("combatgame", "no id");
@@ -293,6 +309,7 @@ public class HostJoinState extends State {
 			Log.i("combatgame", resultString);
 			long id = parsedResult.getLong("user_id");
 			Game.ID = id;
+			Game.NAME = textField.getText();
 			
 			PreferencesHelper prefs = new PreferencesHelper(stateManager.getActivity());
 			prefs.putNameAndID(textField.getText(), id);

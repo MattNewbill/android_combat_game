@@ -71,13 +71,16 @@ public class Map implements Serializable {
 	public static final int FLING_THRESHOLD = 17; //the distance apart to scroll events have to be to determine a "fling"
 	int mapOffsetX = 0, mapOffsetY = 0;
 	
-	public Map (GameState gamestate, AssetManager am, String filePath, GameMode gm) {
+	public Map (GameState gamestate, AssetManager am, String filePath, GameMode gm, boolean createPlayers) {
 		this.gamestate = gamestate;
 		this.gamemode = gm;
-		//create players
-		player1 = new Player("Player 1", true, this, gm.getPlayer1Units());
-		player2 = new Player("Player 2", false, this, gm.getPlayer2Units());
-		thisPlayersTurn = player1;
+		
+		if(createPlayers) {
+			//create players
+			player1 = new Player("Player 1", true, this, gm.getPlayer1Units());
+			player2 = new Player("Player 2", false, this, gm.getPlayer2Units());
+			thisPlayersTurn = player1;
+		}
 		
 		try {
 			//read in map
@@ -104,7 +107,8 @@ public class Map implements Serializable {
 			e.printStackTrace();
 		}
 		
-		thisPlayersTurn.newTurn();
+		if(createPlayers)
+			thisPlayersTurn.newTurn();
 	}
 	
 	public void switchTurn() {

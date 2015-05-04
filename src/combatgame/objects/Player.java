@@ -281,7 +281,12 @@ public class Player implements Serializable {
 			
 			if(yesButton.state == Button.ACTIVATED) {
 				yesButton.disarm();
-				hitIndicators.clear(); //remove any hit indicators
+				
+				//remove any indicators
+				hitIndicators.clear();
+				healthIndicators.clear();
+				notifications.clear();
+				
 				map.switchTurn();
 				isEndingTurn = false;
 			}
@@ -1157,6 +1162,7 @@ public class Player implements Serializable {
 			currentAction = SELECTION;
 			if(selectedUnitIndex != -1 && !units[selectedUnitIndex].isDead()) {
 				map.moveToTile(units[selectedUnitIndex].getXYCoordinate());
+				enableButtons();
 			}
 			else {
 				for(int i = 0; i < units.length; i++) {

@@ -199,7 +199,7 @@ public class ServerBrowserState extends State {
 				
 				JSONObject temp = new JSONObject(response);
 				if(temp.getBoolean("success")) {
-					stateManager.setState(new InternetGameState(stateManager, selectedServer.gameID, MapIDs.getMapNameFromID(selectedServer.mapID)+".txt", GamemodeIDs.getGamemodeFromID(selectedServer.gamemodeID), false));
+					stateManager.setState(new InternetGameState(stateManager, selectedServer.hostName, Game.NAME, selectedServer.gameID, MapIDs.getMapNameFromID(selectedServer.mapID)+".txt", GamemodeIDs.getGamemodeFromID(selectedServer.gamemodeID), false));
 				}
 				else {
 					error = true;
@@ -227,7 +227,8 @@ public class ServerBrowserState extends State {
 				GameStub[] stubsArray = new GameStub[gamesArray.length()];
 				for(int i = 0; i < gamesArray.length(); i++) {
 					JSONObject temp = gamesArray.getJSONObject(i);
-					stubsArray[i] = new GameStub(Long.toString(temp.getInt("host_player_id")), temp.getLong("id"), temp.getInt("map_id"), temp.getInt("game_mode_id"));
+					JSONObject host = temp.getJSONObject("host_player");
+					stubsArray[i] = new GameStub(host.getString("name"), temp.getLong("id"), temp.getInt("map_id"), temp.getInt("game_mode_id"));
 				}
 				serverList = new ServerListView(stubsArray);
 				noServers = false;

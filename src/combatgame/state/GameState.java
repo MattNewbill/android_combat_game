@@ -17,5 +17,8 @@ public abstract class GameState extends State {
 	public StateManager getStateManager() {
 		return stateManager;
 	}
+	
+	public void timeout() {}
+	public void lostConnection() {}
 
 }

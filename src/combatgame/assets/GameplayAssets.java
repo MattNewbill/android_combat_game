@@ -97,6 +97,8 @@ public class GameplayAssets {
 	public static Bitmap noArmedIcon;
 	public static Bitmap exitDialogIcon;
 	public static Bitmap endTurnDialogIcon;
+	public static Bitmap timeoutIcon;
+	public static Bitmap lostConnectionIcon;
 	
 	//hit indicators
 	public static Bitmap hitIndicatorUpIcon;
@@ -213,6 +215,8 @@ public class GameplayAssets {
 			noArmedIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/no_button_armed.png"), null, options);
 			exitDialogIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/confirm_exit_popup.png"), null, options);
 			endTurnDialogIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/confirm_endturn_popup.png"), null, options);
+			timeoutIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/internet_lost_them.png"), null, options);
+			lostConnectionIcon = BitmapFactory.decodeStream(am.open("images/interface_buttons/internet_lost_you.png"), null, options);
 			
 			hitIndicatorUpIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_up.png"), null, options);
 			hitIndicatorRightIcon = BitmapFactory.decodeStream(am.open("sprites/tiles/indicators/hit_indicator_right.png"), null, options);
@@ -523,6 +527,14 @@ public class GameplayAssets {
 		if(endTurnDialogIcon != null) {
 			endTurnDialogIcon.recycle();
 			endTurnDialogIcon = null;
+		}
+		if(timeoutIcon != null) {
+			timeoutIcon.recycle();
+			timeoutIcon = null;
+		}
+		if(lostConnectionIcon != null) {
+			lostConnectionIcon.recycle();
+			lostConnectionIcon = null;
 		}
 		
 		if(hitIndicatorUpIcon != null) {

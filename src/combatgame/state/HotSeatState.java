@@ -136,7 +136,7 @@ public class HotSeatState extends GameState {
 		
 		//create map
 		if(map == null)
-			map = new Map(this, am, mapPath, gm);
+			map = new Map(this, am, mapPath, gm, true);
 		else
 			gm.resume();
 		

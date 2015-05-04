@@ -2,6 +2,7 @@ package combatgame.state;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -93,9 +94,13 @@ public class LobbyState extends State {
 			//Log.i("combatgame", response);
 			
 			JSONObject jsonResponse = new JSONObject(response);
-			JSONObject game = jsonResponse.getJSONObject("game");
-			if(game.getLong("client_player_id") != 0)
-				stateManager.setState(new InternetGameState(stateManager, gameID, MapIDs.getMapNameFromID(mapID)+".txt", GamemodeIDs.getGamemodeFromID(gamemodeID), true));
+			//JSONObject game = jsonResponse.getJSONObject("game");
+			JSONArray temp = jsonResponse.getJSONArray("game");
+			JSONObject game = temp.getJSONObject(0);
+			if(game.getLong("client_player_id") != 0) {
+				JSONObject client = game.getJSONObject("client_player");
+				stateManager.setState(new InternetGameState(stateManager, Game.NAME, client.getString("name"), gameID, MapIDs.getMapNameFromID(mapID)+".txt", GamemodeIDs.getGamemodeFromID(gamemodeID), true));
+			}
 		} catch(Exception e) {
 			stateManager.setState(new HostJoinState(stateManager, true));
 			e.printStackTrace();

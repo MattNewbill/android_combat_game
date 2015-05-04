@@ -31,16 +31,28 @@ public class InternetMap extends Map {
 	public final String turnPostURL = "http://www.newbillity.com/android_combat_game_web/public/games/set_turn";
 	public final String turnGetURL = "http://www.newbillity.com/android_combat_game_web/public/games/get_turn";
 	
+	public final long TIMEOUT_PERIOD = 300000;
+	private long timeoutStartTime;
+	
 	public final long TIME_BETWEEN_TURN_CHECK = 10000;
 	private long startTime;
 	
-	private AsyncTask<PostWrapper, Void, String> currentNetworkThread;
+	public static final int MAX_GET_MISSES = 5;
+	private int misses = 0;
 	
-	public InternetMap(GameState gamestate, AssetManager am, String filePath, GameMode gm, long gameID, boolean isPlayerOne) {
-		super(gamestate, am, filePath, gm);
+	private transient AsyncTask<PostWrapper, Void, String> currentNetworkThread;
+	
+	public InternetMap(GameState gamestate, AssetManager am, String p1Name, String p2Name, String filePath, GameMode gm, long gameID, boolean isPlayerOne) {
+		super(gamestate, am, filePath, gm, false);
 		
 		this.gameID = gameID;
 		this.isPlayerOne = isPlayerOne;
+		
+		player1 = new Player(p1Name, true, this, gm.getPlayer1Units());
+		player2 = new Player(p2Name, false, this, gm.getPlayer2Units());
+		thisPlayersTurn = player1;
+		
+		thisPlayersTurn.newTurn();
 	}
 	
 	@Override
@@ -75,10 +87,12 @@ public class InternetMap extends Map {
 			else if(player1 == thisPlayersTurn) {
 				events = player2.notMyTurnUpdate(events);
 				turnTimeCheck();
+				checkForTimeout();
 			}
 			else if(player2 == thisPlayersTurn) {
 				events = player1.notMyTurnUpdate(events);
 				turnTimeCheck();
+				checkForTimeout();
 			}
 			
 			//check to see if someone has won yet
@@ -104,6 +118,14 @@ public class InternetMap extends Map {
 			getTurnAsJSON();
 			startTime = 0;
 		}
+	}
+	
+	private void checkForTimeout() {
+		if(timeoutStartTime == 0)
+			timeoutStartTime = System.currentTimeMillis();
+		
+		if((System.currentTimeMillis() - timeoutStartTime) > TIMEOUT_PERIOD)
+			gamestate.timeout();
 	}
 	
 	@Override
@@ -145,6 +167,8 @@ public class InternetMap extends Map {
 		
 		if((isPlayerOne && thisPlayersTurn == player1) || (!isPlayerOne && thisPlayersTurn == player2))
 			thisPlayersTurn.newTurn();
+		
+		timeoutStartTime = 0;
 	}
 	
 	@Override
@@ -170,6 +194,13 @@ public class InternetMap extends Map {
 			sendTurnAsJSON();
 	}
 	
+	@Override
+	public void dispose() {
+		super.dispose();
+		if(currentNetworkThread != null)
+			currentNetworkThread.cancel(true);
+	}
+	
 	private void sendTurnAsJSON() {
 		turnNumber++;
 		//if(thisPlayersTurn == player1)
@@ -177,6 +208,10 @@ public class InternetMap extends Map {
 		
 		JSONObject turn = JSONHelper.turnToJSON(gameID, this, turnNumber);
 		String response = Internet.postJSON(turnPostURL, turn);
+		
+		//no internet
+		if(response.equals(""))
+			gamestate.lostConnection();
 		Log.i("combatgame", response);
 	}
 	
@@ -194,7 +229,16 @@ public class InternetMap extends Map {
 					currentNetworkThread = new PostAsync(new OnCompletion() {
 						@Override
 						public void onComplete(String response) {
+							//no internet
+							if(response.equals("")) {
+								misses++;
+								if(misses >= MAX_GET_MISSES)
+									gamestate.lostConnection();
+								return;
+							}
 							try {
+								//we have internet, reset our timeout period
+								misses = 0;
 								JSONObject turn = new JSONObject(response);
 								int number = turn.getInt("turn_number");
 								
@@ -217,30 +261,6 @@ public class InternetMap extends Map {
 					}).execute(new PostWrapper(turnGetURL, getTurn));
 				}
 			});
-			
-//			gamestate.getStateManager().getActivity().runOnUiThread(new Runnable() {
-//				@Override
-//				public void run() {
-//					currentNetworkThread.execute(new PostWrapper(turnGetURL, getTurn));
-//				}
-//			});
-//			String response = Internet.postJSON(turnGetURL, getTurn);
-//			
-//			JSONObject turn = new JSONObject(response);
-//			int number = turn.getInt("turn_number");
-//			
-//			if(number == (turnNumber+1)) {
-//				turnNumber++;
-//				JSONArray p1Units = turn.getJSONArray("host_units");
-//				JSONArray p1Indicators = turn.getJSONArray("host_hit_indicators");
-//				JSONArray p2Units = turn.getJSONArray("client_units");
-//				JSONArray p2Indicators = turn.getJSONArray("client_hit_indicators");
-//				
-//				player1.injectTurn(p1Units, p1Indicators);
-//				player2.injectTurn(p2Units, p2Indicators);
-//				
-//				switchTurn();
-//			}
 			
 		} catch(Exception e) {
 			e.printStackTrace();
