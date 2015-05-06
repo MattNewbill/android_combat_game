@@ -29,6 +29,7 @@ public class ServerBrowserState extends State {
 
 	private final String GET_OPEN_GAMES_URL = "http://www.newbillity.com/android_combat_game_web/public/games/get_open_games";
 	private final String JOIN_GAME_URL = "http://www.newbillity.com/android_combat_game_web/public/games/join";
+	private final String GET_GAME_URL = "http://www.newbillity.com/android_combat_game_web/public/games/get_game";
 	
 	private transient Button backButton, joinButton, refreshButton;
 	
@@ -43,8 +44,10 @@ public class ServerBrowserState extends State {
 	
 	private boolean error = false;
 	private boolean noServers = false;
+	private boolean couldntJoinServer = false;
 	private String errorString = "Could not connect to server";
 	private String noServersString = "No servers found";
+	private String couldntJoinServerString = "Could not join server";
 	
 	public ServerBrowserState(StateManager stateManager) {
 		super(stateManager);
@@ -98,10 +101,12 @@ public class ServerBrowserState extends State {
 		}
 		
 		//render error string if there is an error
+		if(couldntJoinServer)
+			g.drawText(couldntJoinServerString, Game.G_WIDTH - 261, Game.G_HEIGHT / 2 + 70, loadingPaint);
 		if(error)
-			g.drawText(errorString, Game.G_WIDTH - 261, Game.G_HEIGHT / 2 + 50, loadingPaint);
+			g.drawText(errorString, Game.G_WIDTH - 261, Game.G_HEIGHT / 2 + 70, loadingPaint);
 		if(noServers)
-			g.drawText(noServersString, Game.G_WIDTH - 261, Game.G_HEIGHT / 2 + 75, loadingPaint);
+			g.drawText(noServersString, Game.G_WIDTH - 261, Game.G_HEIGHT / 2 + 70, loadingPaint);
 		
 		//render list view
 		if(serverList != null)
@@ -188,8 +193,18 @@ public class ServerBrowserState extends State {
 		return State.SERVER_BROWSER;
 	}
 	
+	private void setErrorFlags(boolean error, boolean noServers, boolean couldntJoinServer) {
+		this.error = error;
+		this.noServers = noServers;
+		this.couldntJoinServer = couldntJoinServer;
+	}
+	
 	private void joinGame() {
 		if(selectedServer != null) {
+			if(!canJoinGame()) {
+				setErrorFlags(false, false, true);
+				return;
+			}
 			try {
 				JSONObject object = new JSONObject();
 				object.put("client_player_id", Game.ID);
@@ -198,16 +213,35 @@ public class ServerBrowserState extends State {
 				String response = Internet.postJSON(JOIN_GAME_URL, object);
 				
 				JSONObject temp = new JSONObject(response);
-				if(temp.getBoolean("success")) {
+				if(temp.getBoolean("success"))
 					stateManager.setState(new InternetGameState(stateManager, selectedServer.hostName, Game.NAME, selectedServer.gameID, MapIDs.getMapNameFromID(selectedServer.mapID)+".txt", GamemodeIDs.getGamemodeFromID(selectedServer.gamemodeID), false));
-				}
-				else {
-					error = true;
-				}
+				else
+					setErrorFlags(true, false, false);
+				
 			} catch(Exception e) {
-				error = true;
+				setErrorFlags(true, false, false);
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	private boolean canJoinGame() {
+		try {
+			JSONObject object = new JSONObject();
+			object.put("game_id", selectedServer.gameID);
+			
+			String response = Internet.postJSON(GET_GAME_URL, object);
+			//Log.i("combatgame", response);
+			
+			JSONObject jsonResponse = new JSONObject(response);
+			JSONArray temp = jsonResponse.getJSONArray("game");
+			JSONObject game = temp.getJSONObject(0);
+			
+			return game.getLong("client_player_id") == 0 && game.getInt("is_active") == 1;
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -231,13 +265,14 @@ public class ServerBrowserState extends State {
 					stubsArray[i] = new GameStub(host.getString("name"), temp.getLong("id"), temp.getInt("map_id"), temp.getInt("game_mode_id"));
 				}
 				serverList = new ServerListView(stubsArray);
-				noServers = false;
+				setErrorFlags(false, false, false);
 			}
 			else {
-				noServers = true;
+				setErrorFlags(false, true, false);
+				selectedServer = null;
 			}
 		} catch(Exception e) {
-			error = true;
+			setErrorFlags(false, true, false);
 			e.printStackTrace();
 		}
 	}
