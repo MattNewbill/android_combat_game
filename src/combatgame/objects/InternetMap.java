@@ -5,8 +5,10 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
+import android.os.Vibrator;
 import android.util.Log;
 import combatgame.assets.GameplayAssets;
 import combatgame.gamemode.GameMode;
@@ -253,6 +255,10 @@ public class InternetMap extends Map {
 									player2.injectTurn(p2Units, p2Indicators);
 									
 									switchTurn();
+									
+									Vibrator v = (Vibrator) gamestate.getStateManager().getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+									if(v.hasVibrator())
+										v.vibrate(400);
 								}
 							}catch(Exception e) {
 								e.printStackTrace();
